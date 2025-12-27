@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pnpm add:*)",
+      "Bash(pnpm dlx:*)",
+      "Bash(pnpm approve-builds:*)",
+      "WebFetch(domain:supabase.com)",
+      "Bash(pnpm remove:*)",
+      "Bash(pnpm build:*)",
+      "Bash(node:*)",
+      "Bash(git add:*)"
+    ]
+  }
+}

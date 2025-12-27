@@ -1,0 +1,112 @@
+import { createClient } from "@/lib/supabase/client";
+import type { Plant, NewPlant, PlantUpdate } from "@/types/supabase";
+
+/**
+ * Database operations for plants.
+ * All operations use the browser Supabase client.
+ */
+
+/**
+ * Fetch all plants in a grove
+ */
+export async function getPlantsByGrove(groveId: string): Promise<Plant[]> {
+  const supabase = createClient();
+
+  const { data, error } = await supabase
+    .from("plants")
+    .select("*")
+    .eq("grove_id", groveId)
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return (data ?? []) as Plant[];
+}
+
+/**
+ * Fetch a single plant by ID
+ */
+export async function getPlant(id: string): Promise<Plant | null> {
+  const supabase = createClient();
+
+  const { data, error } = await supabase
+    .from("plants")
+    .select("*")
+    .eq("id", id)
+    .single();
+
+  if (error) {
+    if (error.code === "PGRST116") {
+      return null;
+    }
+    throw new Error(error.message);
+  }
+
+  return data as Plant;
+}
+
+/**
+ * Create a new plant
+ */
+export async function createPlant(plant: NewPlant): Promise<Plant> {
+  const supabase = createClient();
+
+  const { data, error } = await supabase
+    .from("plants")
+    .insert(plant as any)
+    .select()
+    .single();
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data as Plant;
+}
+
+/**
+ * Update a plant
+ */
+export async function updatePlant(
+  id: string,
+  updates: PlantUpdate
+): Promise<Plant> {
+  const supabase = createClient();
+
+  const { data, error } = await supabase
+    .from("plants")
+    .update(updates as any)
+    .eq("id", id)
+    .select()
+    .single();
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data as Plant;
+}
+
+/**
+ * Water a plant (update last_watered timestamp)
+ */
+export async function waterPlant(id: string): Promise<Plant> {
+  return updatePlant(id, {
+    last_watered: new Date().toISOString(),
+  });
+}
+
+/**
+ * Delete a plant
+ */
+export async function deletePlant(id: string): Promise<void> {
+  const supabase = createClient();
+
+  const { error } = await supabase.from("plants").delete().eq("id", id);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+}
