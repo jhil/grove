@@ -13,6 +13,7 @@ import { QuickWater, PlantCareTip } from "@/components/grove/grove-health";
 import { ViewModeSelector } from "@/components/grove/view-mode-selector";
 import { SortSelector } from "@/components/grove/sort-selector";
 import { ChangelogWidget } from "@/components/grove/grove-changelog";
+import { GroveAnalyticsDashboard } from "@/components/grove/grove-analytics";
 import { useGrove } from "@/hooks/use-grove";
 import { usePlants } from "@/hooks/use-plants";
 import { useRealtimeSync } from "@/hooks/use-realtime";
@@ -162,6 +163,13 @@ export default function GrovePage({ params }: GrovePageProps) {
             />
           )}
         </section>
+
+        {/* Analytics Section */}
+        {plants && plants.length > 0 && (
+          <section className="mt-8">
+            <GroveAnalyticsDashboard groveId={id} plants={plants} />
+          </section>
+        )}
 
         {/* Activity & Tips Section */}
         {plants && plants.length > 0 && (

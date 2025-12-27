@@ -33,7 +33,8 @@
       "Bash(pnpm run deploy:*)",
       "WebFetch(domain:plangrove.app)",
       "Bash(ls:*)",
-      "Bash(pnpm test:run:*)"
+      "Bash(pnpm test:run:*)",
+      "Bash(pnpm test:*)"
     ]
   }
 }
