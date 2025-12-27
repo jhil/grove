@@ -45,7 +45,7 @@ export function Select({
           "bg-cream-100 text-foreground",
           "border border-border",
           "text-sm",
-          "transition-all duration-200",
+          "transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]",
           "focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1",
           "focus:border-primary focus:bg-cream-50",
           "disabled:cursor-not-allowed disabled:opacity-50"

@@ -25,7 +25,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           "border border-border",
           "text-sm placeholder:text-muted-foreground",
           // Focus styles
-          "transition-all duration-200",
+          "transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]",
           "focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1",
           "focus:border-primary focus:bg-cream-50",
           // Disabled styles
@@ -89,7 +89,7 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
           "border border-border",
           "text-sm placeholder:text-muted-foreground",
           // Focus styles
-          "transition-all duration-200",
+          "transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]",
           "focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1",
           "focus:border-primary focus:bg-cream-50",
           // Disabled styles

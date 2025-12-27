@@ -25,8 +25,8 @@ export const Card = React.forwardRef<HTMLDivElement, CardProps>(
           variant === "default" && "shadow-soft",
           variant === "elevated" && "shadow-lifted",
           variant === "interactive" && [
-            "shadow-soft transition-shadow duration-300 ease-out",
-            "hover:shadow-lifted",
+            "shadow-soft transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]",
+            "hover:shadow-lifted hover:-translate-y-0.5",
           ],
           className
         )}
