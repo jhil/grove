@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/hooks/use-auth";
 import { useToast } from "@/components/ui/toast";
+import { cn } from "@/lib/utils/cn";
 import { Leaf, Mail, Lock, User, Loader2 } from "lucide-react";
 
 /**
@@ -189,31 +190,34 @@ interface AuthButtonProps {
 
 export function AuthButton({ className }: AuthButtonProps) {
   const [open, setOpen] = useState(false);
-  const { isAuthenticated, profile, signOut } = useAuth();
-  const { showToast } = useToast();
+  const { isAuthenticated, isLoading, user, profile } = useAuth();
 
-  const handleSignOut = async () => {
-    try {
-      await signOut();
-      showToast("Signed out", "success");
-    } catch (error) {
-      showToast("Failed to sign out", "error");
-    }
-  };
-
-  if (isAuthenticated && profile) {
+  // Show loading state
+  if (isLoading) {
     return (
-      <div className="flex items-center gap-2">
-        <span className="text-sm text-muted-foreground hidden sm:inline">
-          {profile.display_name || profile.email}
-        </span>
-        <Button variant="ghost" size="sm" onClick={handleSignOut} className={className}>
-          Sign Out
-        </Button>
-      </div>
+      <Button variant="ghost" size="sm" disabled className={className}>
+        <Loader2 className="w-4 h-4 animate-spin" />
+      </Button>
     );
   }
 
+  // Authenticated - show user info and link to account
+  if (isAuthenticated && user) {
+    const displayName = profile?.display_name || user.email?.split("@")[0] || "Account";
+
+    return (
+      <a href="/account">
+        <Button variant="ghost" size="sm" className={cn("gap-2", className)}>
+          <User className="w-4 h-4" />
+          <span className="hidden sm:inline max-w-[100px] truncate">
+            {displayName}
+          </span>
+        </Button>
+      </a>
+    );
+  }
+
+  // Not authenticated - show sign in button
   return (
     <>
       <Button variant="secondary" size="sm" onClick={() => setOpen(true)} className={className}>

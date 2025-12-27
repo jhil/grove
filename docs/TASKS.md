@@ -4,6 +4,17 @@ This file tracks tasks that need to be completed by the user (not automated by C
 
 ## Pending Tasks
 
+### Supabase Auth Configuration
+
+- [ ] **[T-004]** Verify Supabase Auth Settings
+  In Supabase Dashboard > Authentication > URL Configuration:
+  - Site URL: `https://plangrove.app`
+  - Redirect URLs should include:
+    - `https://plangrove.app/**`
+    - `https://plangrove.app/auth/callback`
+    - `http://localhost:3000/**` (for local dev)
+    - `http://localhost:3000/auth/callback`
+
 ### Cloudflare Deployment
 
 - [ ] **[T-003]** Deploy to Cloudflare after all features are complete
@@ -37,3 +48,5 @@ All SQL migrations are documented in `docs/MIGRATIONS.md` with full SQL scripts.
 
 - After running migrations, test the feature locally before deploying
 - Environment variables should already be set in Cloudflare dashboard
+- Auth callback route is at `/auth/callback`
+- Account page is at `/account`
