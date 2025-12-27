@@ -9,11 +9,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/hooks/use-auth";
 import { useToast } from "@/components/ui/toast";
 import { User, Mail, Calendar, LogOut, Loader2, Save } from "lucide-react";
+import { NotificationSettings } from "@/components/pwa/notification-settings";
 
 /**
- * Account page - shows user profile and settings
+ * Profile page - shows user profile and settings
  */
-export default function AccountPage() {
+export default function ProfilePage() {
   const router = useRouter();
   const { user, profile, isAuthenticated, isLoading, signOut, updateProfile } = useAuth();
   const { showToast } = useToast();
@@ -81,7 +82,7 @@ export default function AccountPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <Header showBack backLabel="Home" title="Account" />
+      <Header showBack backLabel="Home" title="Profile" />
 
       <main className="container mx-auto px-4 py-8 max-w-2xl">
         {/* Profile Card */}
@@ -169,6 +170,11 @@ export default function AccountPage() {
             </form>
           </CardContent>
         </Card>
+
+        {/* Notification Settings */}
+        <div className="mt-6">
+          <NotificationSettings />
+        </div>
 
         {/* Sign Out Card */}
         <Card className="border-cream-200 shadow-soft mt-6">

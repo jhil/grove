@@ -49,4 +49,4 @@ All SQL migrations are documented in `docs/MIGRATIONS.md` with full SQL scripts.
 - After running migrations, test the feature locally before deploying
 - Environment variables should already be set in Cloudflare dashboard
 - Auth callback route is at `/auth/callback`
-- Account page is at `/account`
+- Profile page is at `/profile`

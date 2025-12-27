@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useState } from "react";
 import { ToastProvider } from "@/components/ui/toast";
 import { AuthProvider } from "@/hooks/use-auth";
+import { PWAProvider } from "@/components/pwa/pwa-provider";
 
 /**
  * Root providers for the application.
@@ -30,7 +31,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <ToastProvider>
-          {children}
+          <PWAProvider>
+            {children}
+          </PWAProvider>
         </ToastProvider>
       </AuthProvider>
     </QueryClientProvider>

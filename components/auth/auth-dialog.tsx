@@ -206,7 +206,7 @@ export function AuthButton({ className }: AuthButtonProps) {
     const displayName = profile?.display_name || user.email?.split("@")[0] || "Account";
 
     return (
-      <a href="/account">
+      <a href="/profile">
         <Button variant="ghost" size="sm" className={cn("gap-2", className)}>
           <User className="w-4 h-4" />
           <span className="hidden sm:inline max-w-[100px] truncate">
