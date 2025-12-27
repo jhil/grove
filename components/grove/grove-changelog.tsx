@@ -84,8 +84,6 @@ interface ActivityItemProps {
 }
 
 function ActivityItem({ activity, isLast }: ActivityItemProps) {
-  const Icon = getActivityIcon(activity.type);
-
   return (
     <div className="flex items-start gap-3 group">
       {/* Timeline dot and line */}
@@ -96,7 +94,7 @@ function ActivityItem({ activity, isLast }: ActivityItemProps) {
             getActivityColor(activity.type)
           )}
         >
-          <Icon className="w-4 h-4" />
+          <ActivityIcon type={activity.type} />
         </div>
         {!isLast && (
           <div className="w-0.5 h-full min-h-[24px] bg-cream-200 mt-1" />
@@ -117,24 +115,25 @@ function ActivityItem({ activity, isLast }: ActivityItemProps) {
 }
 
 /**
- * Get the appropriate icon for an activity type.
+ * Icon component for activity types - avoids dynamic component creation during render.
  */
-function getActivityIcon(type: Activity["type"]) {
+function ActivityIcon({ type }: { type: Activity["type"] }) {
+  const className = "w-4 h-4";
   switch (type) {
     case "plant_added":
-      return Leaf;
+      return <Leaf className={className} />;
     case "plant_watered":
-      return Droplet;
+      return <Droplet className={className} />;
     case "plant_edited":
-      return Pencil;
+      return <Pencil className={className} />;
     case "plant_removed":
-      return LogOut;
+      return <LogOut className={className} />;
     case "grove_created":
-      return Home;
+      return <Home className={className} />;
     case "grove_updated":
-      return Settings;
+      return <Settings className={className} />;
     default:
-      return History;
+      return <History className={className} />;
   }
 }
 

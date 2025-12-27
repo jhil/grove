@@ -2,6 +2,17 @@
 
 import Script from "next/script";
 
+// Type declaration for Google Analytics gtag
+declare global {
+  interface Window {
+    gtag?: (
+      command: string,
+      targetId: string | Date,
+      config?: Record<string, unknown>
+    ) => void;
+  }
+}
+
 /**
  * Google Analytics component.
  * Placeholder for future GA integration.
@@ -48,8 +59,8 @@ export function trackEvent(
   label?: string,
   value?: number
 ) {
-  if (typeof window !== "undefined" && (window as any).gtag) {
-    (window as any).gtag("event", action, {
+  if (typeof window !== "undefined" && window.gtag) {
+    window.gtag("event", action, {
       event_category: category,
       event_label: label,
       value: value,

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useCallback, useSyncExternalStore } from "react";
 import {
   getActivities,
   addActivity,
@@ -9,20 +9,34 @@ import {
   type ActivityType,
 } from "@/lib/utils/activities";
 
+const STORAGE_KEY = "grove_activities";
+
 /**
  * Hook for managing grove activities/changelog.
  */
 export function useActivities(groveId: string) {
-  const [activities, setActivities] = useState<Activity[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  // Use useSyncExternalStore for localStorage sync
+  const subscribe = useCallback(
+    (callback: () => void) => {
+      const handleStorage = (e: StorageEvent) => {
+        if (e.key?.startsWith(STORAGE_KEY)) callback();
+      };
+      window.addEventListener("storage", handleStorage);
+      return () => window.removeEventListener("storage", handleStorage);
+    },
+    []
+  );
 
-  // Load activities on mount
-  useEffect(() => {
-    setIsLoading(true);
-    const loaded = getActivities(groveId);
-    setActivities(loaded);
-    setIsLoading(false);
+  const getSnapshot = useCallback(() => {
+    if (typeof window === "undefined") return JSON.stringify([]);
+    return JSON.stringify(getActivities(groveId));
   }, [groveId]);
+
+  const getServerSnapshot = useCallback(() => JSON.stringify([]), []);
+
+  const activitiesJson = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+  const activities = JSON.parse(activitiesJson) as Activity[];
+  const isLoading = false;
 
   // Log a new activity
   const logActivity = useCallback(
@@ -36,7 +50,10 @@ export function useActivities(groveId: string) {
         message: generateActivityMessage(type, plantName),
       });
 
-      setActivities((prev) => [activity, ...prev].slice(0, 100));
+      // Dispatch storage event to trigger useSyncExternalStore refresh
+      window.dispatchEvent(
+        new StorageEvent("storage", { key: `${STORAGE_KEY}_${groveId}` })
+      );
       return activity;
     },
     [groveId]

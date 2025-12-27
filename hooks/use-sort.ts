@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useCallback, useSyncExternalStore } from "react";
 
 export type SortOption = "urgency" | "name-asc" | "name-desc" | "recent" | "type";
 
@@ -14,33 +14,49 @@ export const SORT_OPTIONS: { value: SortOption; label: string }[] = [
   { value: "type", label: "Plant Type" },
 ];
 
+function isValidSortOption(value: string): value is SortOption {
+  return SORT_OPTIONS.map((o) => o.value).includes(value as SortOption);
+}
+
 /**
  * Hook for managing plant sort preference.
- * Persists to localStorage.
+ * Persists to localStorage using useSyncExternalStore for proper hydration.
  */
 export function useSortOption(groveId: string) {
-  const [sortOption, setSortOptionState] = useState<SortOption>("urgency");
-  const [isLoaded, setIsLoaded] = useState(false);
+  const storageKey = `${STORAGE_KEY}_${groveId}`;
 
-  useEffect(() => {
-    const stored = localStorage.getItem(`${STORAGE_KEY}_${groveId}`);
-    if (stored && isValidSortOption(stored)) {
-      setSortOptionState(stored as SortOption);
-    }
-    setIsLoaded(true);
-  }, [groveId]);
+  const subscribe = useCallback(
+    (callback: () => void) => {
+      const handleStorage = (e: StorageEvent) => {
+        if (e.key === storageKey) callback();
+      };
+      window.addEventListener("storage", handleStorage);
+      return () => window.removeEventListener("storage", handleStorage);
+    },
+    [storageKey]
+  );
+
+  const getSnapshot = useCallback(() => {
+    if (typeof window === "undefined") return "urgency";
+    const stored = localStorage.getItem(storageKey);
+    return stored && isValidSortOption(stored) ? stored : "urgency";
+  }, [storageKey]);
+
+  const getServerSnapshot = useCallback(() => "urgency" as SortOption, []);
+
+  const sortOption = useSyncExternalStore(
+    subscribe,
+    getSnapshot,
+    getServerSnapshot
+  ) as SortOption;
 
   const setSortOption = useCallback(
     (option: SortOption) => {
-      setSortOptionState(option);
-      localStorage.setItem(`${STORAGE_KEY}_${groveId}`, option);
+      localStorage.setItem(storageKey, option);
+      window.dispatchEvent(new StorageEvent("storage", { key: storageKey }));
     },
-    [groveId]
+    [storageKey]
   );
 
-  return { sortOption, setSortOption, isLoaded };
-}
-
-function isValidSortOption(value: string): value is SortOption {
-  return SORT_OPTIONS.map((o) => o.value).includes(value as SortOption);
+  return { sortOption, setSortOption, isLoaded: true };
 }

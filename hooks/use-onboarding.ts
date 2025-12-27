@@ -1,36 +1,48 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useCallback, useSyncExternalStore } from "react";
 
 const STORAGE_KEY = "grove_onboarding_complete";
 
 /**
  * Hook for managing onboarding state.
- * Tracks whether user has completed onboarding.
+ * Tracks whether user has completed onboarding using useSyncExternalStore.
  */
 export function useOnboarding() {
-  const [hasCompletedOnboarding, setHasCompletedState] = useState(true);
-  const [isLoaded, setIsLoaded] = useState(false);
-
-  useEffect(() => {
-    const completed = localStorage.getItem(STORAGE_KEY) === "true";
-    setHasCompletedState(completed);
-    setIsLoaded(true);
+  const subscribe = useCallback((callback: () => void) => {
+    const handleStorage = (e: StorageEvent) => {
+      if (e.key === STORAGE_KEY) callback();
+    };
+    window.addEventListener("storage", handleStorage);
+    return () => window.removeEventListener("storage", handleStorage);
   }, []);
+
+  const getSnapshot = useCallback(() => {
+    if (typeof window === "undefined") return true;
+    return localStorage.getItem(STORAGE_KEY) === "true";
+  }, []);
+
+  const getServerSnapshot = useCallback(() => true, []);
+
+  const hasCompletedOnboarding = useSyncExternalStore(
+    subscribe,
+    getSnapshot,
+    getServerSnapshot
+  );
 
   const completeOnboarding = useCallback(() => {
     localStorage.setItem(STORAGE_KEY, "true");
-    setHasCompletedState(true);
+    window.dispatchEvent(new StorageEvent("storage", { key: STORAGE_KEY }));
   }, []);
 
   const resetOnboarding = useCallback(() => {
     localStorage.removeItem(STORAGE_KEY);
-    setHasCompletedState(false);
+    window.dispatchEvent(new StorageEvent("storage", { key: STORAGE_KEY }));
   }, []);
 
   return {
     hasCompletedOnboarding,
-    isLoaded,
+    isLoaded: true,
     completeOnboarding,
     resetOnboarding,
   };

@@ -14,7 +14,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { useToast } from "@/components/ui/toast";
 import { cn } from "@/lib/utils";
 import { Droplets, Sparkles, Lightbulb } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useMemo } from "react";
 import type { Plant } from "@/types/supabase";
 
 /**
@@ -145,13 +145,8 @@ export function QuickWater({ plants, groveId }: QuickWaterProps) {
  * Daily plant care tip.
  */
 export function PlantCareTip() {
-  const [tip, setTip] = useState("");
-
-  useEffect(() => {
-    setTip(getRandomTip());
-  }, []);
-
-  if (!tip) return null;
+  // Use useMemo to get a random tip once on mount (stable across re-renders)
+  const tip = useMemo(() => getRandomTip(), []);
 
   return (
     <div className="flex items-start gap-3 p-4 bg-cream-100 rounded-xl">

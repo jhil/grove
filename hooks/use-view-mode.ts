@@ -1,41 +1,58 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useCallback, useSyncExternalStore } from "react";
 
 export type ViewMode = "gallery" | "list" | "compact";
 
 const STORAGE_KEY = "grove_view_mode";
 
+function isValidViewMode(value: string): value is ViewMode {
+  return ["gallery", "list", "compact"].includes(value);
+}
+
 /**
  * Hook for managing plant view mode preference.
- * Persists to localStorage.
+ * Persists to localStorage using useSyncExternalStore for proper hydration.
  */
 export function useViewMode(groveId: string) {
-  const [viewMode, setViewModeState] = useState<ViewMode>("gallery");
-  const [isLoaded, setIsLoaded] = useState(false);
+  const storageKey = `${STORAGE_KEY}_${groveId}`;
 
-  // Load from localStorage on mount
-  useEffect(() => {
-    const stored = localStorage.getItem(`${STORAGE_KEY}_${groveId}`);
-    if (stored && isValidViewMode(stored)) {
-      setViewModeState(stored as ViewMode);
-    }
-    setIsLoaded(true);
-  }, [groveId]);
+  // Use useSyncExternalStore for localStorage to avoid hydration issues
+  const subscribe = useCallback(
+    (callback: () => void) => {
+      const handleStorage = (e: StorageEvent) => {
+        if (e.key === storageKey) callback();
+      };
+      window.addEventListener("storage", handleStorage);
+      return () => window.removeEventListener("storage", handleStorage);
+    },
+    [storageKey]
+  );
+
+  const getSnapshot = useCallback(() => {
+    if (typeof window === "undefined") return "gallery";
+    const stored = localStorage.getItem(storageKey);
+    return stored && isValidViewMode(stored) ? stored : "gallery";
+  }, [storageKey]);
+
+  const getServerSnapshot = useCallback(() => "gallery" as ViewMode, []);
+
+  const viewMode = useSyncExternalStore(
+    subscribe,
+    getSnapshot,
+    getServerSnapshot
+  ) as ViewMode;
 
   const setViewMode = useCallback(
     (mode: ViewMode) => {
-      setViewModeState(mode);
-      localStorage.setItem(`${STORAGE_KEY}_${groveId}`, mode);
+      localStorage.setItem(storageKey, mode);
+      // Dispatch storage event to trigger re-render
+      window.dispatchEvent(new StorageEvent("storage", { key: storageKey }));
     },
-    [groveId]
+    [storageKey]
   );
 
-  return { viewMode, setViewMode, isLoaded };
-}
-
-function isValidViewMode(value: string): value is ViewMode {
-  return ["gallery", "list", "compact"].includes(value);
+  return { viewMode, setViewMode, isLoaded: true };
 }
 
 /**

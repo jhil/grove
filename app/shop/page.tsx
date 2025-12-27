@@ -72,7 +72,7 @@ export default function ShopPage() {
             <div className="flex items-center gap-2 mb-6">
               <Sparkles className="w-5 h-5 text-terracotta-400" />
               <h2 className="text-lg font-medium text-foreground">
-                Editor's Picks
+                Editor&apos;s Picks
               </h2>
             </div>
             <StaggerContainer
@@ -165,7 +165,7 @@ export default function ShopPage() {
           <p className="text-xs text-muted-foreground/70 max-w-xl mx-auto">
             Some links on this page are affiliate links. We may earn a small
             commission if you make a purchase, at no extra cost to you. This
-            helps support Grove's development.
+            helps support Grove&apos;s development.
           </p>
         </motion.section>
       </main>

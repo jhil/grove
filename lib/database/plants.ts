@@ -55,7 +55,7 @@ export async function createPlant(plant: NewPlant): Promise<Plant> {
 
   const { data, error } = await supabase
     .from("plants")
-    .insert(plant as any)
+    .insert(plant)
     .select()
     .single();
 
@@ -77,7 +77,7 @@ export async function updatePlant(
 
   const { data, error } = await supabase
     .from("plants")
-    .update(updates as any)
+    .update(updates)
     .eq("id", id)
     .select()
     .single();

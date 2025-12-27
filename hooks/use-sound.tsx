@@ -2,6 +2,13 @@
 
 import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from "react";
 
+// Type declaration for webkit prefixed AudioContext
+declare global {
+  interface Window {
+    webkitAudioContext?: typeof AudioContext;
+  }
+}
+
 /**
  * Sound effects hook for Plangrove.
  * Uses free sound effects and Web Audio API for playback.
@@ -25,8 +32,10 @@ export function useSound(options: UseSoundOptions = {}) {
   useEffect(() => {
     const initAudio = () => {
       if (!audioContextRef.current) {
-        audioContextRef.current = new (window.AudioContext ||
-          (window as any).webkitAudioContext)();
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        if (AudioContextClass) {
+          audioContextRef.current = new AudioContextClass();
+        }
       }
     };
 

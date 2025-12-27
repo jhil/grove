@@ -93,7 +93,9 @@ interface PlantCareTipProps {
 
 export function PlantCareTip({ plantType }: PlantCareTipProps) {
   const recommendation = getWateringRecommendation(plantType);
-  const tip = recommendation.tips[Math.floor(Math.random() * recommendation.tips.length)];
+
+  // Use the first tip for consistency (deterministic)
+  const tip = recommendation.tips[0];
 
   return (
     <p className="text-xs text-muted-foreground italic">

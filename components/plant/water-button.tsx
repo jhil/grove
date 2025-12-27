@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Button } from "@/components/ui/button";
 import { useWaterPlant } from "@/hooks/use-plants";
@@ -35,6 +35,18 @@ export function WaterButton({
 
   const [justWatered, setJustWatered] = useState(false);
   const [showSplash, setShowSplash] = useState(false);
+
+  // Precomputed droplet positions (static, deterministic for consistency)
+  const dropletPositions = [
+    { x: 45, y: 0 },
+    { x: 32, y: 32 },
+    { x: 0, y: 48 },
+    { x: -32, y: 35 },
+    { x: -50, y: 0 },
+    { x: -35, y: -35 },
+    { x: 0, y: -45 },
+    { x: 38, y: -38 },
+  ];
 
   const handleWater = async () => {
     try {
@@ -90,31 +102,24 @@ export function WaterButton({
             </motion.div>
 
             {/* Water droplets */}
-            {[...Array(8)].map((_, i) => {
-              const angle = (i / 8) * Math.PI * 2;
-              const distance = 40 + Math.random() * 20;
-              const x = Math.cos(angle) * distance;
-              const y = Math.sin(angle) * distance;
-
-              return (
-                <motion.div
-                  key={i}
-                  className="absolute left-1/2 top-1/2 w-2 h-2 rounded-full bg-water-400"
-                  initial={{ x: 0, y: 0, scale: 1, opacity: 1 }}
-                  animate={{
-                    x: x,
-                    y: y,
-                    scale: 0,
-                    opacity: 0,
-                  }}
-                  transition={{
-                    duration: 0.5,
-                    delay: i * 0.02,
-                    ease: "easeOut",
-                  }}
-                />
-              );
-            })}
+            {dropletPositions.map((pos, i) => (
+              <motion.div
+                key={i}
+                className="absolute left-1/2 top-1/2 w-2 h-2 rounded-full bg-water-400"
+                initial={{ x: 0, y: 0, scale: 1, opacity: 1 }}
+                animate={{
+                  x: pos.x,
+                  y: pos.y,
+                  scale: 0,
+                  opacity: 0,
+                }}
+                transition={{
+                  duration: 0.5,
+                  delay: i * 0.02,
+                  ease: "easeOut",
+                }}
+              />
+            ))}
 
             {/* Sparkles */}
             {[...Array(4)].map((_, i) => (

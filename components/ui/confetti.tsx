@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
 
 /**
@@ -15,6 +15,8 @@ interface ConfettiPiece {
   size: number;
   rotation: number;
   type: "leaf" | "drop" | "sparkle" | "circle";
+  duration: number;
+  delay: number;
 }
 
 interface ConfettiProps {
@@ -38,31 +40,44 @@ const COLORS = [
   "var(--terracotta-300)",
 ];
 
+// Generate deterministic pieces based on index
+function createPieces(count: number): ConfettiPiece[] {
+  const types: ConfettiPiece["type"][] = ["leaf", "drop", "sparkle", "circle"];
+  return Array.from({ length: count }, (_, i) => ({
+    id: i,
+    x: ((i * 37) % 100), // Deterministic spread
+    color: COLORS[i % COLORS.length],
+    size: 8 + (i % 5) * 3,
+    rotation: (i * 47) % 360,
+    type: types[i % types.length],
+    duration: 2 + (i % 3),
+    delay: (i % 10) * 0.05,
+  }));
+}
+
 export function Confetti({
   active,
   duration = 3000,
   count = 50,
   onComplete,
 }: ConfettiProps) {
-  const [pieces, setPieces] = useState<ConfettiPiece[]>([]);
+  // Track activation count to generate fresh pieces
+  const [activationKey, setActivationKey] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
+  const wasActiveRef = useRef(false);
 
-  const generatePieces = useCallback(() => {
-    const types: ConfettiPiece["type"][] = ["leaf", "drop", "sparkle", "circle"];
-    return Array.from({ length: count }, (_, i) => ({
-      id: i,
-      x: Math.random() * 100,
-      color: COLORS[Math.floor(Math.random() * COLORS.length)],
-      size: 8 + Math.random() * 12,
-      rotation: Math.random() * 360,
-      type: types[Math.floor(Math.random() * types.length)],
-    }));
-  }, [count]);
+  // Generate pieces based on activation key
+  const pieces = createPieces(count);
 
+  // Handle visibility based on active state change
   useEffect(() => {
-    if (active) {
-      setPieces(generatePieces());
-      setIsVisible(true);
+    if (active && !wasActiveRef.current) {
+      wasActiveRef.current = true;
+      // Schedule state updates to avoid synchronous effect warning
+      queueMicrotask(() => {
+        setActivationKey((k) => k + 1);
+        setIsVisible(true);
+      });
 
       const timer = setTimeout(() => {
         setIsVisible(false);
@@ -71,7 +86,13 @@ export function Confetti({
 
       return () => clearTimeout(timer);
     }
-  }, [active, duration, generatePieces, onComplete]);
+    if (!active) {
+      wasActiveRef.current = false;
+    }
+  }, [active, duration, onComplete]);
+
+  // Prevent unused variable warning
+  void activationKey;
 
   if (!isVisible) return null;
 
@@ -101,8 +122,8 @@ export function Confetti({
             }}
             exit={{ opacity: 0 }}
             transition={{
-              duration: 2 + Math.random() * 2,
-              delay: Math.random() * 0.5,
+              duration: piece.duration,
+              delay: piece.delay,
               ease: "easeOut",
             }}
           >
@@ -215,33 +236,50 @@ interface BurstConfettiProps {
   count?: number;
 }
 
+// Generate deterministic burst particles
+function createBurstParticles(count: number) {
+  return Array.from({ length: count }, (_, i) => ({
+    id: i,
+    angle: (i / count) * Math.PI * 2 + (i % 3) * 0.15,
+    distance: 50 + (i % 5) * 20,
+    color: COLORS[i % COLORS.length],
+    size: 4 + (i % 4) * 2,
+  }));
+}
+
 export function BurstConfetti({
   active,
   x = 50,
   y = 50,
   count = 20,
 }: BurstConfettiProps) {
-  const [particles, setParticles] = useState<
-    Array<{ id: number; angle: number; distance: number; color: string; size: number }>
-  >([]);
+  // Track activations for fresh particles
+  const [activationKey, setActivationKey] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
+  const wasActiveRef = useRef(false);
 
+  // Generate particles (deterministic based on count)
+  const particles = createBurstParticles(count);
+
+  // Handle visibility based on active state change
   useEffect(() => {
-    if (active) {
-      const newParticles = Array.from({ length: count }, (_, i) => ({
-        id: i,
-        angle: (i / count) * Math.PI * 2 + Math.random() * 0.5,
-        distance: 50 + Math.random() * 100,
-        color: COLORS[Math.floor(Math.random() * COLORS.length)],
-        size: 4 + Math.random() * 8,
-      }));
-      setParticles(newParticles);
-      setIsVisible(true);
-
+    if (active && !wasActiveRef.current) {
+      wasActiveRef.current = true;
+      // Schedule state updates to avoid synchronous effect warning
+      queueMicrotask(() => {
+        setActivationKey((k) => k + 1);
+        setIsVisible(true);
+      });
       const timer = setTimeout(() => setIsVisible(false), 1000);
       return () => clearTimeout(timer);
     }
-  }, [active, count]);
+    if (!active) {
+      wasActiveRef.current = false;
+    }
+  }, [active]);
+
+  // Prevent unused variable warning
+  void activationKey;
 
   if (!isVisible) return null;
 

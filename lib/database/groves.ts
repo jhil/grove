@@ -37,7 +37,7 @@ export async function createGrove(grove: NewGrove): Promise<Grove> {
 
   const { data, error } = await supabase
     .from("groves")
-    .insert(grove as any)
+    .insert(grove)
     .select()
     .single();
 
@@ -59,7 +59,7 @@ export async function updateGrove(
 
   const { data, error } = await supabase
     .from("groves")
-    .update(updates as any)
+    .update(updates)
     .eq("id", id)
     .select()
     .single();
