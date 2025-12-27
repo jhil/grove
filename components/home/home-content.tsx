@@ -9,6 +9,7 @@ import { motion, useInView } from "motion/react";
 import { useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { AuthButton } from "@/components/auth/auth-dialog";
 import { Leaf, Users, Droplets, Share2, ArrowRight, Sparkles } from "lucide-react";
 
 /**
@@ -90,8 +91,21 @@ export function HomeContent() {
       {/* Organic texture overlay */}
       <div className="fixed inset-0 pointer-events-none opacity-[0.015] bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIj48ZmlsdGVyIGlkPSJuIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iLjciIG51bU9jdGF2ZXM9IjEwIiBzdGl0Y2hUaWxlcz0ic3RpdGNoIi8+PC9maWx0ZXI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsdGVyPSJ1cmwoI24pIi8+PC9zdmc+')]" />
 
+      {/* Navigation */}
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-sm border-b border-border/50">
+        <div className="container mx-auto px-4 py-3 flex items-center justify-between">
+          <Link href="/" className="flex items-center gap-2">
+            <div className="w-8 h-8 rounded-full bg-sage-100 flex items-center justify-center">
+              <Leaf className="w-4 h-4 text-sage-600" />
+            </div>
+            <span className="font-semibold text-foreground">Plangrove</span>
+          </Link>
+          <AuthButton />
+        </div>
+      </nav>
+
       {/* Hero Section */}
-      <header className="relative overflow-hidden">
+      <header className="relative overflow-hidden pt-16">
         {/* Animated background blobs */}
         <div className="absolute inset-0 -z-10">
           <motion.div

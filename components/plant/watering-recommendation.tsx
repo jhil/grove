@@ -5,13 +5,16 @@ import {
   isIntervalRecommended,
 } from "@/lib/utils/watering-recommendations";
 import { cn } from "@/lib/utils";
-import { Info, CheckCircle, AlertTriangle } from "lucide-react";
+import { Info, CheckCircle, AlertTriangle, Droplets } from "lucide-react";
+import type { PlantSpecies } from "@/lib/data/plants";
 
 /**
  * Watering recommendation display component.
+ * Uses plant database data when available for accurate recommendations.
  */
 interface WateringRecommendationProps {
   plantType: string;
+  selectedPlant?: PlantSpecies | null;
   currentInterval?: number;
   onIntervalChange?: (interval: number) => void;
   className?: string;
@@ -19,13 +22,34 @@ interface WateringRecommendationProps {
 
 export function WateringRecommendation({
   plantType,
+  selectedPlant,
   currentInterval,
   onIntervalChange,
   className,
 }: WateringRecommendationProps) {
-  const recommendation = getWateringRecommendation(plantType);
+  // Use plant database data if available, otherwise fall back to generic recommendations
+  const recommendation = selectedPlant
+    ? {
+        min: selectedPlant.wateringInterval.min,
+        ideal: selectedPlant.wateringInterval.ideal,
+        max: selectedPlant.wateringInterval.max,
+        tips: getWateringTipsForPlant(selectedPlant),
+      }
+    : getWateringRecommendation(plantType);
+
+  // Check if current interval is within recommended range
   const check = currentInterval
-    ? isIntervalRecommended(plantType, currentInterval)
+    ? selectedPlant
+      ? {
+          isRecommended:
+            currentInterval >= selectedPlant.wateringInterval.min &&
+            currentInterval <= selectedPlant.wateringInterval.max,
+          suggestion:
+            currentInterval < selectedPlant.wateringInterval.min
+              ? `${selectedPlant.commonName} prefers less frequent watering. Try ${selectedPlant.wateringInterval.ideal} days.`
+              : `${selectedPlant.commonName} may need more frequent watering. Try ${selectedPlant.wateringInterval.ideal} days.`,
+        }
+      : isIntervalRecommended(plantType, currentInterval)
     : null;
 
   return (
@@ -102,4 +126,45 @@ export function PlantCareTip({ plantType }: PlantCareTipProps) {
       {tip}
     </p>
   );
+}
+
+/**
+ * Generate watering tips based on plant database data.
+ */
+function getWateringTipsForPlant(plant: PlantSpecies): string[] {
+  const tips: string[] = [];
+
+  // Sunlight tip
+  if (plant.sunlight === "low") {
+    tips.push(`${plant.commonName} does well in low light conditions.`);
+  } else if (plant.sunlight === "high") {
+    tips.push(`${plant.commonName} needs bright, direct sunlight.`);
+  } else {
+    tips.push(`${plant.commonName} prefers indirect or filtered light.`);
+  }
+
+  // Humidity tip
+  if (plant.humidity === "high") {
+    tips.push("Mist regularly or use a humidity tray for best results.");
+  } else if (plant.humidity === "low") {
+    tips.push("Tolerates dry air well - perfect for heated/AC spaces.");
+  }
+
+  // Difficulty tip
+  if (plant.difficulty === "easy") {
+    tips.push("Great for beginners - very forgiving of occasional neglect.");
+  } else if (plant.difficulty === "expert") {
+    tips.push("Requires consistent care - best for experienced plant parents.");
+  }
+
+  // Category-specific tips
+  if (plant.category === "succulent" || plant.category === "cactus") {
+    tips.push("Let soil dry completely between waterings to prevent root rot.");
+  } else if (plant.category === "fern") {
+    tips.push("Keep soil consistently moist but never soggy.");
+  } else if (plant.category === "tropical") {
+    tips.push("Water when top inch of soil feels dry.");
+  }
+
+  return tips;
 }

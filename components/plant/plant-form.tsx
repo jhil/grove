@@ -1,17 +1,17 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Dialog } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Select, SelectItem } from "@/components/ui/select";
+import { Combobox, type ComboboxOption } from "@/components/ui/combobox";
 import { PhotoUploadButton } from "@/components/plant/plant-photo";
 import { NameGenerator } from "@/components/plant/name-generator";
 import { WateringRecommendation } from "@/components/plant/watering-recommendation";
 import { BurstConfetti } from "@/components/ui/confetti";
 import { useCreatePlant, useUpdatePlant } from "@/hooks/use-plants";
-import { PLANT_TYPES, getDefaultInterval, getPlantType } from "@/lib/constants";
+import { searchPlants, getPlantById, CATEGORY_INFO, type PlantSpecies } from "@/lib/data/plants";
 import { Leaf, Sparkles } from "lucide-react";
 import type { Plant, NewPlant, PlantUpdate } from "@/types/supabase";
 
@@ -45,12 +45,32 @@ export function PlantForm({
 
   // Form state
   const [name, setName] = useState("");
-  const [type, setType] = useState("other");
+  const [plantId, setPlantId] = useState<string | null>(null); // ID from plant database
+  const [type, setType] = useState("other"); // Category
   const [interval, setInterval] = useState(7);
   const [notes, setNotes] = useState("");
   const [photo, setPhoto] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showBurst, setShowBurst] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  // Get selected plant from database
+  const selectedPlant = plantId ? getPlantById(plantId) : null;
+
+  // Search results for combobox
+  const plantOptions = useMemo((): ComboboxOption[] => {
+    const results = searchPlants(searchQuery, 50);
+    return results.map((p) => ({
+      value: p.id,
+      label: p.commonName,
+      description: p.scientificName,
+      icon: <span>{p.emoji}</span>,
+      group: CATEGORY_INFO[p.category]?.label || p.category,
+    }));
+  }, [searchQuery]);
+
+  // Get emoji for current selection
+  const currentEmoji = selectedPlant?.emoji || CATEGORY_INFO[type as keyof typeof CATEGORY_INFO]?.emoji || "🪴";
 
   // Reset form when dialog opens/closes or plant changes
   useEffect(() => {
@@ -61,22 +81,31 @@ export function PlantForm({
         setInterval(plant.watering_interval);
         setNotes(plant.notes || "");
         setPhoto(plant.photo || null);
+        // Try to find matching plant in database
+        const matchingPlant = getPlantById(plant.type);
+        setPlantId(matchingPlant ? plant.type : null);
       } else {
         setName("");
+        setPlantId(null);
         setType("other");
         setInterval(7);
         setNotes("");
         setPhoto(null);
       }
       setShowBurst(false);
+      setSearchQuery("");
     }
   }, [open, plant]);
 
-  // Update interval when type changes (only for new plants)
-  const handleTypeChange = (newType: string) => {
-    setType(newType);
-    if (!isEditing) {
-      setInterval(getDefaultInterval(newType));
+  // Update type and interval when plant selection changes
+  const handlePlantSelect = (selectedId: string) => {
+    setPlantId(selectedId);
+    const plantData = getPlantById(selectedId);
+    if (plantData) {
+      setType(plantData.category);
+      if (!isEditing) {
+        setInterval(plantData.wateringInterval.ideal);
+      }
     }
   };
 
@@ -87,11 +116,14 @@ export function PlantForm({
 
     setIsSubmitting(true);
 
+    // Store plantId if selected from database, otherwise store category
+    const typeToStore = plantId || type;
+
     try {
       if (isEditing && plant) {
         const updates: PlantUpdate = {
           name: name.trim(),
-          type,
+          type: typeToStore,
           watering_interval: interval,
           notes: notes.trim() || null,
           photo: photo,
@@ -106,7 +138,7 @@ export function PlantForm({
         const newPlant: NewPlant = {
           grove_id: groveId,
           name: name.trim(),
-          type,
+          type: typeToStore,
           watering_interval: interval,
           notes: notes.trim() || null,
           photo: photo,
@@ -124,8 +156,6 @@ export function PlantForm({
       setIsSubmitting(false);
     }
   };
-
-  const plantType = getPlantType(type);
 
   return (
     <Dialog
@@ -155,14 +185,14 @@ export function PlantForm({
               scale: showBurst ? [1, 1.2, 1] : 1,
             }}
             transition={{ duration: 0.3 }}
-            key={type}
+            key={plantId || type}
           >
             <motion.span
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ type: "spring", stiffness: 300 }}
             >
-              {plantType.emoji}
+              {currentEmoji}
             </motion.span>
           </motion.div>
         </motion.div>
@@ -205,20 +235,22 @@ export function PlantForm({
           <label className="text-sm font-medium text-foreground">
             Plant Type
           </label>
-          <Select
-            value={type}
-            onValueChange={handleTypeChange}
-            placeholder="Select a type..."
-          >
-            {PLANT_TYPES.map((plantType) => (
-              <SelectItem key={plantType.value} value={plantType.value}>
-                <span className="flex items-center gap-2">
-                  <span>{plantType.emoji}</span>
-                  <span>{plantType.label}</span>
-                </span>
-              </SelectItem>
-            ))}
-          </Select>
+          <Combobox
+            value={plantId || ""}
+            onValueChange={handlePlantSelect}
+            options={plantOptions}
+            placeholder="Search for a plant..."
+            searchPlaceholder="Type to search 250+ plants..."
+            emptyMessage="No plants found. Try a different search."
+            onSearch={setSearchQuery}
+            allowCustom={false}
+            maxHeight={250}
+          />
+          {selectedPlant && (
+            <p className="text-xs text-muted-foreground">
+              {selectedPlant.scientificName} - {CATEGORY_INFO[selectedPlant.category]?.label}
+            </p>
+          )}
         </motion.div>
 
         {/* Watering Interval */}
@@ -249,6 +281,7 @@ export function PlantForm({
           </div>
           <WateringRecommendation
             plantType={type}
+            selectedPlant={selectedPlant}
             currentInterval={interval}
             onIntervalChange={setInterval}
           />

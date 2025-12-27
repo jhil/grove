@@ -9,7 +9,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { PlantViews } from "@/components/plant/plant-views";
 import { PlantForm } from "@/components/plant/plant-form";
 import { GroveHeader } from "@/components/grove/grove-header";
-import { CareSummary } from "@/components/grove/grove-stats";
 import { QuickWater, PlantCareTip } from "@/components/grove/grove-health";
 import { ViewModeSelector } from "@/components/grove/view-mode-selector";
 import { SortSelector } from "@/components/grove/sort-selector";
@@ -112,10 +111,9 @@ export default function GrovePage({ params }: GrovePageProps) {
         {/* Grove Header with name and share functionality */}
         <GroveHeader grove={grove} />
 
-        {/* Care Summary & Quick Actions */}
+        {/* Quick Actions */}
         {plants && plants.length > 0 && (
-          <div className="mt-6 space-y-4">
-            <CareSummary plants={plants} />
+          <div className="mt-6">
             <QuickWater plants={plants} groveId={id} />
           </div>
         )}
