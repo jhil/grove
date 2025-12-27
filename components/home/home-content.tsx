@@ -71,7 +71,7 @@ export function HomeContent() {
   return (
     <div className="min-h-screen bg-background">
       {/* Navigation - minimal, full width */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-background/90 backdrop-blur-sm">
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-background/90 backdrop-blur-sm" aria-label="Main navigation">
         <div className="flex items-center justify-between px-6 py-4 lg:px-12">
           <Link href="/" className="flex items-center gap-2 group">
             <div className="w-7 h-7 rounded-lg bg-sage-100 flex items-center justify-center transition-colors group-hover:bg-sage-200">
@@ -84,7 +84,7 @@ export function HomeContent() {
       </nav>
 
       {/* Hero - full width, asymmetric */}
-      <header className="min-h-[80vh] sm:min-h-[85vh] flex flex-col justify-center px-6 lg:px-12 pt-20">
+      <header id="main-content" className="min-h-[80vh] sm:min-h-[85vh] flex flex-col justify-center px-6 lg:px-12 pt-20">
         <div className="max-w-7xl w-full">
           <motion.p
             className="text-sm text-muted-foreground mb-4 tracking-wide uppercase"

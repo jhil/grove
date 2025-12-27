@@ -44,7 +44,7 @@ export function GroveSettings({ grove, open, onOpenChange }: GroveSettingsProps)
       });
       showToast("Grove updated!", "success");
       onOpenChange(false);
-    } catch (error) {
+    } catch {
       showToast("Failed to update grove", "error");
     } finally {
       setIsSubmitting(false);
@@ -57,7 +57,7 @@ export function GroveSettings({ grove, open, onOpenChange }: GroveSettingsProps)
       await deleteGrove.mutateAsync(grove.id);
       showToast("Grove deleted", "success");
       router.push("/");
-    } catch (error) {
+    } catch {
       showToast("Failed to delete grove", "error");
       setIsDeleting(false);
     }

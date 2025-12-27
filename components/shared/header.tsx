@@ -6,7 +6,6 @@ import { motion } from "motion/react";
 import { Leaf, ArrowLeft, ShoppingBag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AuthButton } from "@/components/auth/auth-dialog";
-import { cn } from "@/lib/utils";
 
 /**
  * App header with logo and optional back navigation.

@@ -5,7 +5,7 @@ import {
   isIntervalRecommended,
 } from "@/lib/utils/watering-recommendations";
 import { cn } from "@/lib/utils";
-import { Info, CheckCircle, AlertTriangle, Droplets } from "lucide-react";
+import { Info, CheckCircle, AlertTriangle } from "lucide-react";
 import type { PlantSpecies } from "@/lib/data/plants";
 
 /**
