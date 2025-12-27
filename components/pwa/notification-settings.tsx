@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useNotifications, plantNotifications } from "@/hooks/use-notifications";
 import { useToast } from "@/components/ui/toast";
-import { cn } from "@/lib/utils/cn";
+import { cn } from "@/lib/utils";
 
 /**
  * Notification settings card for profile page
@@ -121,7 +121,7 @@ export function NotificationSettings() {
         {permission === "denied" && (
           <div className="p-3 bg-terracotta-400/10 rounded-lg">
             <p className="text-sm text-terracotta-600">
-              Notifications are blocked. To enable them, click the lock icon in your browser's
+              Notifications are blocked. To enable them, click the lock icon in your browser&apos;s
               address bar and allow notifications for this site.
             </p>
           </div>
@@ -130,7 +130,7 @@ export function NotificationSettings() {
         {/* Notification Types */}
         {permission === "granted" && (
           <div className="pt-2 space-y-2">
-            <p className="text-sm font-medium">You'll receive reminders for:</p>
+            <p className="text-sm font-medium">You&apos;ll receive reminders for:</p>
             <NotificationTypeItem
               icon="💧"
               title="Watering reminders"
@@ -154,11 +154,12 @@ export function NotificationSettings() {
 }
 
 function PermissionBadge({ permission }: { permission: string }) {
-  const config = {
+  const configs = {
     granted: { bg: "bg-sage-100", text: "text-sage-600", icon: Check, label: "Enabled" },
     denied: { bg: "bg-terracotta-100", text: "text-terracotta-600", icon: X, label: "Blocked" },
     default: { bg: "bg-cream-100", text: "text-muted-foreground", icon: Bell, label: "Off" },
-  }[permission] || config.default;
+  };
+  const config = configs[permission as keyof typeof configs] || configs.default;
 
   const Icon = config.icon;
 

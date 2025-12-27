@@ -13,7 +13,7 @@ import {
   type Milestone,
 } from "@/lib/utils/milestones";
 import type { Plant } from "@/types/supabase";
-import { cn } from "@/lib/utils/cn";
+import { cn } from "@/lib/utils";
 
 interface PlantAgeProps {
   plant: Plant;

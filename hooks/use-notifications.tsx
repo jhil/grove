@@ -77,9 +77,8 @@ export function useNotifications() {
           await registration.showNotification(title, {
             icon: "/icons/icon-192.svg",
             badge: "/icons/icon-192.svg",
-            vibrate: [100, 50, 100],
             ...options,
-          });
+          } as NotificationOptions);
           return true;
         }
 

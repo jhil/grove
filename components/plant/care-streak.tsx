@@ -10,7 +10,7 @@ import {
   daysUntilStreakBreaks,
 } from "@/lib/utils/streaks";
 import type { Plant } from "@/types/supabase";
-import { cn } from "@/lib/utils/cn";
+import { cn } from "@/lib/utils";
 
 interface CareStreakProps {
   plant: Plant;

@@ -19,7 +19,7 @@ import {
   type DailyWateringStats,
   type GroveAnalytics,
 } from "@/lib/database/analytics";
-import { cn } from "@/lib/utils/cn";
+import { cn } from "@/lib/utils";
 import type { Plant } from "@/types/supabase";
 
 interface GroveAnalyticsDashboardProps {

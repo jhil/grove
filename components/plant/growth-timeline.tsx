@@ -14,7 +14,7 @@ import {
   addPlantPhoto,
   deletePlantPhoto,
 } from "@/lib/database/plant-photos";
-import { cn } from "@/lib/utils/cn";
+import { cn } from "@/lib/utils";
 import type { PlantPhoto, Plant } from "@/types/supabase";
 
 interface GrowthTimelineProps {

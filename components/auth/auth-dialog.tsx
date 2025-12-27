@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/hooks/use-auth";
 import { useToast } from "@/components/ui/toast";
-import { cn } from "@/lib/utils/cn";
+import { cn } from "@/lib/utils";
 import { Leaf, Mail, Lock, User, Loader2 } from "lucide-react";
 
 /**
