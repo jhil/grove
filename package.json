@@ -9,7 +9,11 @@
     "preview": "opennextjs-cloudflare preview",
     "deploy": "opennextjs-cloudflare deploy",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest run --coverage"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
@@ -20,7 +24,6 @@
   "dependencies": {
     "@base-ui/react": "^1.0.0",
     "@opennextjs/cloudflare": "^1.14.7",
-    "@radix-ui/react-avatar": "^1.1.11",
     "@supabase/ssr": "^0.8.0",
     "@supabase/supabase-js": "^2.89.0",
     "@tanstack/react-query": "^5.90.12",

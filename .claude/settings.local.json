@@ -32,7 +32,8 @@
       "mcp__Sanity__list_projects",
       "Bash(pnpm run deploy:*)",
       "WebFetch(domain:plangrove.app)",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "Bash(pnpm test:run:*)"
     ]
   }
 }

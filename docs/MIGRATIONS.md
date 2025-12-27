@@ -227,3 +227,37 @@ $$ LANGUAGE plpgsql;
 - **plant-photos** storage bucket for uploading plant images
 - All tables have public read access for collaborative features
 - Profiles require authentication for insert/update
+
+---
+
+## Incremental Migrations
+
+### Migration 001: Add Care Streaks and Plant Milestones (2025-12-27)
+
+Run this SQL to add streak tracking and plant birthday fields:
+
+```sql
+-- =====================================================
+-- CARE STREAKS & MILESTONES FIELDS
+-- =====================================================
+
+-- Add streak tracking fields to plants
+ALTER TABLE plants
+ADD COLUMN IF NOT EXISTS streak_count INTEGER DEFAULT 0,
+ADD COLUMN IF NOT EXISTS best_streak INTEGER DEFAULT 0,
+ADD COLUMN IF NOT EXISTS streak_started_at TIMESTAMPTZ;
+
+-- Add plant birthday for milestones
+ALTER TABLE plants
+ADD COLUMN IF NOT EXISTS birthday TIMESTAMPTZ;
+
+-- Set default values for existing plants
+UPDATE plants SET streak_count = 0 WHERE streak_count IS NULL;
+UPDATE plants SET best_streak = 0 WHERE best_streak IS NULL;
+```
+
+**Description:**
+- `streak_count`: Current consecutive on-time waterings
+- `best_streak`: All-time best streak for this plant
+- `streak_started_at`: When the current streak began
+- `birthday`: Plant's "birthday" (when you got it) for milestone celebrations

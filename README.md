@@ -100,6 +100,15 @@ pnpm build
 
 # Production
 pnpm start
+
+# Run tests
+pnpm test
+
+# Run tests once
+pnpm test:run
+
+# Run tests with coverage
+pnpm test:coverage
 ```
 
 Visit `http://localhost:3000`
@@ -132,11 +141,12 @@ Set these in the Cloudflare dashboard (Workers & Pages > plangrove > Settings > 
 - **Framework**: Next.js 15 (App Router)
 - **Language**: TypeScript
 - **Styling**: Tailwind CSS 4
-- **Components**: Radix UI
+- **Components**: Base UI (from MUI)
 - **Icons**: Lucide React
 - **Database**: Supabase (PostgreSQL)
 - **State**: TanStack Query
 - **Animation**: Motion
+- **Testing**: Vitest + React Testing Library
 - **Deployment**: Cloudflare Workers (OpenNext)
 
 ## Project Structure
@@ -145,14 +155,17 @@ Set these in the Cloudflare dashboard (Workers & Pages > plangrove > Settings > 
 grove/
 ├── app/              # Next.js pages
 ├── components/       # React components
-│   ├── ui/           # Base UI primitives
+│   ├── ui/           # Base UI primitives (Dialog, Select, Combobox)
 │   ├── grove/        # Grove-specific components
 │   ├── plant/        # Plant-specific components
 │   └── shared/       # Shared components
 ├── hooks/            # Custom React hooks
 ├── lib/              # Utilities and clients
+│   ├── data/         # Static data (plant database)
+│   └── utils/        # Utilities (geocoding, dates)
 ├── types/            # TypeScript types
 ├── public/           # Static assets
+├── __tests__/        # Test files
 └── docs/             # Documentation
 ```
 

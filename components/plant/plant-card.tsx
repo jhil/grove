@@ -17,6 +17,7 @@ import { getPlantType, WATERING_STATUS_COLORS } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import { MoreHorizontal, Pencil, Trash2, Droplets } from "lucide-react";
 import type { Plant } from "@/types/supabase";
+import { CareStreak } from "@/components/plant/care-streak";
 
 /**
  * Card component for displaying a plant with watering status.
@@ -202,16 +203,22 @@ export function PlantCard({
           <CardContent className="p-4">
             {/* Plant Name and Type */}
             <div className="mb-3">
-              <motion.h3
-                className="font-semibold text-foreground truncate"
-                animate={{ color: isHovered ? "var(--sage-600)" : "var(--foreground)" }}
-                transition={{ duration: 0.2 }}
-              >
-                {plant.name}
-              </motion.h3>
-              <p className="text-sm text-muted-foreground">
-                {plantType.label}
-              </p>
+              <div className="flex items-start justify-between gap-2">
+                <div className="min-w-0 flex-1">
+                  <motion.h3
+                    className="font-semibold text-foreground truncate"
+                    animate={{ color: isHovered ? "var(--sage-600)" : "var(--foreground)" }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    {plant.name}
+                  </motion.h3>
+                  <p className="text-sm text-muted-foreground">
+                    {plantType.label}
+                  </p>
+                </div>
+                {/* Care Streak Badge */}
+                <CareStreak plant={plant} showDetails />
+              </div>
             </div>
 
             {/* Last Watered */}

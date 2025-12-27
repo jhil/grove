@@ -72,6 +72,12 @@ export type Database = {
           last_watered: string | null;
           created_at: string;
           updated_at: string;
+          // Care Streaks
+          streak_count: number;
+          best_streak: number;
+          streak_started_at: string | null;
+          // Plant Milestones
+          birthday: string | null;
         };
         Insert: {
           id?: string;
@@ -84,6 +90,12 @@ export type Database = {
           last_watered?: string | null;
           created_at?: string;
           updated_at?: string;
+          // Care Streaks
+          streak_count?: number;
+          best_streak?: number;
+          streak_started_at?: string | null;
+          // Plant Milestones
+          birthday?: string | null;
         };
         Update: {
           id?: string;
@@ -96,6 +108,12 @@ export type Database = {
           last_watered?: string | null;
           created_at?: string;
           updated_at?: string;
+          // Care Streaks
+          streak_count?: number;
+          best_streak?: number;
+          streak_started_at?: string | null;
+          // Plant Milestones
+          birthday?: string | null;
         };
         Relationships: [
           {

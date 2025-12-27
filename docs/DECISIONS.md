@@ -4,22 +4,23 @@ This document records key technical and design decisions for future reference.
 
 ---
 
-## 2024-12-26: Radix UI for Component Primitives
+## 2024-12-26: Base UI for Component Primitives
 
-**Decision**: Use Radix UI instead of Base UI or shadcn/ui.
+**Decision**: Use Base UI (from MUI) for all component primitives.
 
-**Context**: Needed accessible, unstyled component primitives for building custom UI.
+**Context**: Needed accessible, unstyled component primitives for building custom UI. Initially used Radix UI, but migrated to Base UI.
 
 **Rationale**:
-- Radix UI provides excellent accessibility out of the box
+- Base UI provides excellent accessibility out of the box
 - Unstyled by default, giving full design control
 - Well-documented with React-first API
-- Good composition patterns with Slot/asChild
-- Active maintenance and community
+- Good composition patterns with render props
+- Active maintenance by MUI team
+- Consistent API across all components
 
 **Trade-offs**:
 - Requires more styling work than pre-styled alternatives
-- Bundle size considerations (though tree-shakeable)
+- Fewer community examples than Radix UI
 
 ---
 
@@ -214,6 +215,64 @@ This document records key technical and design decisions for future reference.
 - Credentials visible in client bundle
 - Must ensure RLS policies are correct
 - Service role key must NEVER be exposed
+
+---
+
+## 2025-12-27: Comprehensive Plant Database
+
+**Decision**: Create a static JSON database of ~188 plant species with watering data.
+
+**Context**: Initially had only 9 hardcoded plant types. Users need accurate watering recommendations.
+
+**Rationale**:
+- Static data means no API costs or dependencies
+- Includes watering intervals (min/ideal/max days)
+- Supports fuzzy search with Combobox autocomplete
+- Categories: succulent, tropical, fern, flowering, herb, tree, vine, cactus, aquatic, carnivorous
+- Includes scientific names, sunlight/humidity requirements, difficulty ratings
+
+**Trade-offs**:
+- Manual curation required for updates
+- Not as comprehensive as paid plant APIs
+- ~188 species covers most common houseplants
+
+---
+
+## 2025-12-27: Nominatim API for Geocoding
+
+**Decision**: Use OpenStreetMap's Nominatim API for location search in weather widget.
+
+**Context**: Weather widget needed user-configurable location instead of hardcoded coordinates.
+
+**Rationale**:
+- Completely free, no API key required
+- No rate limiting for reasonable use
+- Good accuracy for city-level geocoding
+- Same free-tier philosophy as Open-Meteo weather API
+
+**Trade-offs**:
+- Must respect usage policy (no heavy use)
+- Less accurate than paid alternatives for addresses
+- Requires user-agent header
+
+---
+
+## 2025-12-27: Vitest for Testing
+
+**Decision**: Use Vitest with React Testing Library for unit/component tests.
+
+**Context**: Needed testing infrastructure compatible with Next.js 15 and TypeScript.
+
+**Rationale**:
+- Native TypeScript support
+- Fast execution with Vite
+- Jest-compatible API (easy migration)
+- Works well with React Testing Library
+- jsdom environment for component tests
+
+**Trade-offs**:
+- Separate config from Next.js
+- Some Next.js-specific features need mocking
 
 ---
 

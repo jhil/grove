@@ -14,19 +14,20 @@
 - ✅ Next.js 15 with App Router
 - ✅ TypeScript configuration
 - ✅ Tailwind CSS 4 with custom theme
-- ✅ Radix UI components
+- ✅ Base UI components (migrated from Radix UI)
 - ✅ TanStack Query setup
 - ✅ Supabase client setup (browser + server)
 - ✅ Motion animations library
 - ✅ Lucide React icons
-- 📋 Testing infrastructure (Vitest, Playwright)
+- ✅ Testing infrastructure (Vitest + React Testing Library)
 
 ### UI Components
 - ✅ Button (all variants: primary, secondary, ghost, accent, water, destructive)
 - ✅ Card (default, elevated, interactive)
 - ✅ Input, Label, Textarea
-- ✅ Dialog (modal dialogs with animations)
-- ✅ Select (dropdown with groups)
+- ✅ Dialog (Base UI modal dialogs with animations)
+- ✅ Select (Base UI dropdown)
+- ✅ Combobox (Base UI autocomplete for plant search)
 - ✅ Toast/Notifications (success, error, info variants)
 - ✅ Progress bar (with watering variant)
 - ✅ Skeleton loaders (generic + plant card + grove header)
@@ -48,8 +49,9 @@
 - ✅ Edit plant details
 - ✅ Delete plant with confirmation
 - ✅ Plant photo upload (Supabase Storage)
-- ✅ Plant type selection (8 types with default intervals)
-- ✅ Watering interval setting
+- ✅ Comprehensive plant database (~188 species with watering data)
+- ✅ Plant type autocomplete with fuzzy search
+- ✅ Watering interval auto-populated from plant database
 - ✅ Plant notes
 
 ### Water Tracking
@@ -83,6 +85,8 @@
 - ✅ Weather widget (Open-Meteo API)
 - ✅ Local temperature display
 - ✅ Weather condition icons
+- ✅ Location search with geocoding (Nominatim API)
+- ✅ Persistent location preference
 
 ### Delight Features
 - ✅ Sound effects (Web Audio API synthesized)
@@ -141,7 +145,7 @@ Dashboard showing care patterns over time.
 
 ## Technical Debt
 
-- [ ] Add comprehensive unit tests
+- [x] Add comprehensive unit tests (Vitest + React Testing Library)
 - [ ] Add E2E tests with Playwright
 - [ ] Implement error boundaries
 - [ ] Add more loading states
@@ -152,4 +156,4 @@ Dashboard showing care patterns over time.
 ---
 
 ## Last Updated
-December 27, 2024
+December 27, 2025

@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/client";
 import type { Plant, NewPlant, PlantUpdate, WateringEvent, NewWateringEvent } from "@/types/supabase";
+import { calculateStreakUpdate } from "@/lib/utils/streaks";
 
 /**
  * Database operations for plants.
@@ -90,7 +91,7 @@ export async function updatePlant(
 }
 
 /**
- * Water a plant (update last_watered timestamp) and record who did it
+ * Water a plant (update last_watered timestamp), update streak, and record who did it
  */
 export async function waterPlant(
   id: string,
@@ -98,11 +99,24 @@ export async function waterPlant(
   userInfo?: { userId: string; userName: string }
 ): Promise<Plant> {
   const supabase = createClient();
-  const now = new Date().toISOString();
+  const now = new Date();
+  const nowIso = now.toISOString();
 
-  // Update the plant's last_watered timestamp
+  // First, get the current plant to calculate streak
+  const currentPlant = await getPlant(id);
+  if (!currentPlant) {
+    throw new Error("Plant not found");
+  }
+
+  // Calculate streak updates
+  const streakUpdate = calculateStreakUpdate(currentPlant, now);
+
+  // Update the plant's last_watered timestamp and streak
   const plant = await updatePlant(id, {
-    last_watered: now,
+    last_watered: nowIso,
+    streak_count: streakUpdate.streak_count,
+    best_streak: streakUpdate.best_streak,
+    streak_started_at: streakUpdate.streak_started_at,
   });
 
   // Record the watering event (if user is authenticated)
@@ -112,7 +126,7 @@ export async function waterPlant(
       grove_id: groveId,
       user_id: userInfo?.userId || null,
       user_name: userInfo?.userName || null,
-      created_at: now,
+      created_at: nowIso,
     } as NewWateringEvent);
   } catch (error) {
     // Don't fail the watering if event logging fails

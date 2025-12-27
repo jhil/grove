@@ -2,7 +2,7 @@
 
 ## UI Primitives (`components/ui/`)
 
-All based on Radix UI, styled with Plangrove's "Greenhouse Warmth" theme.
+All based on Base UI (from MUI), styled with Plangrove's "Greenhouse Warmth" theme.
 
 ### Button
 ```tsx
@@ -76,6 +76,23 @@ import { Select, SelectItem, SelectGroup, SelectLabel } from "@/components/ui/se
     <SelectItem value="tropical">Tropical</SelectItem>
   </SelectGroup>
 </Select>
+```
+
+### Combobox
+Autocomplete component for searching the plant database.
+```tsx
+import { Combobox } from "@/components/ui/combobox";
+
+<Combobox
+  options={plantOptions}
+  value={selectedPlant}
+  onChange={setSelectedPlant}
+  placeholder="Search plants..."
+  emptyMessage="No plants found"
+  filterFn={(option, query) =>
+    option.label.toLowerCase().includes(query.toLowerCase())
+  }
+/>
 ```
 
 ### Toast

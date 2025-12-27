@@ -6,11 +6,12 @@ Plangrove is a collaborative plant care webapp built with:
 - **Next.js 15** (App Router) - Framework
 - **TypeScript** - Type safety
 - **Tailwind CSS 4** - Styling with custom "Greenhouse Warmth" theme
-- **Radix UI** - Accessible component primitives
+- **Base UI** - Accessible component primitives (from MUI)
 - **Supabase** - Database, auth (optional), real-time, storage
 - **TanStack Query** - Data fetching and caching
 - **Motion** - Animations
 - **Cloudflare Workers** - Edge deployment via OpenNext
+- **Vitest** - Unit and component testing
 
 ## Directory Structure
 
@@ -30,12 +31,13 @@ grove/
 │   ├── ui/                 # Base UI primitives
 │   │   ├── button.tsx
 │   │   ├── card.tsx
+│   │   ├── combobox.tsx    # Autocomplete for plant search
 │   │   ├── confetti.tsx
-│   │   ├── dialog.tsx
+│   │   ├── dialog.tsx      # Base UI Dialog
 │   │   ├── input.tsx
 │   │   ├── motion.tsx
 │   │   ├── progress.tsx
-│   │   ├── select.tsx
+│   │   ├── select.tsx      # Base UI Select
 │   │   ├── skeleton.tsx
 │   │   └── toast.tsx
 │   ├── grove/              # Grove-specific components
@@ -84,16 +86,26 @@ grove/
 │   │   ├── client.ts       # Browser client
 │   │   └── server.ts       # Server client
 │   ├── database/           # Database operations
-│   └── utils/              # Utilities (cn, dates, etc.)
+│   ├── data/               # Static data
+│   │   └── plants.ts       # Plant database (~188 species)
+│   └── utils/              # Utilities
+│       ├── cn.ts           # Class name merging
+│       ├── dates.ts        # Date formatting
+│       └── geocoding.ts    # Location search (Nominatim)
 │
 ├── types/                  # TypeScript type definitions
 ├── public/                 # Static assets
 │   ├── icons/              # PWA icons
 │   └── manifest.json       # PWA manifest
 ├── docs/                   # Documentation
+├── __tests__/              # Test files
+│   ├── components/         # Component tests
+│   └── lib/                # Utility tests
 │
 ├── open-next.config.ts     # OpenNext configuration
 ├── wrangler.jsonc          # Cloudflare Workers config
+├── vitest.config.ts        # Vitest configuration
+├── vitest.setup.ts         # Test setup (mocks)
 └── next.config.ts          # Next.js configuration
 ```
 
@@ -146,8 +158,10 @@ Optional authentication via Supabase Auth enables:
 2. **Human-readable IDs**: Grove IDs are slugs for better URLs
 3. **Optimistic Updates**: Water actions update instantly via TanStack Query
 4. **Real-time Sync**: Changes propagate to all viewers via Supabase realtime
-5. **Radix UI**: Accessible component primitives with full design control
+5. **Base UI**: Accessible component primitives with full design control
 6. **Edge Deployment**: Cloudflare Workers for global low latency
+7. **Static Plant Database**: ~188 species with watering data, no API dependencies
+8. **Free APIs Only**: Open-Meteo for weather, Nominatim for geocoding
 
 ## Theme: "Greenhouse Warmth"
 
@@ -184,6 +198,7 @@ Set in both `.env.local` (local) and Cloudflare dashboard (production).
 
 - **Supabase**: Database, auth, real-time, storage
 - **Open-Meteo**: Weather data (free, no API key)
+- **Nominatim** (OpenStreetMap): Geocoding for location search (free, no API key)
 
 ## Performance Considerations
 

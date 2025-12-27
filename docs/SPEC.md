@@ -36,11 +36,12 @@ Plangrove should feel like stepping into a cozy, sunlit greenhouse - warm, invit
 - **Framework**: Next.js 15 (App Router)
 - **Language**: TypeScript
 - **Styling**: Tailwind CSS 4 with custom organic theme
-- **Components**: Radix UI for accessible primitives
+- **Components**: Base UI for accessible primitives
 - **Icons**: Lucide React
 - **Database**: Supabase (PostgreSQL + Real-time)
 - **State**: TanStack Query
 - **Animation**: Motion (motion/react)
+- **Testing**: Vitest + React Testing Library
 
 ## Design System
 
