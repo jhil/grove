@@ -261,3 +261,40 @@ UPDATE plants SET best_streak = 0 WHERE best_streak IS NULL;
 - `best_streak`: All-time best streak for this plant
 - `streak_started_at`: When the current streak began
 - `birthday`: Plant's "birthday" (when you got it) for milestone celebrations
+
+---
+
+### Migration 002: Plant Growth Timeline (2025-12-27)
+
+Run this SQL to add the plant_photos table for growth timeline:
+
+```sql
+-- =====================================================
+-- PLANT PHOTOS TABLE (Growth Timeline)
+-- =====================================================
+
+CREATE TABLE IF NOT EXISTS plant_photos (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  plant_id UUID NOT NULL REFERENCES plants(id) ON DELETE CASCADE,
+  photo_url TEXT NOT NULL,
+  caption TEXT,
+  taken_at TIMESTAMPTZ DEFAULT NOW(),
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Indexes
+CREATE INDEX IF NOT EXISTS idx_plant_photos_plant_id ON plant_photos(plant_id);
+CREATE INDEX IF NOT EXISTS idx_plant_photos_taken_at ON plant_photos(taken_at);
+
+-- RLS Policies
+ALTER TABLE plant_photos ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Public plant_photos select" ON plant_photos FOR SELECT USING (true);
+CREATE POLICY "Public plant_photos insert" ON plant_photos FOR INSERT WITH CHECK (true);
+CREATE POLICY "Public plant_photos delete" ON plant_photos FOR DELETE USING (true);
+```
+
+**Description:**
+- `plant_photos`: Stores multiple photos per plant for growth tracking
+- Photos are ordered by `taken_at` date to create a timeline
+- Each photo can have an optional caption

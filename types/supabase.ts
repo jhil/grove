@@ -201,6 +201,41 @@ export type Database = {
           }
         ];
       };
+      plant_photos: {
+        Row: {
+          id: string;
+          plant_id: string;
+          photo_url: string;
+          caption: string | null;
+          taken_at: string;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          plant_id: string;
+          photo_url: string;
+          caption?: string | null;
+          taken_at?: string;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          plant_id?: string;
+          photo_url?: string;
+          caption?: string | null;
+          taken_at?: string;
+          created_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "plant_photos_plant_id_fkey";
+            columns: ["plant_id"];
+            isOneToOne: false;
+            referencedRelation: "plants";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
     };
     Views: Record<string, never>;
     Functions: Record<string, never>;
@@ -226,3 +261,7 @@ export type ProfileUpdate = Database["public"]["Tables"]["profiles"]["Update"];
 
 export type WateringEvent = Database["public"]["Tables"]["watering_events"]["Row"];
 export type NewWateringEvent = Database["public"]["Tables"]["watering_events"]["Insert"];
+
+export type PlantPhoto = Database["public"]["Tables"]["plant_photos"]["Row"];
+export type NewPlantPhoto = Database["public"]["Tables"]["plant_photos"]["Insert"];
+export type PlantPhotoUpdate = Database["public"]["Tables"]["plant_photos"]["Update"];
