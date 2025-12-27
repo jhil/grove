@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Leaf, ArrowLeft } from "lucide-react";
+import { Leaf, ArrowLeft, ShoppingBag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AuthButton } from "@/components/auth/auth-dialog";
 import { cn } from "@/lib/utils";
@@ -66,6 +66,12 @@ export function Header({
         {/* Right side: Actions + Auth */}
         <div className="flex items-center gap-3">
           {actions}
+          <Link href="/shop">
+            <Button variant="ghost" size="sm" className="gap-2 text-muted-foreground hover:text-foreground">
+              <ShoppingBag className="w-4 h-4" />
+              <span className="hidden sm:inline">Shop</span>
+            </Button>
+          </Link>
           <AuthButton />
         </div>
       </div>
