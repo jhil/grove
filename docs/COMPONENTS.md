@@ -2,12 +2,13 @@
 
 ## UI Primitives (`components/ui/`)
 
-All based on Base UI, styled with Plangrove theme.
+All based on Radix UI, styled with Plangrove's "Greenhouse Warmth" theme.
 
 ### Button
 ```tsx
 import { Button } from "@/components/ui/button";
 
+// Variants
 <Button variant="primary">Water Plant</Button>
 <Button variant="secondary">Cancel</Button>
 <Button variant="ghost">Edit</Button>
@@ -107,20 +108,298 @@ import { Skeleton, PlantCardSkeleton, GroveHeaderSkeleton } from "@/components/u
 <GroveHeaderSkeleton /> // Pre-built header loading state
 ```
 
+### Motion
+```tsx
+import { FadeIn, SlideIn, ScaleIn, StaggerContainer, StaggerItem } from "@/components/ui/motion";
+
+<FadeIn>Content fades in</FadeIn>
+<SlideIn direction="up">Slides up</SlideIn>
+<ScaleIn>Scales in</ScaleIn>
+
+<StaggerContainer>
+  <StaggerItem>Item 1</StaggerItem>
+  <StaggerItem>Item 2</StaggerItem>
+</StaggerContainer>
+```
+
+### Confetti
+```tsx
+import { Confetti, useConfetti } from "@/components/ui/confetti";
+
+const { trigger, isActive } = useConfetti();
+<Confetti active={isActive} />
+<Button onClick={trigger}>Celebrate!</Button>
+```
+
 ---
 
 ## Grove Components (`components/grove/`)
 
-TODO: Document after implementation
+### GroveHeader
+Displays grove name with share button.
+```tsx
+import { GroveHeader } from "@/components/grove/grove-header";
+
+<GroveHeader grove={grove} />
+```
+
+### GroveSettings
+Dialog for editing grove name and deleting grove.
+```tsx
+import { GroveSettings } from "@/components/grove/grove-settings";
+
+<GroveSettings grove={grove} open={open} onOpenChange={setOpen} />
+```
+
+### GroveStats
+Statistics panel showing plant count, watering needs.
+```tsx
+import { GroveStats } from "@/components/grove/grove-stats";
+
+<GroveStats plants={plants} />
+```
+
+### GroveHealth
+Health dashboard showing overall grove status.
+```tsx
+import { GroveHealth } from "@/components/grove/grove-health";
+
+<GroveHealth plants={plants} />
+```
+
+### GroveChangelog
+Activity feed showing recent grove actions.
+```tsx
+import { GroveChangelog } from "@/components/grove/grove-changelog";
+
+<GroveChangelog groveId={groveId} />
+```
+
+### ViewModeSelector
+Toggle between gallery/list/compact views.
+```tsx
+import { ViewModeSelector } from "@/components/grove/view-mode-selector";
+
+<ViewModeSelector value={viewMode} onChange={setViewMode} />
+```
+
+### SortSelector
+Dropdown for sorting plants.
+```tsx
+import { SortSelector } from "@/components/grove/sort-selector";
+
+<SortSelector value={sortBy} onChange={setSortBy} />
+```
+
+### WeatherWidget
+Local weather display using Open-Meteo.
+```tsx
+import { WeatherWidget } from "@/components/grove/weather-widget";
+
+<WeatherWidget />
+```
+
+### MyGroves
+List of groves for signed-in users.
+```tsx
+import { MyGroves } from "@/components/grove/my-groves";
+
+<MyGroves />
+```
 
 ---
 
 ## Plant Components (`components/plant/`)
 
-TODO: Document after implementation
+### PlantCard
+Main plant display card with photo, name, status.
+```tsx
+import { PlantCard } from "@/components/plant/plant-card";
+
+<PlantCard plant={plant} onWater={handleWater} onEdit={handleEdit} />
+```
+
+### PlantForm
+Form for creating/editing plants.
+```tsx
+import { PlantForm } from "@/components/plant/plant-form";
+
+<PlantForm
+  groveId={groveId}
+  plant={existingPlant} // optional for edit mode
+  onSuccess={handleSuccess}
+/>
+```
+
+### PlantGrid
+Responsive grid layout for plant cards.
+```tsx
+import { PlantGrid } from "@/components/plant/plant-grid";
+
+<PlantGrid>
+  {plants.map(plant => <PlantCard key={plant.id} plant={plant} />)}
+</PlantGrid>
+```
+
+### PlantViews
+Alternative view modes (list, compact).
+```tsx
+import { PlantListView, PlantCompactView } from "@/components/plant/plant-views";
+
+<PlantListView plants={plants} onWater={handleWater} />
+<PlantCompactView plants={plants} onWater={handleWater} />
+```
+
+### PlantPhoto
+Photo display with upload capability.
+```tsx
+import { PlantPhoto } from "@/components/plant/plant-photo";
+
+<PlantPhoto
+  src={photoUrl}
+  onUpload={handleUpload}
+  editable={true}
+/>
+```
+
+### WaterButton
+Animated water action button.
+```tsx
+import { WaterButton } from "@/components/plant/water-button";
+
+<WaterButton
+  plant={plant}
+  onWater={handleWater}
+  loading={isWatering}
+/>
+```
+
+### WateringRecommendation
+Smart watering suggestions based on plant type.
+```tsx
+import { WateringRecommendation } from "@/components/plant/watering-recommendation";
+
+<WateringRecommendation plantType="succulent" />
+```
+
+### NameGenerator
+AI-powered fun plant name suggestions.
+```tsx
+import { NameGenerator } from "@/components/plant/name-generator";
+
+<NameGenerator onSelect={setPlantName} />
+```
 
 ---
 
 ## Shared Components (`components/shared/`)
 
-TODO: Document after implementation
+### Header
+App header with logo and navigation.
+```tsx
+import { Header } from "@/components/shared/header";
+
+<Header />
+```
+
+### EmptyState
+Illustrated empty state for no plants/groves.
+```tsx
+import { EmptyState } from "@/components/shared/empty-state";
+
+<EmptyState
+  title="No plants yet"
+  description="Add your first plant to get started"
+  action={<Button>Add Plant</Button>}
+/>
+```
+
+---
+
+## Auth Components (`components/auth/`)
+
+### AuthDialog
+Sign in/up dialog with Supabase Auth.
+```tsx
+import { AuthDialog } from "@/components/auth/auth-dialog";
+
+<AuthDialog open={open} onOpenChange={setOpen} />
+```
+
+---
+
+## Custom Hooks (`hooks/`)
+
+### useGrove
+Fetch grove data.
+```tsx
+const { data: grove, isLoading, error } = useGrove(groveId);
+```
+
+### usePlants
+Plant CRUD operations with TanStack Query.
+```tsx
+const {
+  plants,
+  isLoading,
+  createPlant,
+  updatePlant,
+  deletePlant,
+  waterPlant
+} = usePlants(groveId);
+```
+
+### useAuth
+Supabase authentication state.
+```tsx
+const { user, signIn, signOut, isLoading } = useAuth();
+```
+
+### usePhotoUpload
+Upload photos to Supabase Storage.
+```tsx
+const { upload, isUploading, error } = usePhotoUpload();
+const url = await upload(file, `plants/${plantId}`);
+```
+
+### useRealtime
+Subscribe to Supabase realtime changes.
+```tsx
+useRealtime(groveId); // Auto-invalidates queries on changes
+```
+
+### useSound
+Web Audio synthesized sound effects.
+```tsx
+const { playWater, playSuccess, playClick } = useSound();
+```
+
+### useViewMode
+Persist view mode preference.
+```tsx
+const [viewMode, setViewMode] = useViewMode(); // 'gallery' | 'list' | 'compact'
+```
+
+### useSort
+Persist sort preference.
+```tsx
+const [sortBy, setSortBy] = useSort(); // 'urgency' | 'name' | 'date' | 'type'
+```
+
+### useActivities
+Fetch grove activity feed.
+```tsx
+const { activities, isLoading } = useActivities(groveId);
+```
+
+### useMyGroves
+Fetch groves for signed-in user.
+```tsx
+const { groves, isLoading } = useMyGroves();
+```
+
+### useOnboarding
+Onboarding flow state.
+```tsx
+const { showOnboarding, completeOnboarding } = useOnboarding();
+```

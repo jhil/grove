@@ -6,9 +6,11 @@ Plangrove is a collaborative plant care webapp built with:
 - **Next.js 15** (App Router) - Framework
 - **TypeScript** - Type safety
 - **Tailwind CSS 4** - Styling with custom "Greenhouse Warmth" theme
-- **Base UI** - Unstyled accessible components
-- **Supabase** - Database, auth (none), real-time, storage
+- **Radix UI** - Accessible component primitives
+- **Supabase** - Database, auth (optional), real-time, storage
 - **TanStack Query** - Data fetching and caching
+- **Motion** - Animations
+- **Cloudflare Workers** - Edge deployment via OpenNext
 
 ## Directory Structure
 
@@ -18,25 +20,81 @@ grove/
 │   ├── layout.tsx          # Root layout with providers
 │   ├── page.tsx            # Landing page
 │   ├── globals.css         # Theme and global styles
+│   ├── providers.tsx       # React context providers
+│   ├── not-found.tsx       # 404 page
 │   ├── create-grove/       # Grove creation flow
-│   └── grove/[id]/         # Grove detail view
+│   ├── grove/[id]/         # Grove detail view
+│   └── shop/               # Shop page (future)
 │
 ├── components/
-│   ├── ui/                 # Base UI primitives (Button, Card, etc.)
+│   ├── ui/                 # Base UI primitives
+│   │   ├── button.tsx
+│   │   ├── card.tsx
+│   │   ├── confetti.tsx
+│   │   ├── dialog.tsx
+│   │   ├── input.tsx
+│   │   ├── motion.tsx
+│   │   ├── progress.tsx
+│   │   ├── select.tsx
+│   │   ├── skeleton.tsx
+│   │   └── toast.tsx
 │   ├── grove/              # Grove-specific components
+│   │   ├── grove-changelog.tsx
+│   │   ├── grove-header.tsx
+│   │   ├── grove-health.tsx
+│   │   ├── grove-settings.tsx
+│   │   ├── grove-stats.tsx
+│   │   ├── my-groves.tsx
+│   │   ├── sort-selector.tsx
+│   │   ├── view-mode-selector.tsx
+│   │   └── weather-widget.tsx
 │   ├── plant/              # Plant-specific components
-│   └── shared/             # Shared components (Header, etc.)
+│   │   ├── name-generator.tsx
+│   │   ├── plant-card.tsx
+│   │   ├── plant-form.tsx
+│   │   ├── plant-grid.tsx
+│   │   ├── plant-photo.tsx
+│   │   ├── plant-views.tsx
+│   │   ├── water-button.tsx
+│   │   └── watering-recommendation.tsx
+│   ├── shared/             # Shared components
+│   │   ├── empty-state.tsx
+│   │   └── header.tsx
+│   ├── auth/               # Authentication components
+│   │   └── auth-dialog.tsx
+│   ├── home/               # Home page components
+│   ├── onboarding/         # Onboarding flow
+│   └── analytics.tsx       # Analytics component
+│
+├── hooks/                  # React hooks
+│   ├── use-activities.ts   # Activity feed data
+│   ├── use-auth.tsx        # Supabase authentication
+│   ├── use-grove.ts        # Grove data fetching
+│   ├── use-my-groves.ts    # User's groves list
+│   ├── use-onboarding.ts   # Onboarding state
+│   ├── use-photo-upload.ts # Image upload to Supabase
+│   ├── use-plants.ts       # Plant CRUD operations
+│   ├── use-realtime.ts     # Supabase realtime subscriptions
+│   ├── use-sort.ts         # Sort state management
+│   ├── use-sound.tsx       # Web Audio sound effects
+│   └── use-view-mode.ts    # View mode state
 │
 ├── lib/
-│   ├── supabase/           # Supabase clients (browser, server)
+│   ├── supabase/           # Supabase clients
+│   │   ├── client.ts       # Browser client
+│   │   └── server.ts       # Server client
 │   ├── database/           # Database operations
 │   └── utils/              # Utilities (cn, dates, etc.)
 │
-├── hooks/                  # React hooks for data fetching
 ├── types/                  # TypeScript type definitions
-├── tests/                  # Test utilities and mocks
-├── e2e/                    # Playwright E2E tests
-└── docs/                   # Documentation for agents
+├── public/                 # Static assets
+│   ├── icons/              # PWA icons
+│   └── manifest.json       # PWA manifest
+├── docs/                   # Documentation
+│
+├── open-next.config.ts     # OpenNext configuration
+├── wrangler.jsonc          # Cloudflare Workers config
+└── next.config.ts          # Next.js configuration
 ```
 
 ## Data Flow
@@ -76,16 +134,20 @@ grove/
 
 ### Access Control
 
-No authentication - all tables have public read/write access via RLS policies.
-This is intentional for collaborative plant care.
+No authentication required for basic operations - all tables have public read/write access via RLS policies. This is intentional for collaborative plant care.
+
+Optional authentication via Supabase Auth enables:
+- Tracking who watered plants
+- "My Groves" feature for signed-in users
 
 ## Key Design Decisions
 
-1. **No Auth**: Intentionally auth-free for frictionless collaboration
+1. **Optional Auth**: Auth-free by default for frictionless collaboration, sign-in for bonus features
 2. **Human-readable IDs**: Grove IDs are slugs for better URLs
-3. **Optimistic Updates**: Water actions update instantly
-4. **Real-time Sync**: Changes propagate to all viewers
-5. **Base UI**: Unstyled components for full design control
+3. **Optimistic Updates**: Water actions update instantly via TanStack Query
+4. **Real-time Sync**: Changes propagate to all viewers via Supabase realtime
+5. **Radix UI**: Accessible component primitives with full design control
+6. **Edge Deployment**: Cloudflare Workers for global low latency
 
 ## Theme: "Greenhouse Warmth"
 
@@ -96,3 +158,37 @@ Custom color palette using OKLCH:
 - **Water**: Blue for watering UI
 
 See `app/globals.css` for full theme definition.
+
+## Deployment
+
+### Infrastructure
+- **Hosting**: Cloudflare Workers (edge)
+- **Adapter**: OpenNext (@opennextjs/cloudflare)
+- **Domain**: plangrove.app
+- **Database**: Supabase (hosted PostgreSQL)
+- **Storage**: Supabase Storage (plant photos)
+
+### Build & Deploy
+```bash
+pnpm build:cf    # Build for Cloudflare
+pnpm deploy      # Deploy to production
+```
+
+### Environment Variables
+- `NEXT_PUBLIC_SUPABASE_URL` - Supabase project URL
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY` - Supabase anon key (safe to expose)
+
+Set in both `.env.local` (local) and Cloudflare dashboard (production).
+
+## External APIs
+
+- **Supabase**: Database, auth, real-time, storage
+- **Open-Meteo**: Weather data (free, no API key)
+
+## Performance Considerations
+
+- TanStack Query caching reduces redundant requests
+- Optimistic updates for instant UI feedback
+- Real-time subscriptions for live sync without polling
+- Edge deployment for global low latency
+- Static generation where possible

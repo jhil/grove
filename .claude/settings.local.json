@@ -29,7 +29,10 @@
       "Bash(npx wrangler pages project list:*)",
       "Bash(npx wrangler:*)",
       "WebFetch(domain:plangrove.jahilnbrand.workers.dev)",
-      "mcp__Sanity__list_projects"
+      "mcp__Sanity__list_projects",
+      "Bash(pnpm run deploy:*)",
+      "WebFetch(domain:plangrove.app)",
+      "Bash(ls:*)"
     ]
   }
 }

@@ -2,6 +2,21 @@
 
 A collaborative plant care app for teams, roommates, and plant lovers.
 
+**Live at [plangrove.app](https://plangrove.app)**
+
+## Features
+
+- **Collaborative Groves** - Create shared plant spaces with unique shareable links
+- **Water Tracking** - Track when plants were watered and when they need water next
+- **Smart Recommendations** - Get watering suggestions based on plant type
+- **Multiple Views** - Gallery, list, and compact view modes
+- **Real-time Sync** - Changes sync instantly across all devices
+- **Activity Changelog** - See who watered what and when
+- **Weather Widget** - Local weather to help plan plant care
+- **Sound Effects** - Satisfying audio feedback for actions
+- **Motion Animations** - Smooth, organic animations throughout
+- **Optional Sign-in** - Works without accounts, but sign in to track your contributions
+
 ## Getting Started
 
 ### Prerequisites
@@ -62,7 +77,7 @@ CREATE TABLE plants (
 CREATE INDEX idx_plants_grove_id ON plants(grove_id);
 CREATE INDEX idx_plants_last_watered ON plants(last_watered);
 
--- RLS Policies
+-- RLS Policies (public access)
 ALTER TABLE groves ENABLE ROW LEVEL SECURITY;
 ALTER TABLE plants ENABLE ROW LEVEL SECURITY;
 
@@ -74,7 +89,7 @@ ALTER PUBLICATION supabase_realtime ADD TABLE groves;
 ALTER PUBLICATION supabase_realtime ADD TABLE plants;
 ```
 
-### Running
+### Running Locally
 
 ```bash
 # Development
@@ -89,26 +104,66 @@ pnpm start
 
 Visit `http://localhost:3000`
 
-## Features
+## Deployment
 
-- Create shared plant groves with unique shareable links
-- Track watering schedules with smart recommendations
-- Multiple view modes (gallery, list, compact)
-- Real-time sync across devices
-- Activity changelog
-- Weather widget
-- Subtle sound effects and animations
+Plangrove is deployed to Cloudflare Workers using OpenNext.
+
+### Build for Cloudflare
+
+```bash
+pnpm build:cf
+```
+
+### Deploy
+
+```bash
+pnpm deploy
+```
+
+### Environment Variables (Production)
+
+Set these in the Cloudflare dashboard (Workers & Pages > plangrove > Settings > Variables):
+
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 
 ## Tech Stack
 
-- Next.js 15 (App Router)
-- TypeScript
-- Tailwind CSS 4
-- Supabase
-- TanStack Query
-- Motion
-- Radix UI
+- **Framework**: Next.js 15 (App Router)
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS 4
+- **Components**: Radix UI
+- **Icons**: Lucide React
+- **Database**: Supabase (PostgreSQL)
+- **State**: TanStack Query
+- **Animation**: Motion
+- **Deployment**: Cloudflare Workers (OpenNext)
+
+## Project Structure
+
+```
+grove/
+├── app/              # Next.js pages
+├── components/       # React components
+│   ├── ui/           # Base UI primitives
+│   ├── grove/        # Grove-specific components
+│   ├── plant/        # Plant-specific components
+│   └── shared/       # Shared components
+├── hooks/            # Custom React hooks
+├── lib/              # Utilities and clients
+├── types/            # TypeScript types
+├── public/           # Static assets
+└── docs/             # Documentation
+```
 
 ## Documentation
 
-See [docs/SPEC.md](docs/SPEC.md) for detailed specification.
+- [Architecture](docs/ARCHITECTURE.md) - System overview and data flow
+- [Components](docs/COMPONENTS.md) - Component library reference
+- [Features](docs/FEATURES.md) - Feature status and roadmap
+- [Decisions](docs/DECISIONS.md) - Technical decision log
+- [Specification](docs/SPEC.md) - Product specification
+
+## License
+
+MIT
