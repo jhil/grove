@@ -2,12 +2,13 @@
 
 import * as React from "react";
 import { Dialog as BaseDialog } from "@base-ui/react/dialog";
+import { motion } from "motion/react";
 import { cn } from "@/lib/utils";
 import { X } from "lucide-react";
 
 /**
  * Dialog component using Base UI with Plangrove styling.
- * Organic, rounded modals with soft backdrop.
+ * Organic, rounded modals with soft backdrop and delightful animations.
  */
 
 interface DialogProps {
@@ -50,26 +51,28 @@ export function Dialog({
 
 export const DialogTrigger = BaseDialog.Trigger;
 
-export function DialogContent({
-  className,
-  children,
-  ...props
-}: React.HTMLAttributes<HTMLDivElement>) {
+interface DialogContentProps {
+  className?: string;
+  children: React.ReactNode;
+}
+
+export function DialogContent({ className, children }: DialogContentProps) {
   return (
     <BaseDialog.Portal>
       <BaseDialog.Backdrop
         className={cn(
           "fixed inset-0 z-50",
-          "bg-sage-900/20 backdrop-blur-sm",
+          "bg-sage-900/25 backdrop-blur-sm",
           "data-[state=open]:animate-in data-[state=closed]:animate-out",
-          "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0"
+          "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
+          "duration-200"
         )}
       />
       <BaseDialog.Popup
         className={cn(
           "fixed left-[50%] top-[50%] z-50",
           "w-full max-w-lg translate-x-[-50%] translate-y-[-50%]",
-          "bg-card rounded-xl shadow-lifted",
+          "bg-card rounded-2xl shadow-lifted",
           "border border-border/50",
           "p-6",
           "data-[state=open]:animate-in data-[state=closed]:animate-out",
@@ -80,77 +83,103 @@ export function DialogContent({
           "duration-200",
           className
         )}
-        {...props}
       >
         {children}
-        <BaseDialog.Close
-          className={cn(
-            "absolute right-4 top-4",
-            "rounded-lg p-1.5",
-            "text-muted-foreground hover:text-foreground",
-            "hover:bg-sage-100 transition-colors",
-            "focus:outline-none focus:ring-2 focus:ring-ring"
-          )}
+        <motion.div
+          className="absolute right-4 top-4"
+          whileHover={{ scale: 1.1, rotate: 90 }}
+          whileTap={{ scale: 0.9 }}
+          transition={{ type: "spring", stiffness: 400, damping: 20 }}
         >
-          <X className="h-4 w-4" />
-          <span className="sr-only">Close</span>
-        </BaseDialog.Close>
+          <BaseDialog.Close
+            className={cn(
+              "rounded-lg p-1.5",
+              "text-muted-foreground hover:text-foreground",
+              "hover:bg-sage-100 transition-colors",
+              "focus:outline-none focus:ring-2 focus:ring-ring"
+            )}
+          >
+            <X className="h-4 w-4" />
+            <span className="sr-only">Close</span>
+          </BaseDialog.Close>
+        </motion.div>
       </BaseDialog.Popup>
     </BaseDialog.Portal>
   );
 }
 
-export function DialogHeader({
-  className,
-  ...props
-}: React.HTMLAttributes<HTMLDivElement>) {
+interface DialogHeaderProps {
+  className?: string;
+  children: React.ReactNode;
+}
+
+export function DialogHeader({ className, children }: DialogHeaderProps) {
   return (
-    <div
+    <motion.div
       className={cn("flex flex-col space-y-2 mb-4", className)}
-      {...props}
-    />
+      initial={{ opacity: 0, y: -10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.05, duration: 0.2 }}
+    >
+      {children}
+    </motion.div>
   );
 }
 
-export function DialogTitle({
-  className,
-  ...props
-}: React.HTMLAttributes<HTMLHeadingElement>) {
+interface DialogTitleProps {
+  className?: string;
+  children: React.ReactNode;
+}
+
+export function DialogTitle({ className, children }: DialogTitleProps) {
   return (
     <BaseDialog.Title
       className={cn(
         "text-xl font-semibold leading-none tracking-tight",
         className
       )}
-      {...props}
-    />
+    >
+      {children}
+    </BaseDialog.Title>
   );
+}
+
+interface DialogDescriptionProps {
+  className?: string;
+  children: React.ReactNode;
 }
 
 export function DialogDescription({
   className,
-  ...props
-}: React.HTMLAttributes<HTMLParagraphElement>) {
+  children,
+}: DialogDescriptionProps) {
   return (
     <BaseDialog.Description
       className={cn("text-sm text-muted-foreground", className)}
-      {...props}
-    />
+    >
+      {children}
+    </BaseDialog.Description>
   );
 }
 
-export function DialogFooter({
-  className,
-  ...props
-}: React.HTMLAttributes<HTMLDivElement>) {
+interface DialogFooterProps {
+  className?: string;
+  children: React.ReactNode;
+}
+
+export function DialogFooter({ className, children }: DialogFooterProps) {
   return (
-    <div
+    <motion.div
       className={cn(
         "flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2 mt-6",
         className
       )}
-      {...props}
-    />
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.1, duration: 0.2 }}
+    >
+      {children}
+    </motion.div>
   );
 }
 
