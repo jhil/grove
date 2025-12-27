@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "motion/react";
 import { Dialog } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,14 +9,15 @@ import { Select, SelectItem } from "@/components/ui/select";
 import { PhotoUploadButton } from "@/components/plant/plant-photo";
 import { NameGenerator } from "@/components/plant/name-generator";
 import { WateringRecommendation } from "@/components/plant/watering-recommendation";
+import { BurstConfetti } from "@/components/ui/confetti";
 import { useCreatePlant, useUpdatePlant } from "@/hooks/use-plants";
-import { PLANT_TYPES, getDefaultInterval } from "@/lib/constants";
-import { Leaf } from "lucide-react";
+import { PLANT_TYPES, getDefaultInterval, getPlantType } from "@/lib/constants";
+import { Leaf, Sparkles } from "lucide-react";
 import type { Plant, NewPlant, PlantUpdate } from "@/types/supabase";
 
 /**
  * Form dialog for creating or editing a plant.
- * Handles both add and edit modes.
+ * Handles both add and edit modes with delightful animations.
  */
 interface PlantFormProps {
   groveId: string;
@@ -48,6 +50,7 @@ export function PlantForm({
   const [notes, setNotes] = useState("");
   const [photo, setPhoto] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showBurst, setShowBurst] = useState(false);
 
   // Reset form when dialog opens/closes or plant changes
   useEffect(() => {
@@ -65,6 +68,7 @@ export function PlantForm({
         setNotes("");
         setPhoto(null);
       }
+      setShowBurst(false);
     }
   }, [open, plant]);
 
@@ -93,7 +97,11 @@ export function PlantForm({
           photo: photo,
         };
         const updatedPlant = await updatePlant.mutateAsync({ id: plant.id, updates });
-        onPlantUpdated?.(updatedPlant);
+        setShowBurst(true);
+        setTimeout(() => {
+          onPlantUpdated?.(updatedPlant);
+          onSuccess?.();
+        }, 300);
       } else {
         const newPlant: NewPlant = {
           grove_id: groveId,
@@ -104,16 +112,20 @@ export function PlantForm({
           photo: photo,
         };
         const createdPlant = await createPlant.mutateAsync(newPlant);
-        onPlantCreated?.(createdPlant);
+        setShowBurst(true);
+        setTimeout(() => {
+          onPlantCreated?.(createdPlant);
+          onSuccess?.();
+        }, 300);
       }
-
-      onSuccess?.();
     } catch (error) {
       console.error("Failed to save plant:", error);
     } finally {
       setIsSubmitting(false);
     }
   };
+
+  const plantType = getPlantType(type);
 
   return (
     <Dialog
@@ -126,9 +138,42 @@ export function PlantForm({
           : "Add a new plant to your grove."
       }
     >
+      {/* Burst confetti on success */}
+      <BurstConfetti active={showBurst} x={50} y={30} count={25} />
+
       <form onSubmit={handleSubmit} className="space-y-5">
+        {/* Plant preview icon */}
+        <motion.div
+          className="flex justify-center"
+          initial={{ scale: 0, rotate: -180 }}
+          animate={{ scale: 1, rotate: 0 }}
+          transition={{ type: "spring", stiffness: 200, delay: 0.1 }}
+        >
+          <motion.div
+            className="w-16 h-16 rounded-full bg-sage-100 flex items-center justify-center text-3xl"
+            animate={{
+              scale: showBurst ? [1, 1.2, 1] : 1,
+            }}
+            transition={{ duration: 0.3 }}
+            key={type}
+          >
+            <motion.span
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ type: "spring", stiffness: 300 }}
+            >
+              {plantType.emoji}
+            </motion.span>
+          </motion.div>
+        </motion.div>
+
         {/* Plant Name */}
-        <div className="space-y-2">
+        <motion.div
+          className="space-y-2"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.15 }}
+        >
           <div className="flex items-center justify-between">
             <label
               htmlFor="plant-name"
@@ -148,10 +193,15 @@ export function PlantForm({
             autoFocus
             maxLength={50}
           />
-        </div>
+        </motion.div>
 
         {/* Plant Type */}
-        <div className="space-y-2">
+        <motion.div
+          className="space-y-2"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+        >
           <label className="text-sm font-medium text-foreground">
             Plant Type
           </label>
@@ -169,10 +219,15 @@ export function PlantForm({
               </SelectItem>
             ))}
           </Select>
-        </div>
+        </motion.div>
 
         {/* Watering Interval */}
-        <div className="space-y-3">
+        <motion.div
+          className="space-y-3"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.25 }}
+        >
           <label
             htmlFor="interval"
             className="text-sm font-medium text-foreground"
@@ -197,10 +252,15 @@ export function PlantForm({
             currentInterval={interval}
             onIntervalChange={setInterval}
           />
-        </div>
+        </motion.div>
 
         {/* Photo Upload */}
-        <div className="space-y-2">
+        <motion.div
+          className="space-y-2"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+        >
           <label className="text-sm font-medium text-foreground">
             Photo{" "}
             <span className="text-muted-foreground font-normal">(optional)</span>
@@ -210,10 +270,15 @@ export function PlantForm({
             plantType={type}
             onPhotoChange={setPhoto}
           />
-        </div>
+        </motion.div>
 
         {/* Notes (Optional) */}
-        <div className="space-y-2">
+        <motion.div
+          className="space-y-2"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.35 }}
+        >
           <label
             htmlFor="notes"
             className="text-sm font-medium text-foreground"
@@ -230,37 +295,79 @@ export function PlantForm({
             disabled={isSubmitting}
             maxLength={200}
           />
-        </div>
+        </motion.div>
 
         {/* Actions */}
-        <div className="flex gap-3 pt-2">
-          <Button
-            type="button"
-            variant="secondary"
-            onClick={() => onOpenChange(false)}
-            disabled={isSubmitting}
+        <motion.div
+          className="flex gap-3 pt-2"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+        >
+          <motion.div className="flex-1" whileTap={{ scale: 0.98 }}>
+            <Button
+              type="button"
+              variant="secondary"
+              onClick={() => onOpenChange(false)}
+              disabled={isSubmitting}
+              className="w-full"
+            >
+              Cancel
+            </Button>
+          </motion.div>
+          <motion.div
             className="flex-1"
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
           >
-            Cancel
-          </Button>
-          <Button
-            type="submit"
-            disabled={!name.trim() || isSubmitting}
-            className="flex-1"
-          >
-            {isSubmitting ? (
-              <span className="flex items-center gap-2">
-                <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                {isEditing ? "Saving..." : "Adding..."}
-              </span>
-            ) : (
-              <span className="flex items-center gap-2">
-                <Leaf className="w-4 h-4" />
-                {isEditing ? "Save Changes" : "Add Plant"}
-              </span>
-            )}
-          </Button>
-        </div>
+            <Button
+              type="submit"
+              disabled={!name.trim() || isSubmitting}
+              className="w-full"
+            >
+              <AnimatePresence mode="wait">
+                {isSubmitting ? (
+                  <motion.span
+                    key="submitting"
+                    className="flex items-center gap-2"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                  >
+                    <motion.div
+                      animate={{ rotate: 360 }}
+                      transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                    >
+                      <Leaf className="w-4 h-4" />
+                    </motion.div>
+                    {isEditing ? "Saving..." : "Adding..."}
+                  </motion.span>
+                ) : showBurst ? (
+                  <motion.span
+                    key="success"
+                    className="flex items-center gap-2"
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                  >
+                    <Sparkles className="w-4 h-4" />
+                    {isEditing ? "Saved!" : "Added!"}
+                  </motion.span>
+                ) : (
+                  <motion.span
+                    key="default"
+                    className="flex items-center gap-2"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                  >
+                    <Leaf className="w-4 h-4" />
+                    {isEditing ? "Save Changes" : "Add Plant"}
+                  </motion.span>
+                )}
+              </AnimatePresence>
+            </Button>
+          </motion.div>
+        </motion.div>
       </form>
     </Dialog>
   );
