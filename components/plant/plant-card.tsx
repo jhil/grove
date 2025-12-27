@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { motion, AnimatePresence } from "motion/react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { WaterButton } from "@/components/plant/water-button";
@@ -19,7 +20,7 @@ import type { Plant } from "@/types/supabase";
 
 /**
  * Card component for displaying a plant with watering status.
- * Shows plant info, photo, watering status, and actions.
+ * Features delightful animations and interactions.
  */
 interface PlantCardProps {
   plant: Plant;
@@ -42,6 +43,7 @@ export function PlantCard({
   const [showMenu, setShowMenu] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
 
   const plantType = getPlantType(plant.type);
   const status = getWateringStatus(plant.last_watered, plant.watering_interval);
@@ -68,116 +70,176 @@ export function PlantCard({
 
   return (
     <>
-      <Card
-        variant="interactive"
-        className={cn(
-          "relative overflow-hidden",
-          status === "overdue" && "ring-2 ring-destructive/30",
-          status === "due-today" && "ring-2 ring-warning/30"
-        )}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.9 }}
+        whileHover={{ y: -4 }}
+        transition={{ duration: 0.2 }}
+        onHoverStart={() => setIsHovered(true)}
+        onHoverEnd={() => setIsHovered(false)}
       >
-        {/* Plant Photo or Placeholder */}
-        <div
+        <Card
+          variant="interactive"
           className={cn(
-            "h-40 flex items-center justify-center",
-            plant.photo ? "bg-cream-100" : "bg-gradient-to-br from-sage-50 to-sage-100"
+            "relative overflow-hidden",
+            status === "overdue" && "ring-2 ring-destructive/30",
+            status === "due-today" && "ring-2 ring-warning/30"
           )}
         >
-          {plant.photo ? (
-            <img
-              src={plant.photo}
-              alt={plant.name}
-              className="w-full h-full object-cover"
-            />
-          ) : (
-            <span className="text-5xl">{plantType.emoji}</span>
-          )}
-        </div>
-
-        {/* Status Badge */}
-        <div
-          className={cn(
-            "absolute top-3 right-3 px-2.5 py-1 rounded-full text-xs font-medium",
-            statusColors.bg,
-            statusColors.text
-          )}
-        >
-          {statusText}
-        </div>
-
-        {/* Menu Button */}
-        <div className="absolute top-3 left-3">
-          <div className="relative">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setShowMenu(!showMenu)}
-              className="h-8 w-8 bg-white/80 hover:bg-white backdrop-blur-sm"
-            >
-              <MoreHorizontal className="w-4 h-4" />
-            </Button>
-
-            {showMenu && (
-              <>
-                <div
-                  className="fixed inset-0 z-10"
-                  onClick={() => setShowMenu(false)}
-                />
-                <div className="absolute left-0 top-full mt-1 z-20 bg-white rounded-lg shadow-lifted border border-border/50 py-1 min-w-[140px]">
-                  <button
-                    onClick={() => {
-                      setShowMenu(false);
-                      setShowEdit(true);
-                    }}
-                    className="w-full px-3 py-2 text-left text-sm hover:bg-sage-50 flex items-center gap-2"
-                  >
-                    <Pencil className="w-4 h-4" />
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => {
-                      setShowMenu(false);
-                      handleDelete();
-                    }}
-                    disabled={isDeleting}
-                    className="w-full px-3 py-2 text-left text-sm hover:bg-destructive/10 text-destructive flex items-center gap-2"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                    {isDeleting ? "Deleting..." : "Delete"}
-                  </button>
-                </div>
-              </>
+          {/* Plant Photo or Placeholder */}
+          <div
+            className={cn(
+              "h-40 flex items-center justify-center relative overflow-hidden",
+              plant.photo ? "bg-cream-100" : "bg-gradient-to-br from-sage-50 to-sage-100"
             )}
-          </div>
-        </div>
+          >
+            {plant.photo ? (
+              <motion.img
+                src={plant.photo}
+                alt={plant.name}
+                className="w-full h-full object-cover"
+                animate={{ scale: isHovered ? 1.05 : 1 }}
+                transition={{ duration: 0.4 }}
+              />
+            ) : (
+              <motion.span
+                className="text-5xl"
+                animate={{
+                  scale: isHovered ? 1.15 : 1,
+                  rotate: isHovered ? [0, -5, 5, 0] : 0,
+                }}
+                transition={{ duration: 0.4 }}
+              >
+                {plantType.emoji}
+              </motion.span>
+            )}
 
-        <CardContent className="p-4">
-          {/* Plant Name and Type */}
-          <div className="mb-3">
-            <h3 className="font-semibold text-foreground truncate">
-              {plant.name}
-            </h3>
-            <p className="text-sm text-muted-foreground">
-              {plantType.label}
-            </p>
+            {/* Gradient overlay on hover */}
+            <motion.div
+              className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: isHovered ? 1 : 0 }}
+              transition={{ duration: 0.3 }}
+            />
           </div>
 
-          {/* Last Watered */}
-          <div className="flex items-center gap-1.5 text-sm text-muted-foreground mb-4">
-            <Droplets className="w-3.5 h-3.5" />
-            Last watered: {lastWateredText}
+          {/* Status Badge */}
+          <motion.div
+            className={cn(
+              "absolute top-3 right-3 px-2.5 py-1 rounded-full text-xs font-medium",
+              statusColors.bg,
+              statusColors.text
+            )}
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ delay: 0.1, type: "spring", stiffness: 300 }}
+            whileHover={{ scale: 1.1 }}
+          >
+            {statusText}
+          </motion.div>
+
+          {/* Menu Button */}
+          <div className="absolute top-3 left-3">
+            <div className="relative">
+              <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setShowMenu(!showMenu)}
+                  className="h-8 w-8 bg-white/80 hover:bg-white backdrop-blur-sm"
+                >
+                  <MoreHorizontal className="w-4 h-4" />
+                </Button>
+              </motion.div>
+
+              <AnimatePresence>
+                {showMenu && (
+                  <>
+                    <div
+                      className="fixed inset-0 z-10"
+                      onClick={() => setShowMenu(false)}
+                    />
+                    <motion.div
+                      className="absolute left-0 top-full mt-1 z-20 bg-white rounded-lg shadow-lifted border border-border/50 py-1 min-w-[140px]"
+                      initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                      transition={{ duration: 0.15 }}
+                    >
+                      <motion.button
+                        onClick={() => {
+                          setShowMenu(false);
+                          setShowEdit(true);
+                        }}
+                        className="w-full px-3 py-2 text-left text-sm hover:bg-sage-50 flex items-center gap-2"
+                        whileHover={{ x: 4 }}
+                        transition={{ duration: 0.15 }}
+                      >
+                        <Pencil className="w-4 h-4" />
+                        Edit
+                      </motion.button>
+                      <motion.button
+                        onClick={() => {
+                          setShowMenu(false);
+                          handleDelete();
+                        }}
+                        disabled={isDeleting}
+                        className="w-full px-3 py-2 text-left text-sm hover:bg-destructive/10 text-destructive flex items-center gap-2"
+                        whileHover={{ x: 4 }}
+                        transition={{ duration: 0.15 }}
+                      >
+                        <Trash2 className="w-4 h-4" />
+                        {isDeleting ? "Deleting..." : "Delete"}
+                      </motion.button>
+                    </motion.div>
+                  </>
+                )}
+              </AnimatePresence>
+            </div>
           </div>
 
-          {/* Water Button */}
-          <WaterButton
-            plantId={plant.id}
-            groveId={groveId}
-            plantName={plant.name}
-            status={status}
-            onWatered={onWatered}
-          />
-        </CardContent>
-      </Card>
+          <CardContent className="p-4">
+            {/* Plant Name and Type */}
+            <div className="mb-3">
+              <motion.h3
+                className="font-semibold text-foreground truncate"
+                animate={{ color: isHovered ? "var(--sage-600)" : "var(--foreground)" }}
+                transition={{ duration: 0.2 }}
+              >
+                {plant.name}
+              </motion.h3>
+              <p className="text-sm text-muted-foreground">
+                {plantType.label}
+              </p>
+            </div>
+
+            {/* Last Watered */}
+            <motion.div
+              className="flex items-center gap-1.5 text-sm text-muted-foreground mb-4"
+              initial={{ opacity: 0.8 }}
+              whileHover={{ opacity: 1 }}
+            >
+              <motion.div
+                animate={{ rotate: isHovered ? [0, 15, -15, 0] : 0 }}
+                transition={{ duration: 0.5 }}
+              >
+                <Droplets className="w-3.5 h-3.5" />
+              </motion.div>
+              Last watered: {lastWateredText}
+            </motion.div>
+
+            {/* Water Button */}
+            <WaterButton
+              plantId={plant.id}
+              groveId={groveId}
+              plantName={plant.name}
+              status={status}
+              onWatered={onWatered}
+            />
+          </CardContent>
+        </Card>
+      </motion.div>
 
       {/* Edit Dialog */}
       <PlantForm
