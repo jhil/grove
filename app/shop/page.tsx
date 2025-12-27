@@ -28,7 +28,7 @@ export default function ShopPage() {
     <div className="min-h-screen bg-background">
       <Header showBack backHref="/" backLabel="Home" />
 
-      <main className="container mx-auto px-4 py-8">
+      <main className="container mx-auto px-4 sm:px-6 py-6 sm:py-8">
         {/* Hero Section */}
         <FadeInUp>
           <section className="text-center mb-12">
@@ -76,7 +76,7 @@ export default function ShopPage() {
               </h2>
             </div>
             <StaggerContainer
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6"
               delay={0.08}
             >
               {featuredProducts.map((product) => (
@@ -101,7 +101,8 @@ export default function ShopPage() {
                 key={category.id}
                 onClick={() => setSelectedCategory(category.id)}
                 className={cn(
-                  "px-4 py-2 rounded-lg text-sm font-medium transition-colors",
+                  "px-4 py-2.5 rounded-lg text-sm font-medium transition-colors",
+                  "min-h-[44px]", // Mobile touch target
                   selectedCategory === category.id
                     ? "bg-sage-500 text-white"
                     : "bg-cream-100 text-muted-foreground hover:bg-cream-200"
@@ -123,7 +124,7 @@ export default function ShopPage() {
           <AnimatePresence mode="wait">
             <motion.div
               key={selectedCategory}
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
@@ -184,9 +185,10 @@ function FeaturedProductCard({ product }: { product: Product }) {
       rel="noopener noreferrer"
       className="group block bg-white rounded-2xl border border-cream-200 overflow-hidden"
       whileHover={{ y: -4, scale: 1.02 }}
+      whileTap={{ scale: 0.98 }}
       transition={{ duration: 0.2 }}
     >
-      <div className="aspect-square relative overflow-hidden bg-cream-100">
+      <div className="aspect-[4/3] sm:aspect-square relative overflow-hidden bg-cream-100">
         <motion.img
           src={product.image}
           alt={product.name}
@@ -253,7 +255,7 @@ function ProductCard({ product }: { product: Product }) {
       whileTap={{ scale: 0.98 }}
       transition={{ duration: 0.2 }}
     >
-      <div className="aspect-[4/3] relative overflow-hidden bg-cream-100">
+      <div className="aspect-square sm:aspect-[4/3] relative overflow-hidden bg-cream-100">
         <motion.img
           src={product.image}
           alt={product.name}
@@ -268,14 +270,14 @@ function ProductCard({ product }: { product: Product }) {
       </div>
       <div className="p-4">
         <div className="flex items-start justify-between gap-2">
-          <h3 className="font-medium text-foreground text-sm group-hover:text-sage-600 transition-colors">
+          <h3 className="font-medium text-foreground text-sm sm:text-base group-hover:text-sage-600 transition-colors">
             {product.name}
           </h3>
-          <span className="text-sm font-semibold text-sage-600">
+          <span className="text-sm sm:text-base font-semibold text-sage-600 whitespace-nowrap">
             {product.price}
           </span>
         </div>
-        <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
+        <p className="text-sm sm:text-xs text-muted-foreground mt-1.5 line-clamp-2">
           {product.description}
         </p>
       </div>

@@ -37,7 +37,10 @@
       "Bash(pnpm test:*)",
       "WebFetch(domain:nornorm.com)",
       "WebFetch(domain:springsummer.dk)",
-      "WebFetch(domain:www.samara.com)"
+      "WebFetch(domain:www.samara.com)",
+      "Bash(pnpm deploy:*)",
+      "Bash(npx playwright install:*)",
+      "Bash(npx tsx:*)"
     ]
   }
 }

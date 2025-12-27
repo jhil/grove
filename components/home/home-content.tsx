@@ -84,7 +84,7 @@ export function HomeContent() {
       </nav>
 
       {/* Hero - full width, asymmetric */}
-      <header className="min-h-[85vh] flex flex-col justify-center px-6 lg:px-12 pt-20">
+      <header className="min-h-[80vh] sm:min-h-[85vh] flex flex-col justify-center px-6 lg:px-12 pt-20">
         <div className="max-w-7xl w-full">
           <motion.p
             className="text-sm text-muted-foreground mb-4 tracking-wide uppercase"
@@ -96,7 +96,7 @@ export function HomeContent() {
           </motion.p>
 
           <motion.h1
-            className="text-5xl md:text-6xl lg:text-8xl font-semibold text-foreground tracking-tight leading-[0.95] max-w-4xl"
+            className="text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-semibold text-foreground tracking-tight leading-[0.95] max-w-4xl"
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ ...transition.slow, delay: 0.15 }}
@@ -107,7 +107,7 @@ export function HomeContent() {
           </motion.h1>
 
           <motion.p
-            className="text-lg md:text-xl text-muted-foreground mt-8 max-w-xl leading-relaxed"
+            className="text-base sm:text-lg md:text-xl text-muted-foreground mt-6 sm:mt-8 max-w-xl leading-relaxed"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ ...transition.enter, delay: 0.3 }}
@@ -117,18 +117,18 @@ export function HomeContent() {
           </motion.p>
 
           <motion.div
-            className="flex items-center gap-4 mt-10"
+            className="flex flex-col sm:flex-row sm:items-center gap-4 mt-8 sm:mt-10"
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ ...transition.enter, delay: 0.4 }}
           >
             <Link href="/create-grove">
-              <Button size="lg" className="group">
+              <Button size="lg" className="group w-full sm:w-auto">
                 Create a grove
                 <ArrowRight className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
               </Button>
             </Link>
-            <span className="text-sm text-muted-foreground">
+            <span className="text-sm text-muted-foreground text-center sm:text-left">
               Free &middot; No account needed
             </span>
           </motion.div>
@@ -199,10 +199,10 @@ function FeaturesSection() {
   ];
 
   return (
-    <section ref={ref} className="py-24 lg:py-32 border-t border-border/30">
+    <section ref={ref} className="py-16 sm:py-24 lg:py-32 border-t border-border/30">
       <div className="px-6 lg:px-12">
         <motion.div
-          className="mb-16"
+          className="mb-10 sm:mb-16"
           initial={{ opacity: 0, y: 16 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={transition.enter}
@@ -210,27 +210,27 @@ function FeaturesSection() {
           <p className="text-sm text-muted-foreground mb-3 tracking-wide uppercase">
             How it works
           </p>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-semibold text-foreground tracking-tight max-w-2xl">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-semibold text-foreground tracking-tight max-w-2xl">
             Simple plant care for groups
           </h2>
         </motion.div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-px bg-border/30">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-px bg-border/30">
           {features.map((feature, index) => (
             <motion.div
               key={feature.title}
               initial={{ opacity: 0, y: 24 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ ...transition.enter, delay: index * 0.1 }}
-              className="bg-background p-8 lg:p-10"
+              className="bg-background p-6 sm:p-8 lg:p-10"
             >
-              <div className="w-10 h-10 rounded-lg bg-sage-100 flex items-center justify-center text-sage-600 mb-6">
+              <div className="w-10 h-10 rounded-lg bg-sage-100 flex items-center justify-center text-sage-600 mb-4 sm:mb-6">
                 <feature.icon className="w-5 h-5" />
               </div>
               <h3 className="text-lg font-medium text-foreground mb-2">
                 {feature.title}
               </h3>
-              <p className="text-muted-foreground leading-relaxed">
+              <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
                 {feature.description}
               </p>
             </motion.div>

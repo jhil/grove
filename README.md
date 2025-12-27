@@ -4,17 +4,27 @@ A collaborative plant care app for teams, roommates, and plant lovers.
 
 **Live at [plangrove.app](https://plangrove.app)**
 
+## Design
+
+Plangrove features a refined, editorial design inspired by Scandinavian minimalism:
+- **Serene animations** with 300ms transitions and ease-out curves
+- **Full-width layouts** with asymmetric, edge-to-edge compositions
+- **Mobile-optimized** for modern iPhones (SE, 14, 15 Pro)
+- **Touch-friendly** with 44px minimum tap targets
+
 ## Features
 
 - **Collaborative Groves** - Create shared plant spaces with unique shareable links
 - **Water Tracking** - Track when plants were watered and when they need water next
+- **277 Plant Database** - Searchable plant types with scientific names and care data
 - **Smart Recommendations** - Get watering suggestions based on plant type
 - **Multiple Views** - Gallery, list, and compact view modes
 - **Real-time Sync** - Changes sync instantly across all devices
 - **Activity Changelog** - See who watered what and when
-- **Weather Widget** - Local weather to help plan plant care
+- **Weather Widget** - Local weather with custom location via geocoding
 - **Sound Effects** - Satisfying audio feedback for actions
-- **Motion Animations** - Smooth, organic animations throughout
+- **Motion Animations** - Smooth, serene animations throughout
+- **PWA Support** - Installable on mobile devices
 - **Optional Sign-in** - Works without accounts, but sign in to track your contributions
 
 ## Getting Started
@@ -109,9 +119,22 @@ pnpm test:run
 
 # Run tests with coverage
 pnpm test:coverage
+
+# Capture mobile screenshots (Playwright)
+npx tsx scripts/mobile-screenshots.ts
 ```
 
 Visit `http://localhost:3000`
+
+### Mobile Screenshots
+
+Screenshots are captured for visual regression testing and stored in `.screenshots/`:
+
+```bash
+npx tsx scripts/mobile-screenshots.ts
+```
+
+Devices tested: iPhone 15 Pro, iPhone 14, iPhone SE
 
 ## Deployment
 
