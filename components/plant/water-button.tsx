@@ -1,17 +1,18 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "motion/react";
 import { Button } from "@/components/ui/button";
 import { useWaterPlant } from "@/hooks/use-plants";
 import { useAuth } from "@/hooks/use-auth";
 import { useToast } from "@/components/ui/toast";
 import { cn } from "@/lib/utils";
-import { Droplets, Check } from "lucide-react";
+import { Droplets, Check, Sparkles } from "lucide-react";
 import type { WateringStatus } from "@/lib/utils/dates";
 
 /**
- * Water button with visual feedback and optimistic updates.
- * Shows different states based on watering urgency.
+ * Water button with delightful visual feedback and animations.
+ * Shows water splash effect and celebration on successful watering.
  */
 interface WaterButtonProps {
   plantId: string;
@@ -33,6 +34,7 @@ export function WaterButton({
   const waterPlant = useWaterPlant();
 
   const [justWatered, setJustWatered] = useState(false);
+  const [showSplash, setShowSplash] = useState(false);
 
   const handleWater = async () => {
     try {
@@ -45,12 +47,16 @@ export function WaterButton({
         groveId,
         userInfo,
       });
+
+      // Trigger splash animation
+      setShowSplash(true);
       setJustWatered(true);
       showToast(`${plantName} watered!`, "success");
       onWatered?.();
 
-      // Reset the "just watered" state after animation
-      setTimeout(() => setJustWatered(false), 2000);
+      // Reset animations
+      setTimeout(() => setShowSplash(false), 1000);
+      setTimeout(() => setJustWatered(false), 3000);
     } catch (error) {
       console.error("Failed to water plant:", error);
       showToast("Failed to water plant", "error");
@@ -64,36 +70,155 @@ export function WaterButton({
     return "secondary";
   };
 
+  const isUrgent = status === "overdue" || status === "due-today";
+
   return (
-    <Button
-      variant={getVariant()}
-      className={cn(
-        "w-full gap-2",
-        justWatered && "bg-sage-100 text-sage-700",
-        // Pulse animation for urgent plants
-        (status === "overdue" || status === "due-today") &&
-          !justWatered &&
-          "animate-pulse-subtle"
-      )}
-      onClick={handleWater}
-      disabled={waterPlant.isPending || justWatered}
-    >
-      {justWatered ? (
-        <>
-          <Check className="w-4 h-4" />
-          Watered!
-        </>
-      ) : waterPlant.isPending ? (
-        <>
-          <span className="w-4 h-4 border-2 border-current/30 border-t-current rounded-full animate-spin" />
-          Watering...
-        </>
-      ) : (
-        <>
-          <Droplets className="w-4 h-4" />
-          Water Now
-        </>
-      )}
-    </Button>
+    <div className="relative">
+      {/* Water splash particles */}
+      <AnimatePresence>
+        {showSplash && (
+          <div className="absolute inset-0 pointer-events-none overflow-visible">
+            {/* Center splash */}
+            <motion.div
+              className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+              initial={{ scale: 0, opacity: 1 }}
+              animate={{ scale: 2.5, opacity: 0 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.6, ease: "easeOut" }}
+            >
+              <div className="w-8 h-8 rounded-full bg-water-400/30" />
+            </motion.div>
+
+            {/* Water droplets */}
+            {[...Array(8)].map((_, i) => {
+              const angle = (i / 8) * Math.PI * 2;
+              const distance = 40 + Math.random() * 20;
+              const x = Math.cos(angle) * distance;
+              const y = Math.sin(angle) * distance;
+
+              return (
+                <motion.div
+                  key={i}
+                  className="absolute left-1/2 top-1/2 w-2 h-2 rounded-full bg-water-400"
+                  initial={{ x: 0, y: 0, scale: 1, opacity: 1 }}
+                  animate={{
+                    x: x,
+                    y: y,
+                    scale: 0,
+                    opacity: 0,
+                  }}
+                  transition={{
+                    duration: 0.5,
+                    delay: i * 0.02,
+                    ease: "easeOut",
+                  }}
+                />
+              );
+            })}
+
+            {/* Sparkles */}
+            {[...Array(4)].map((_, i) => (
+              <motion.div
+                key={`sparkle-${i}`}
+                className="absolute text-water-400"
+                style={{
+                  left: `${20 + i * 20}%`,
+                  top: `${30 + (i % 2) * 40}%`,
+                }}
+                initial={{ scale: 0, rotate: 0, opacity: 0 }}
+                animate={{
+                  scale: [0, 1.5, 0],
+                  rotate: [0, 180],
+                  opacity: [0, 1, 0],
+                }}
+                transition={{
+                  duration: 0.6,
+                  delay: 0.1 + i * 0.05,
+                }}
+              >
+                <Sparkles className="w-3 h-3" />
+              </motion.div>
+            ))}
+          </div>
+        )}
+      </AnimatePresence>
+
+      <motion.div
+        whileHover={{ scale: 1.02 }}
+        whileTap={{ scale: 0.98 }}
+      >
+        <Button
+          variant={getVariant()}
+          className={cn(
+            "w-full gap-2 relative overflow-hidden",
+            justWatered && "bg-sage-100 text-sage-700 border-sage-200",
+          )}
+          onClick={handleWater}
+          disabled={waterPlant.isPending || justWatered}
+        >
+          {/* Urgent status pulse effect */}
+          {isUrgent && !justWatered && !waterPlant.isPending && (
+            <motion.div
+              className="absolute inset-0 bg-water-400/20 rounded-lg"
+              animate={{ opacity: [0.3, 0.6, 0.3] }}
+              transition={{ duration: 2, repeat: Infinity }}
+            />
+          )}
+
+          <AnimatePresence mode="wait">
+            {justWatered ? (
+              <motion.div
+                key="watered"
+                className="flex items-center gap-2"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+              >
+                <motion.div
+                  initial={{ scale: 0, rotate: -180 }}
+                  animate={{ scale: 1, rotate: 0 }}
+                  transition={{ type: "spring", stiffness: 300 }}
+                >
+                  <Check className="w-4 h-4" />
+                </motion.div>
+                Watered!
+              </motion.div>
+            ) : waterPlant.isPending ? (
+              <motion.div
+                key="pending"
+                className="flex items-center gap-2"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+              >
+                <motion.div
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                >
+                  <Droplets className="w-4 h-4" />
+                </motion.div>
+                Watering...
+              </motion.div>
+            ) : (
+              <motion.div
+                key="default"
+                className="flex items-center gap-2"
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 10 }}
+              >
+                <motion.div
+                  animate={isUrgent ? { y: [0, -2, 0] } : {}}
+                  transition={{ duration: 0.5, repeat: Infinity }}
+                >
+                  <Droplets className="w-4 h-4" />
+                </motion.div>
+                Water Now
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </Button>
+      </motion.div>
+    </div>
   );
 }
