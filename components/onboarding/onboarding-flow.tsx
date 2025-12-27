@@ -4,13 +4,13 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { Leaf, Droplets, Users, Share2, ArrowRight, Check } from "lucide-react";
+import { Leaf, Droplets, Users, Link, ArrowRight, Check } from "lucide-react";
+import { transition } from "@/lib/motion";
 
 interface OnboardingStep {
   icon: typeof Leaf;
   title: string;
   description: string;
-  color: string;
 }
 
 const STEPS: OnboardingStep[] = [
@@ -18,25 +18,21 @@ const STEPS: OnboardingStep[] = [
     icon: Leaf,
     title: "Create a Grove",
     description: "A grove is your shared plant space. Name it, add your plants, and watch them thrive together.",
-    color: "text-sage-500",
   },
   {
     icon: Droplets,
     title: "Track Watering",
-    description: "Each plant has its own schedule. We'll remind you when it's time to water.",
-    color: "text-water-500",
+    description: "Each plant has its own schedule. See when it needs water and mark it done with one tap.",
   },
   {
     icon: Users,
     title: "Care Together",
     description: "Share your grove with roommates, colleagues, or friends. Everyone can water and track plants.",
-    color: "text-terracotta-500",
   },
   {
-    icon: Share2,
+    icon: Link,
     title: "Share the Link",
-    description: "Just share the link — no accounts needed. Anyone with the link can join in.",
-    color: "text-sage-600",
+    description: "Just share the link — no accounts needed. Anyone with the link can join.",
   },
 ];
 
@@ -65,26 +61,25 @@ export function OnboardingFlow({ onComplete, className }: OnboardingFlowProps) {
   };
 
   return (
-    <div
-      className={cn(
-        "max-w-lg mx-auto text-center",
-        className
-      )}
-    >
+    <div className={cn("max-w-lg mx-auto text-center", className)}>
       {/* Progress dots */}
-      <div className="flex items-center justify-center gap-2 mb-8">
+      <div className="flex items-center justify-center gap-2 mb-10">
         {STEPS.map((_, index) => (
           <button
             key={index}
             onClick={() => setCurrentStep(index)}
             className={cn(
-              "w-2 h-2 rounded-full transition-all duration-300",
+              "h-1.5 rounded-full transition-all",
               index === currentStep
                 ? "w-8 bg-sage-500"
                 : index < currentStep
-                ? "bg-sage-400"
-                : "bg-sage-200"
+                ? "w-1.5 bg-sage-400"
+                : "w-1.5 bg-sage-200"
             )}
+            style={{
+              transitionDuration: "400ms",
+              transitionTimingFunction: "cubic-bezier(0.22, 1, 0.36, 1)",
+            }}
           />
         ))}
       </div>
@@ -93,28 +88,24 @@ export function OnboardingFlow({ onComplete, className }: OnboardingFlowProps) {
       <AnimatePresence mode="wait">
         <motion.div
           key={currentStep}
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -20 }}
-          transition={{ duration: 0.3 }}
+          exit={{ opacity: 0, y: -8 }}
+          transition={transition.enter}
           className="space-y-6"
         >
           {/* Icon */}
           <motion.div
-            initial={{ scale: 0.8 }}
-            animate={{ scale: 1 }}
-            transition={{ delay: 0.1, type: "spring", stiffness: 200 }}
-            className={cn(
-              "w-20 h-20 mx-auto rounded-3xl flex items-center justify-center",
-              "bg-gradient-to-br from-sage-50 to-sage-100",
-              "shadow-soft"
-            )}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ ...transition.enter, delay: 0.1 }}
+            className="w-16 h-16 mx-auto rounded-xl bg-sage-100 flex items-center justify-center"
           >
-            <Icon className={cn("w-10 h-10", step.color)} />
+            <Icon className="w-8 h-8 text-sage-600" />
           </motion.div>
 
           {/* Title */}
-          <h2 className="text-2xl font-semibold text-foreground">
+          <h2 className="text-2xl font-semibold text-foreground tracking-editorial">
             {step.title}
           </h2>
 
@@ -130,17 +121,17 @@ export function OnboardingFlow({ onComplete, className }: OnboardingFlowProps) {
         <Button
           onClick={handleNext}
           size="lg"
-          className="w-full max-w-xs gap-2"
+          className="w-full max-w-xs group"
         >
           {isLastStep ? (
             <>
               Get Started
-              <Check className="w-4 h-4" />
+              <Check className="w-4 h-4 ml-1" />
             </>
           ) : (
             <>
               Next
-              <ArrowRight className="w-4 h-4" />
+              <ArrowRight className="w-4 h-4 ml-1 transition-transform group-hover:translate-x-1" />
             </>
           )}
         </Button>
@@ -171,15 +162,20 @@ export function OnboardingModal({ open, onOpenChange }: OnboardingModalProps) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div
-        className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={transition.fast}
+        className="absolute inset-0 bg-black/20 backdrop-blur-sm"
         onClick={() => onOpenChange(false)}
       />
       <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        exit={{ opacity: 0, scale: 0.95 }}
-        className="relative bg-white rounded-3xl p-8 max-w-lg w-full shadow-lifted"
+        initial={{ opacity: 0, scale: 0.96, y: 20 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.96 }}
+        transition={transition.enter}
+        className="relative bg-white rounded-xl p-8 max-w-lg w-full shadow-elevated border border-border/50"
       >
         <OnboardingFlow onComplete={() => onOpenChange(false)} />
       </motion.div>

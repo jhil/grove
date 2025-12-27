@@ -1,23 +1,39 @@
 "use client";
 
-import { motion, type MotionProps } from "motion/react";
+import { motion, type MotionProps, AnimatePresence } from "motion/react";
 import { forwardRef } from "react";
+import {
+  fadeUp,
+  fadeIn,
+  scaleIn,
+  staggerItem,
+  hoverLift,
+  tapResponse,
+  transition,
+  easing,
+} from "@/lib/motion";
 
 /**
  * Animated components using Motion library.
- * Provides delightful micro-interactions throughout the app.
+ * Design philosophy: Serene, purposeful, unhurried.
  */
 
-// Fade in from bottom animation for cards and content
+// ============================================================================
+// ENTRANCE ANIMATIONS
+// ============================================================================
+
+/**
+ * Fade in from below - standard entrance for content
+ */
 export const FadeInUp = forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement> & MotionProps
 >(({ children, ...props }, ref) => (
   <motion.div
     ref={ref}
-    initial={{ opacity: 0, y: 20 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.3, ease: "easeOut" }}
+    initial="hidden"
+    animate="visible"
+    variants={fadeUp}
     {...props}
   >
     {children}
@@ -25,16 +41,38 @@ export const FadeInUp = forwardRef<
 ));
 FadeInUp.displayName = "FadeInUp";
 
-// Scale in animation for pop effects
+/**
+ * Simple fade in - for subtle appearances
+ */
+export const FadeIn = forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement> & MotionProps
+>(({ children, ...props }, ref) => (
+  <motion.div
+    ref={ref}
+    initial="hidden"
+    animate="visible"
+    variants={fadeIn}
+    {...props}
+  >
+    {children}
+  </motion.div>
+));
+FadeIn.displayName = "FadeIn";
+
+/**
+ * Scale in - subtle scale for dialogs and modals
+ */
 export const ScaleIn = forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement> & MotionProps
 >(({ children, ...props }, ref) => (
   <motion.div
     ref={ref}
-    initial={{ opacity: 0, scale: 0.95 }}
-    animate={{ opacity: 1, scale: 1 }}
-    transition={{ duration: 0.2, ease: "easeOut" }}
+    initial="hidden"
+    animate="visible"
+    exit="exit"
+    variants={scaleIn}
     {...props}
   >
     {children}
@@ -42,17 +80,23 @@ export const ScaleIn = forwardRef<
 ));
 ScaleIn.displayName = "ScaleIn";
 
-// Stagger children animation for lists
+// ============================================================================
+// STAGGER ANIMATIONS
+// ============================================================================
+
 interface StaggerContainerProps {
   children: React.ReactNode;
-  staggerDelay?: number;
   className?: string;
+  delay?: number;
 }
 
+/**
+ * Container for staggered children animations
+ */
 export function StaggerContainer({
   children,
-  staggerDelay = 0.05,
   className,
+  delay = 0.08,
 }: StaggerContainerProps) {
   return (
     <motion.div
@@ -60,9 +104,12 @@ export function StaggerContainer({
       initial="hidden"
       animate="visible"
       variants={{
+        hidden: { opacity: 0 },
         visible: {
+          opacity: 1,
           transition: {
-            staggerChildren: staggerDelay,
+            staggerChildren: delay,
+            delayChildren: 0.1,
           },
         },
       }}
@@ -72,49 +119,91 @@ export function StaggerContainer({
   );
 }
 
-// Stagger item for use inside StaggerContainer
 interface StaggerItemProps {
   children: React.ReactNode;
   className?: string;
 }
 
+/**
+ * Item for use inside StaggerContainer
+ */
 export function StaggerItem({ children, className }: StaggerItemProps) {
+  return (
+    <motion.div className={className} variants={staggerItem}>
+      {children}
+    </motion.div>
+  );
+}
+
+// ============================================================================
+// INTERACTIVE ANIMATIONS
+// ============================================================================
+
+interface HoverLiftProps {
+  children: React.ReactNode;
+  className?: string;
+}
+
+/**
+ * Subtle lift on hover - for cards
+ */
+export function HoverLift({ children, className }: HoverLiftProps) {
   return (
     <motion.div
       className={className}
-      variants={{
-        hidden: { opacity: 0, y: 10 },
-        visible: { opacity: 1, y: 0 },
-      }}
-      transition={{ duration: 0.2 }}
+      whileHover={hoverLift}
+      transition={transition.interaction}
     >
       {children}
     </motion.div>
   );
 }
 
-// Pulse animation for attention
+interface TapScaleProps {
+  children: React.ReactNode;
+  className?: string;
+}
+
+/**
+ * Subtle scale feedback on tap/click
+ */
+export function TapScale({ children, className }: TapScaleProps) {
+  return (
+    <motion.div
+      className={className}
+      whileTap={tapResponse}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+// ============================================================================
+// AMBIENT ANIMATIONS
+// ============================================================================
+
 interface PulseProps {
   children: React.ReactNode;
   active?: boolean;
   className?: string;
 }
 
+/**
+ * Subtle pulse for attention - gentle, not distracting
+ */
 export function Pulse({ children, active = true, className }: PulseProps) {
   return (
     <motion.div
       className={className}
       animate={
         active
-          ? {
-              scale: [1, 1.02, 1],
-            }
+          ? { opacity: [1, 0.7, 1] }
           : {}
       }
       transition={{
-        duration: 2,
+        duration: 3,
         repeat: Infinity,
-        ease: "easeInOut",
+        ease: easing.inOut,
       }}
     >
       {children}
@@ -122,68 +211,83 @@ export function Pulse({ children, active = true, className }: PulseProps) {
   );
 }
 
-// Water drop animation for watering action
+// ============================================================================
+// SPECIAL EFFECTS
+// ============================================================================
+
+/**
+ * Water drop effect for watering action
+ */
 export const WaterDrop = motion.div;
 
 export const waterDropVariants = {
-  initial: { scale: 0, y: 0, opacity: 1 },
+  initial: { scale: 0.8, y: 0, opacity: 1 },
   animate: {
-    scale: [0, 1.5, 2],
-    y: [0, 50, 100],
-    opacity: [1, 0.8, 0],
+    scale: [0.8, 1.2, 1.6],
+    y: [0, 30, 60],
+    opacity: [1, 0.6, 0],
   },
 };
 
-// Hover lift animation
-interface HoverLiftProps {
-  children: React.ReactNode;
-  className?: string;
-}
+export const waterDropTransition = {
+  duration: 0.8,
+  ease: easing.out,
+};
 
-export function HoverLift({ children, className }: HoverLiftProps) {
-  return (
-    <motion.div
-      className={className}
-      whileHover={{ y: -4, scale: 1.02 }}
-      transition={{ duration: 0.2 }}
-    >
-      {children}
-    </motion.div>
-  );
-}
-
-// Tap scale animation for buttons
-interface TapScaleProps {
-  children: React.ReactNode;
-  className?: string;
-}
-
-export function TapScale({ children, className }: TapScaleProps) {
-  return (
-    <motion.div
-      className={className}
-      whileTap={{ scale: 0.98 }}
-      transition={{ duration: 0.1 }}
-    >
-      {children}
-    </motion.div>
-  );
-}
-
-// Success checkmark animation
+/**
+ * Success checkmark with path animation
+ */
 export const SuccessCheck = ({ className }: { className?: string }) => (
   <motion.svg
     className={className}
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
-    strokeWidth={3}
+    strokeWidth={2}
     strokeLinecap="round"
     strokeLinejoin="round"
-    initial={{ pathLength: 0, opacity: 0 }}
-    animate={{ pathLength: 1, opacity: 1 }}
-    transition={{ duration: 0.3, ease: "easeOut" }}
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    transition={transition.fast}
   >
-    <motion.path d="M5 12l5 5L19 7" />
+    <motion.path
+      d="M5 12l5 5L19 7"
+      initial={{ pathLength: 0 }}
+      animate={{ pathLength: 1 }}
+      transition={{ duration: 0.4, ease: easing.out, delay: 0.1 }}
+    />
   </motion.svg>
 );
+
+// ============================================================================
+// VIEWPORT ANIMATIONS
+// ============================================================================
+
+interface ViewportFadeProps {
+  children: React.ReactNode;
+  className?: string;
+  delay?: number;
+}
+
+/**
+ * Fade in when entering viewport - for scroll-triggered reveals
+ */
+export function ViewportFade({ children, className, delay = 0 }: ViewportFadeProps) {
+  return (
+    <motion.div
+      className={className}
+      initial={{ opacity: 0, y: 16 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-80px" }}
+      transition={{
+        ...transition.enter,
+        delay,
+      }}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+// Re-export AnimatePresence for convenience
+export { AnimatePresence };

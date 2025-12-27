@@ -34,7 +34,10 @@
       "WebFetch(domain:plangrove.app)",
       "Bash(ls:*)",
       "Bash(pnpm test:run:*)",
-      "Bash(pnpm test:*)"
+      "Bash(pnpm test:*)",
+      "WebFetch(domain:nornorm.com)",
+      "WebFetch(domain:springsummer.dk)",
+      "WebFetch(domain:www.samara.com)"
     ]
   }
 }

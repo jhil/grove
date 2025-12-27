@@ -2,17 +2,22 @@
 
 import { useState } from "react";
 import { motion } from "motion/react";
-import { Bell, BellOff, Check, X } from "lucide-react";
+import { Bell, BellOff, Check, X, Droplets, Sprout, Gift } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useNotifications, plantNotifications } from "@/hooks/use-notifications";
 import { useToast } from "@/components/ui/toast";
 import { cn } from "@/lib/utils";
+import { transition } from "@/lib/motion";
+
+interface NotificationSettingsProps {
+  compact?: boolean;
+}
 
 /**
- * Notification settings card for profile page
+ * Notification settings for profile page
  */
-export function NotificationSettings() {
+export function NotificationSettings({ compact = false }: NotificationSettingsProps) {
   const { isSupported, permission, requestPermission, showNotification } = useNotifications();
   const { showToast } = useToast();
   const [isRequesting, setIsRequesting] = useState(false);
@@ -22,8 +27,7 @@ export function NotificationSettings() {
     try {
       const granted = await requestPermission();
       if (granted) {
-        showToast("Notifications enabled!", "success");
-        // Send test notification
+        showToast("Notifications enabled", "success");
         await showNotification("Notifications enabled", {
           body: "You'll now receive plant care reminders.",
         });
@@ -42,16 +46,23 @@ export function NotificationSettings() {
       tag: notification.tag,
     });
     if (sent) {
-      showToast("Test notification sent!", "success");
+      showToast("Test notification sent", "success");
     }
   };
 
   if (!isSupported) {
+    if (compact) {
+      return (
+        <p className="text-sm text-muted-foreground">
+          Notifications are not supported in your browser.
+        </p>
+      );
+    }
     return (
-      <Card className="border-cream-200 shadow-soft">
+      <Card className="border-border/50">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <BellOff className="w-5 h-5" />
+          <CardTitle className="flex items-center gap-2 text-base">
+            <BellOff className="w-4 h-4" />
             Notifications
           </CardTitle>
         </CardHeader>
@@ -64,113 +75,120 @@ export function NotificationSettings() {
     );
   }
 
+  const content = (
+    <div className="space-y-4">
+      {/* Permission Status */}
+      <div className="flex items-center justify-between">
+        <div>
+          <p className="text-sm font-medium">Permission</p>
+          <p className="text-xs text-muted-foreground">
+            {permission === "granted"
+              ? "Enabled"
+              : permission === "denied"
+                ? "Blocked in browser settings"
+                : "Not yet enabled"}
+          </p>
+        </div>
+        <PermissionBadge permission={permission} />
+      </div>
+
+      {/* Enable Button */}
+      {permission === "default" && (
+        <Button
+          onClick={handleEnableNotifications}
+          disabled={isRequesting}
+          className="w-full"
+          size={compact ? "sm" : "md"}
+        >
+          {isRequesting ? "Requesting..." : "Enable Notifications"}
+        </Button>
+      )}
+
+      {/* Test Button */}
+      {permission === "granted" && (
+        <Button
+          onClick={handleTestNotification}
+          variant="secondary"
+          className="w-full"
+          size={compact ? "sm" : "md"}
+        >
+          Send Test Notification
+        </Button>
+      )}
+
+      {/* Denied Message */}
+      {permission === "denied" && (
+        <div className="p-3 bg-terracotta-50 rounded-lg border border-terracotta-200">
+          <p className="text-sm text-terracotta-700">
+            Notifications are blocked. To enable them, click the lock icon in your browser&apos;s
+            address bar and allow notifications.
+          </p>
+        </div>
+      )}
+
+      {/* Notification Types */}
+      {permission === "granted" && !compact && (
+        <div className="pt-2 space-y-2">
+          <p className="text-sm font-medium">You&apos;ll receive reminders for:</p>
+          <NotificationTypeItem
+            icon={Droplets}
+            title="Watering reminders"
+            description="When plants need water"
+          />
+          <NotificationTypeItem
+            icon={Sprout}
+            title="Streak milestones"
+            description="When you reach care streaks"
+          />
+          <NotificationTypeItem
+            icon={Gift}
+            title="Plant birthdays"
+            description="Annual celebrations"
+          />
+        </div>
+      )}
+    </div>
+  );
+
+  if (compact) {
+    return content;
+  }
+
   return (
-    <Card className="border-cream-200 shadow-soft">
+    <Card className="border-border/50">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Bell className="w-5 h-5" />
+        <CardTitle className="flex items-center gap-2 text-base">
+          <Bell className="w-4 h-4" />
           Notifications
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
-        {/* Permission Status */}
-        <div className="flex items-center justify-between">
-          <div>
-            <p className="text-sm font-medium">Notification Permission</p>
-            <p className="text-xs text-muted-foreground">
-              {permission === "granted"
-                ? "Enabled - you'll receive reminders"
-                : permission === "denied"
-                  ? "Blocked - enable in browser settings"
-                  : "Not yet enabled"}
-            </p>
-          </div>
-          <PermissionBadge permission={permission} />
-        </div>
-
-        {/* Enable Button */}
-        {permission === "default" && (
-          <Button
-            onClick={handleEnableNotifications}
-            disabled={isRequesting}
-            className="w-full"
-          >
-            {isRequesting ? (
-              "Requesting..."
-            ) : (
-              <>
-                <Bell className="w-4 h-4 mr-2" />
-                Enable Notifications
-              </>
-            )}
-          </Button>
-        )}
-
-        {/* Test Button */}
-        {permission === "granted" && (
-          <Button
-            onClick={handleTestNotification}
-            variant="secondary"
-            className="w-full"
-          >
-            Send Test Notification
-          </Button>
-        )}
-
-        {/* Denied Message */}
-        {permission === "denied" && (
-          <div className="p-3 bg-terracotta-400/10 rounded-lg">
-            <p className="text-sm text-terracotta-600">
-              Notifications are blocked. To enable them, click the lock icon in your browser&apos;s
-              address bar and allow notifications for this site.
-            </p>
-          </div>
-        )}
-
-        {/* Notification Types */}
-        {permission === "granted" && (
-          <div className="pt-2 space-y-2">
-            <p className="text-sm font-medium">You&apos;ll receive reminders for:</p>
-            <NotificationTypeItem
-              icon="💧"
-              title="Watering reminders"
-              description="When plants need water"
-            />
-            <NotificationTypeItem
-              icon="🌱"
-              title="Streak milestones"
-              description="When you reach care streaks"
-            />
-            <NotificationTypeItem
-              icon="🎂"
-              title="Plant birthdays"
-              description="Annual celebrations"
-            />
-          </div>
-        )}
-      </CardContent>
+      <CardContent>{content}</CardContent>
     </Card>
   );
 }
 
 function PermissionBadge({ permission }: { permission: string }) {
-  const configs = {
-    granted: { bg: "bg-sage-100", text: "text-sage-600", icon: Check, label: "Enabled" },
-    denied: { bg: "bg-terracotta-100", text: "text-terracotta-600", icon: X, label: "Blocked" },
-    default: { bg: "bg-cream-100", text: "text-muted-foreground", icon: Bell, label: "Off" },
+  const configs: Record<string, { bg: string; text: string; Icon: React.ComponentType<{ className?: string }>; label: string }> = {
+    granted: { bg: "bg-sage-50", text: "text-sage-700", Icon: Check, label: "Enabled" },
+    denied: { bg: "bg-terracotta-50", text: "text-terracotta-700", Icon: X, label: "Blocked" },
+    default: { bg: "bg-cream-100", text: "text-muted-foreground", Icon: Bell, label: "Off" },
   };
-  const config = configs[permission as keyof typeof configs] || configs.default;
 
-  const Icon = config.icon;
+  const config = configs[permission] || configs.default;
+  const { Icon } = config;
 
   return (
     <motion.div
-      initial={{ scale: 0.9 }}
-      animate={{ scale: 1 }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={transition.fast}
       className={cn(
-        "flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium",
+        "flex items-center gap-1.5 px-2 py-1 rounded-md text-xs font-medium border",
         config.bg,
-        config.text
+        config.text,
+        permission === "granted" && "border-sage-200",
+        permission === "denied" && "border-terracotta-200",
+        permission === "default" && "border-border/50"
       )}
     >
       <Icon className="w-3 h-3" />
@@ -180,17 +198,19 @@ function PermissionBadge({ permission }: { permission: string }) {
 }
 
 function NotificationTypeItem({
-  icon,
+  icon: Icon,
   title,
   description,
 }: {
-  icon: string;
+  icon: React.ComponentType<{ className?: string }>;
   title: string;
   description: string;
 }) {
   return (
-    <div className="flex items-center gap-3 p-2 rounded-lg bg-cream-50">
-      <span className="text-lg">{icon}</span>
+    <div className="flex items-center gap-3 p-2 rounded-lg bg-sage-50/50">
+      <div className="w-8 h-8 rounded-md bg-sage-100 flex items-center justify-center text-sage-600">
+        <Icon className="w-4 h-4" />
+      </div>
       <div>
         <p className="text-sm font-medium">{title}</p>
         <p className="text-xs text-muted-foreground">{description}</p>

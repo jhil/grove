@@ -8,234 +8,163 @@ import Link from "next/link";
 import { motion, useInView } from "motion/react";
 import { useRef } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { AuthButton } from "@/components/auth/auth-dialog";
-import { Leaf, Users, Droplets, Share2, ArrowRight, Sparkles } from "lucide-react";
+import {
+  Leaf,
+  Users,
+  Droplets,
+  Link as LinkIcon,
+  ArrowRight,
+  Building2,
+  Home,
+  Trees,
+} from "lucide-react";
+import { transition } from "@/lib/motion";
 
 /**
- * Home page content with onboarding for new users.
- * Features delightful animations and organic design.
+ * Home page with editorial, full-width layout.
+ * Inspired by: Nornorm, Spring/Summer, Samara
  */
 export function HomeContent() {
   const { hasCompletedOnboarding, isLoaded, completeOnboarding } = useOnboarding();
   const { hasGroves } = useMyGroves();
 
-  // Show nothing while loading to prevent flash
   if (!isLoaded) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <motion.div
-          className="flex items-center gap-3"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
+          transition={transition.enter}
         >
-          <motion.div
-            className="w-10 h-10 rounded-full bg-sage-100 flex items-center justify-center"
-            animate={{ rotate: 360 }}
-            transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-          >
-            <Leaf className="w-5 h-5 text-sage-600" />
-          </motion.div>
-          <span className="text-muted-foreground">Loading...</span>
+          <div className="w-8 h-8 rounded-lg bg-sage-100 flex items-center justify-center">
+            <Leaf className="w-4 h-4 text-sage-600" />
+          </div>
         </motion.div>
       </div>
     );
   }
 
-  // Show onboarding for new users
   if (!hasCompletedOnboarding) {
     return (
       <div className="min-h-screen bg-background flex flex-col">
-        {/* Decorative background */}
-        <div className="absolute inset-0 -z-10">
+        <header className="py-6 px-6">
           <motion.div
-            className="absolute top-20 left-10 w-64 h-64 bg-sage-200 rounded-full blur-3xl opacity-40"
-            animate={{ scale: [1, 1.1, 1], x: [0, 20, 0] }}
-            transition={{ duration: 10, repeat: Infinity }}
-          />
-          <motion.div
-            className="absolute bottom-20 right-10 w-96 h-96 bg-terracotta-300 rounded-full blur-3xl opacity-20"
-            animate={{ scale: [1, 1.15, 1], y: [0, -20, 0] }}
-            transition={{ duration: 12, repeat: Infinity }}
-          />
-        </div>
-
-        {/* Header */}
-        <header className="py-8">
-          <div className="container mx-auto px-4 flex items-center justify-center">
-            <motion.div
-              className="flex items-center gap-2"
-              initial={{ y: -20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.2 }}
-            >
-              <div className="w-10 h-10 rounded-full bg-sage-100 flex items-center justify-center">
-                <Leaf className="w-5 h-5 text-sage-600" />
-              </div>
-              <span className="font-semibold text-lg text-foreground">Plangrove</span>
-            </motion.div>
-          </div>
+            className="flex items-center gap-2"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={transition.enter}
+          >
+            <div className="w-7 h-7 rounded-lg bg-sage-100 flex items-center justify-center">
+              <Leaf className="w-3.5 h-3.5 text-sage-600" />
+            </div>
+            <span className="font-medium text-foreground tracking-tight">Plangrove</span>
+          </motion.div>
         </header>
-
-        {/* Onboarding content */}
-        <main className="flex-1 flex items-center justify-center p-4">
+        <main className="flex-1 flex items-center justify-center p-6">
           <OnboardingFlow onComplete={completeOnboarding} />
         </main>
       </div>
     );
   }
 
-  // Regular home page for returning users
   return (
-    <div className="min-h-screen bg-background overflow-hidden">
-      {/* Organic texture overlay */}
-      <div className="fixed inset-0 pointer-events-none opacity-[0.015] bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIj48ZmlsdGVyIGlkPSJuIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iLjciIG51bU9jdGF2ZXM9IjEwIiBzdGl0Y2hUaWxlcz0ic3RpdGNoIi8+PC9maWx0ZXI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsdGVyPSJ1cmwoI24pIi8+PC9zdmc+')]" />
-
-      {/* Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-sm border-b border-border/50">
-        <div className="container mx-auto px-4 py-3 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full bg-sage-100 flex items-center justify-center">
-              <Leaf className="w-4 h-4 text-sage-600" />
+    <div className="min-h-screen bg-background">
+      {/* Navigation - minimal, full width */}
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-background/90 backdrop-blur-sm">
+        <div className="flex items-center justify-between px-6 py-4 lg:px-12">
+          <Link href="/" className="flex items-center gap-2 group">
+            <div className="w-7 h-7 rounded-lg bg-sage-100 flex items-center justify-center transition-colors group-hover:bg-sage-200">
+              <Leaf className="w-3.5 h-3.5 text-sage-600" />
             </div>
-            <span className="font-semibold text-foreground">Plangrove</span>
+            <span className="font-medium text-foreground tracking-tight">Plangrove</span>
           </Link>
           <AuthButton />
         </div>
       </nav>
 
-      {/* Hero Section */}
-      <header className="relative overflow-hidden pt-16">
-        {/* Animated background blobs */}
-        <div className="absolute inset-0 -z-10">
+      {/* Hero - full width, asymmetric */}
+      <header className="min-h-[85vh] flex flex-col justify-center px-6 lg:px-12 pt-20">
+        <div className="max-w-7xl w-full">
+          <motion.p
+            className="text-sm text-muted-foreground mb-4 tracking-wide uppercase"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ ...transition.enter, delay: 0.1 }}
+          >
+            Collaborative plant care
+          </motion.p>
+
+          <motion.h1
+            className="text-5xl md:text-6xl lg:text-8xl font-semibold text-foreground tracking-tight leading-[0.95] max-w-4xl"
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ ...transition.slow, delay: 0.15 }}
+          >
+            Share the joy of
+            <br />
+            <span className="text-sage-500">growing together</span>
+          </motion.h1>
+
+          <motion.p
+            className="text-lg md:text-xl text-muted-foreground mt-8 max-w-xl leading-relaxed"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ ...transition.enter, delay: 0.3 }}
+          >
+            Plangrove makes it simple to coordinate plant care with your team,
+            roommates, or community. No more forgotten waterings.
+          </motion.p>
+
           <motion.div
-            className="absolute top-20 left-10 w-64 h-64 bg-sage-200 rounded-full blur-3xl opacity-40"
-            animate={{ scale: [1, 1.2, 1], x: [0, 30, 0], y: [0, 20, 0] }}
-            transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
-          />
-          <motion.div
-            className="absolute bottom-20 right-10 w-96 h-96 bg-terracotta-300 rounded-full blur-3xl opacity-20"
-            animate={{ scale: [1, 1.1, 1], x: [0, -20, 0], y: [0, 30, 0] }}
-            transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
-          />
-          <motion.div
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-sage-100 rounded-full blur-3xl opacity-30"
-            animate={{ scale: [1, 1.15, 1] }}
-            transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-          />
-        </div>
-
-        <div className="container mx-auto px-4 py-16 md:py-24">
-          <div className="max-w-3xl mx-auto text-center">
-            {/* Animated logo */}
-            <motion.div
-              className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-sage-100 mb-8"
-              initial={{ scale: 0, rotate: -180 }}
-              animate={{ scale: 1, rotate: 0 }}
-              transition={{ type: "spring", stiffness: 200, damping: 15 }}
-            >
-              <motion.div
-                animate={{ rotate: [0, 5, -5, 0] }}
-                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-              >
-                <Leaf className="w-10 h-10 text-sage-600" />
-              </motion.div>
-            </motion.div>
-
-            <motion.h1
-              className="text-4xl md:text-6xl font-bold text-foreground mb-6 tracking-tight"
-              initial={{ y: 30, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.2, duration: 0.5 }}
-            >
-              Care for plants,{" "}
-              <motion.span
-                className="text-primary inline-block"
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.4, type: "spring" }}
-              >
-                together
-              </motion.span>
-            </motion.h1>
-
-            <motion.p
-              className="text-lg md:text-xl text-muted-foreground mb-10 max-w-2xl mx-auto"
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.4, duration: 0.5 }}
-            >
-              Plangrove makes it easy to share plant care with your team,
-              roommates, or community. No more forgotten waterings or
-              wilted leaves.
-            </motion.p>
-
-            <motion.div
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.6, duration: 0.5 }}
-            >
-              <Link href="/create-grove">
-                <motion.div
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <Button size="lg" className="text-lg px-8 gap-2 group">
-                    Create Your Grove
-                    <motion.span
-                      className="inline-block"
-                      initial={{ x: 0 }}
-                      whileHover={{ x: 5 }}
-                    >
-                      <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
-                    </motion.span>
-                  </Button>
-                </motion.div>
-              </Link>
-            </motion.div>
-
-            <motion.p
-              className="text-sm text-muted-foreground mt-4"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.8 }}
-            >
-              Free to use. Sign in to track who cares for your plants.
-            </motion.p>
-          </div>
+            className="flex items-center gap-4 mt-10"
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ ...transition.enter, delay: 0.4 }}
+          >
+            <Link href="/create-grove">
+              <Button size="lg" className="group">
+                Create a grove
+                <ArrowRight className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
+              </Button>
+            </Link>
+            <span className="text-sm text-muted-foreground">
+              Free &middot; No account needed
+            </span>
+          </motion.div>
         </div>
       </header>
 
-      {/* User's Groves - shown if they have any saved */}
+      {/* User's Groves */}
       {hasGroves && (
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
+        <motion.section
+          className="px-6 lg:px-12 py-16"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ ...transition.enter, delay: 0.5 }}
         >
           <MyGroves />
-        </motion.div>
+        </motion.section>
       )}
 
-      {/* Features Section */}
+      {/* Features - full width grid */}
       <FeaturesSection />
 
-      {/* Use Cases */}
+      {/* Use Cases - edge to edge */}
       <UseCasesSection />
 
-      {/* Final CTA */}
+      {/* CTA - full width */}
       <CTASection />
 
-      {/* Footer */}
-      <footer className="py-8 border-t border-border">
-        <div className="container mx-auto px-4 text-center text-sm text-muted-foreground">
-          <motion.p
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-          >
-            Made with 🌱 for plant lovers everywhere
-          </motion.p>
+      {/* Footer - minimal */}
+      <footer className="px-6 lg:px-12 py-12 border-t border-border/30">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <div className="w-6 h-6 rounded-md bg-sage-100 flex items-center justify-center">
+              <Leaf className="w-3 h-3 text-sage-600" />
+            </div>
+            <span className="text-sm text-muted-foreground">Plangrove</span>
+          </div>
         </div>
       </footer>
     </div>
@@ -246,53 +175,64 @@ function FeaturesSection() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 
+  const features = [
+    {
+      icon: LinkIcon,
+      title: "Share with a link",
+      description: "Create a grove and share the link. Anyone can join without creating an account.",
+    },
+    {
+      icon: Users,
+      title: "Collaborate",
+      description: "Everyone sees the same plants and their watering status in real time.",
+    },
+    {
+      icon: Droplets,
+      title: "Track watering",
+      description: "See when plants need water. Mark them as watered with a single tap.",
+    },
+    {
+      icon: Leaf,
+      title: "Keep plants healthy",
+      description: "Smart schedules help you never miss a watering again.",
+    },
+  ];
+
   return (
-    <section ref={ref} className="py-16 md:py-24">
-      <div className="container mx-auto px-4">
+    <section ref={ref} className="py-24 lg:py-32 border-t border-border/30">
+      <div className="px-6 lg:px-12">
         <motion.div
-          className="text-center mb-12"
-          initial={{ opacity: 0, y: 20 }}
+          className="mb-16"
+          initial={{ opacity: 0, y: 16 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.5 }}
+          transition={transition.enter}
         >
-          <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
+          <p className="text-sm text-muted-foreground mb-3 tracking-wide uppercase">
+            How it works
+          </p>
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-semibold text-foreground tracking-tight max-w-2xl">
             Simple plant care for groups
           </h2>
-          <p className="text-muted-foreground max-w-xl mx-auto">
-            Everything you need to keep your plants happy, together.
-          </p>
         </motion.div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto">
-          {[
-            {
-              icon: <Share2 className="w-6 h-6" />,
-              title: "Share with a link",
-              description: "Create a grove and share the link. Anyone can join - no accounts needed.",
-            },
-            {
-              icon: <Users className="w-6 h-6" />,
-              title: "Collaborate",
-              description: "Everyone sees the same plants. Water one, and everyone knows.",
-            },
-            {
-              icon: <Droplets className="w-6 h-6" />,
-              title: "Track watering",
-              description: "See when plants need water and mark them as watered with one tap.",
-            },
-            {
-              icon: <Leaf className="w-6 h-6" />,
-              title: "Keep plants happy",
-              description: "Smart reminders help you never forget a watering again.",
-            },
-          ].map((feature, index) => (
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-px bg-border/30">
+          {features.map((feature, index) => (
             <motion.div
               key={feature.title}
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 24 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ delay: index * 0.1, duration: 0.5 }}
+              transition={{ ...transition.enter, delay: index * 0.1 }}
+              className="bg-background p-8 lg:p-10"
             >
-              <FeatureCard {...feature} />
+              <div className="w-10 h-10 rounded-lg bg-sage-100 flex items-center justify-center text-sage-600 mb-6">
+                <feature.icon className="w-5 h-5" />
+              </div>
+              <h3 className="text-lg font-medium text-foreground mb-2">
+                {feature.title}
+              </h3>
+              <p className="text-muted-foreground leading-relaxed">
+                {feature.description}
+              </p>
             </motion.div>
           ))}
         </div>
@@ -307,55 +247,52 @@ function UseCasesSection() {
 
   const useCases = [
     {
-      emoji: "🏢",
-      title: "Office Plants",
-      description: "Share the responsibility of caring for office greenery.",
+      icon: Building2,
+      label: "Office",
+      title: "Keep office plants thriving",
+      description: "Share responsibility for office greenery across your team.",
     },
     {
-      emoji: "🏠",
-      title: "Roommates",
-      description: "Never argue about who watered the fiddle leaf fig.",
+      icon: Home,
+      label: "Home",
+      title: "Roommate coordination",
+      description: "Never argue about who watered the fiddle leaf fig again.",
     },
     {
-      emoji: "🌱",
-      title: "Community Gardens",
-      description: "Coordinate plant care across multiple caretakers.",
+      icon: Trees,
+      label: "Community",
+      title: "Garden collaboration",
+      description: "Coordinate care across multiple caretakers and spaces.",
     },
   ];
 
   return (
-    <section ref={ref} className="py-16 md:py-24 bg-cream-100 relative overflow-hidden">
-      {/* Subtle decorative elements */}
-      <motion.div
-        className="absolute -top-20 -right-20 w-40 h-40 bg-sage-200 rounded-full blur-3xl opacity-30"
-        animate={{ scale: [1, 1.2, 1] }}
-        transition={{ duration: 8, repeat: Infinity }}
-      />
-
-      <div className="container mx-auto px-4 relative">
-        <motion.div
-          className="text-center mb-12"
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.5 }}
-        >
-          <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
-            Perfect for...
-          </h2>
-        </motion.div>
-
-        <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
-          {useCases.map((useCase, index) => (
-            <motion.div
-              key={useCase.title}
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={isInView ? { opacity: 1, scale: 1 } : {}}
-              transition={{ delay: index * 0.15, duration: 0.4, type: "spring" }}
-            >
-              <UseCaseCard {...useCase} />
-            </motion.div>
-          ))}
-        </div>
+    <section ref={ref} className="bg-sage-50/50">
+      <div className="grid lg:grid-cols-3">
+        {useCases.map((useCase, index) => (
+          <motion.div
+            key={useCase.title}
+            initial={{ opacity: 0, y: 24 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ ...transition.enter, delay: index * 0.1 }}
+            className="p-10 lg:p-16 border-b lg:border-b-0 lg:border-r border-border/30 last:border-0"
+          >
+            <div className="flex items-center gap-3 mb-8">
+              <div className="w-10 h-10 rounded-lg bg-sage-100 flex items-center justify-center text-sage-600">
+                <useCase.icon className="w-5 h-5" />
+              </div>
+              <span className="text-sm text-muted-foreground tracking-wide uppercase">
+                {useCase.label}
+              </span>
+            </div>
+            <h3 className="text-2xl font-medium text-foreground mb-3 tracking-tight">
+              {useCase.title}
+            </h3>
+            <p className="text-muted-foreground leading-relaxed">
+              {useCase.description}
+            </p>
+          </motion.div>
+        ))}
       </div>
     </section>
   );
@@ -366,129 +303,29 @@ function CTASection() {
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 
   return (
-    <section ref={ref} className="py-16 md:py-24 relative">
-      {/* Animated sparkles */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {[...Array(5)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute text-sage-300"
-            style={{
-              left: `${20 + i * 15}%`,
-              top: `${30 + (i % 3) * 20}%`,
-            }}
-            animate={{
-              y: [0, -10, 0],
-              opacity: [0.3, 0.7, 0.3],
-              scale: [1, 1.2, 1],
-            }}
-            transition={{
-              duration: 3 + i * 0.5,
-              repeat: Infinity,
-              delay: i * 0.3,
-            }}
-          >
-            <Sparkles className="w-4 h-4" />
-          </motion.div>
-        ))}
-      </div>
-
-      <div className="container mx-auto px-4 text-center relative">
-        <motion.h2
-          className="text-2xl md:text-3xl font-bold text-foreground mb-4"
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.5 }}
-        >
-          Ready to grow together?
-        </motion.h2>
-        <motion.p
-          className="text-muted-foreground mb-8"
-          initial={{ opacity: 0 }}
-          animate={isInView ? { opacity: 1 } : {}}
-          transition={{ delay: 0.2, duration: 0.5 }}
-        >
-          Create your first grove in seconds.
-        </motion.p>
+    <section ref={ref} className="py-24 lg:py-32">
+      <div className="px-6 lg:px-12 max-w-7xl">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 24 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ delay: 0.3, duration: 0.5 }}
+          transition={transition.enter}
         >
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-semibold text-foreground tracking-tight mb-6">
+            Ready to grow
+            <br />
+            together?
+          </h2>
+          <p className="text-lg text-muted-foreground mb-10 max-w-md">
+            Create your first grove in seconds. Start caring for plants as a team.
+          </p>
           <Link href="/create-grove">
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <Button size="lg" variant="accent" className="text-lg px-8 gap-2">
-                Start Your Grove
-                <motion.span
-                  animate={{ x: [0, 5, 0] }}
-                  transition={{ duration: 1.5, repeat: Infinity }}
-                >
-                  <ArrowRight className="w-5 h-5" />
-                </motion.span>
-              </Button>
-            </motion.div>
+            <Button size="lg" variant="accent" className="group">
+              Start your grove
+              <ArrowRight className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
+            </Button>
           </Link>
         </motion.div>
       </div>
     </section>
-  );
-}
-
-function FeatureCard({
-  icon,
-  title,
-  description,
-}: {
-  icon: React.ReactNode;
-  title: string;
-  description: string;
-}) {
-  return (
-    <motion.div whileHover={{ y: -4 }} transition={{ duration: 0.2 }}>
-      <Card variant="elevated" className="p-6 h-full">
-        <CardContent className="p-0">
-          <motion.div
-            className="w-12 h-12 rounded-xl bg-sage-100 flex items-center justify-center text-sage-600 mb-4"
-            whileHover={{ scale: 1.1, rotate: 5 }}
-            transition={{ type: "spring", stiffness: 300 }}
-          >
-            {icon}
-          </motion.div>
-          <h3 className="font-semibold text-foreground mb-2">{title}</h3>
-          <p className="text-sm text-muted-foreground">{description}</p>
-        </CardContent>
-      </Card>
-    </motion.div>
-  );
-}
-
-function UseCaseCard({
-  emoji,
-  title,
-  description,
-}: {
-  emoji: string;
-  title: string;
-  description: string;
-}) {
-  return (
-    <motion.div
-      className="text-center p-6 rounded-2xl bg-white/50 backdrop-blur-sm"
-      whileHover={{ y: -4, backgroundColor: "rgba(255,255,255,0.8)" }}
-      transition={{ duration: 0.2 }}
-    >
-      <motion.div
-        className="text-4xl mb-4"
-        whileHover={{ scale: 1.2, rotate: [0, -10, 10, 0] }}
-        transition={{ duration: 0.3 }}
-      >
-        {emoji}
-      </motion.div>
-      <h3 className="font-semibold text-foreground mb-2">{title}</h3>
-      <p className="text-sm text-muted-foreground">{description}</p>
-    </motion.div>
   );
 }

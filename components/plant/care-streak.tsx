@@ -1,16 +1,16 @@
 "use client";
 
 import { motion } from "motion/react";
-import { Flame, Sparkles, Leaf, Trophy } from "lucide-react";
+import { Flame, Trophy, Sprout, Zap, AlertCircle } from "lucide-react";
 import {
   getStreakStatus,
-  getStreakEmoji,
   getStreakLabel,
   isStreakAtRisk,
   daysUntilStreakBreaks,
 } from "@/lib/utils/streaks";
 import type { Plant } from "@/types/supabase";
 import { cn } from "@/lib/utils";
+import { transition } from "@/lib/motion";
 
 interface CareStreakProps {
   plant: Plant;
@@ -23,7 +23,6 @@ interface CareStreakProps {
  */
 export function CareStreak({ plant, showDetails = false, className }: CareStreakProps) {
   const streakCount = plant.streak_count ?? 0;
-  const bestStreak = plant.best_streak ?? 0;
   const status = getStreakStatus(streakCount);
   const atRisk = isStreakAtRisk(plant);
   const daysLeft = daysUntilStreakBreaks(plant);
@@ -32,31 +31,27 @@ export function CareStreak({ plant, showDetails = false, className }: CareStreak
     return null;
   }
 
-  const Icon = status === "legendary" ? Trophy : status === "strong" ? Flame : Leaf;
+  const Icon = status === "legendary" ? Trophy : status === "strong" ? Flame : Sprout;
 
   return (
     <motion.div
-      initial={{ scale: 0.8, opacity: 0 }}
-      animate={{ scale: 1, opacity: 1 }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={transition.fast}
       className={cn(
-        "inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium",
-        status === "legendary" && "bg-amber-100 text-amber-800",
-        status === "strong" && "bg-orange-100 text-orange-800",
-        status === "building" && "bg-emerald-100 text-emerald-800",
-        status === "starting" && "bg-sage-100 text-sage-800",
-        atRisk && "ring-2 ring-terracotta-400 ring-offset-1",
+        "inline-flex items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium",
+        status === "legendary" && "bg-amber-50 text-amber-700 border border-amber-200",
+        status === "strong" && "bg-orange-50 text-orange-700 border border-orange-200",
+        status === "building" && "bg-emerald-50 text-emerald-700 border border-emerald-200",
+        status === "starting" && "bg-sage-50 text-sage-700 border border-sage-200",
+        atRisk && "ring-1 ring-terracotta-300",
         className
       )}
     >
-      <motion.span
-        animate={status === "strong" || status === "legendary" ? { scale: [1, 1.2, 1] } : {}}
-        transition={{ repeat: Infinity, duration: 1.5 }}
-      >
-        <Icon className="h-3.5 w-3.5" />
-      </motion.span>
+      <Icon className="h-3 w-3" />
       <span>{streakCount}</span>
       {showDetails && (
-        <span className="text-[10px] opacity-75">
+        <span className="text-[10px] opacity-70">
           {atRisk && daysLeft !== null ? `${daysLeft}d left` : "streak"}
         </span>
       )}
@@ -72,24 +67,22 @@ export function CareStreakSummary({ plant }: { plant: Plant }) {
   const bestStreak = plant.best_streak ?? 0;
   const status = getStreakStatus(streakCount);
   const label = getStreakLabel(streakCount);
-  const emoji = getStreakEmoji(streakCount);
   const atRisk = isStreakAtRisk(plant);
   const daysLeft = daysUntilStreakBreaks(plant);
 
   if (status === "none") {
     return (
       <div className="text-xs text-muted-foreground">
-        Water on time to start a streak!
+        Water on time to start a streak
       </div>
     );
   }
 
   return (
-    <div className="space-y-1">
+    <div className="space-y-2">
       <div className="flex items-center gap-2">
         <CareStreak plant={plant} />
-        <span className="text-sm">{label}</span>
-        {emoji && <span className="text-sm">{emoji}</span>}
+        <span className="text-sm text-foreground">{label}</span>
       </div>
       {bestStreak > streakCount && (
         <div className="text-xs text-muted-foreground">
@@ -100,9 +93,11 @@ export function CareStreakSummary({ plant }: { plant: Plant }) {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="text-xs text-terracotta-600 font-medium"
+          transition={transition.fast}
+          className="flex items-center gap-1.5 text-xs text-terracotta-600"
         >
-          Water within {daysLeft} day{daysLeft !== 1 ? "s" : ""} to keep your streak!
+          <AlertCircle className="h-3 w-3" />
+          Water within {daysLeft} day{daysLeft !== 1 ? "s" : ""} to keep your streak
         </motion.div>
       )}
     </div>
@@ -122,7 +117,6 @@ export function StreakCelebration({
   onComplete?: () => void;
 }) {
   const status = getStreakStatus(newStreak);
-  const emoji = getStreakEmoji(newStreak);
   const milestones = [3, 5, 7, 10, 15, 20, 25, 30];
   const hitMilestone = milestones.includes(newStreak);
 
@@ -131,44 +125,46 @@ export function StreakCelebration({
     return null;
   }
 
+  const Icon = status === "legendary" ? Trophy : status === "strong" ? Flame : Zap;
+
   return (
     <motion.div
-      initial={{ scale: 0, opacity: 0 }}
-      animate={{ scale: 1, opacity: 1 }}
-      exit={{ scale: 0, opacity: 0 }}
-      onAnimationComplete={onComplete}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={transition.fast}
+      onClick={onComplete}
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 backdrop-blur-sm"
     >
       <motion.div
-        initial={{ y: 50 }}
-        animate={{ y: 0 }}
-        className="bg-white rounded-2xl p-8 shadow-xl text-center max-w-sm mx-4"
+        initial={{ opacity: 0, scale: 0.96, y: 20 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.96 }}
+        transition={transition.enter}
+        onClick={(e) => e.stopPropagation()}
+        className="bg-white rounded-xl p-8 shadow-elevated text-center max-w-sm mx-4 border border-border/50"
       >
-        <motion.div
-          animate={{ scale: [1, 1.3, 1], rotate: [0, 10, -10, 0] }}
-          transition={{ duration: 0.5, repeat: 2 }}
-          className="text-6xl mb-4"
-        >
-          {emoji}
-        </motion.div>
-        <h3 className="text-xl font-bold text-sage-900 mb-2">
-          {newStreak} Watering Streak!
+        <div className="w-16 h-16 rounded-xl bg-sage-100 flex items-center justify-center text-sage-600 mx-auto mb-4">
+          <Icon className="w-8 h-8" />
+        </div>
+
+        <h3 className="text-xl font-semibold text-foreground mb-2">
+          {newStreak} Watering Streak
         </h3>
-        <p className="text-sage-600 mb-4">
+        <p className="text-muted-foreground mb-6">
           {status === "legendary"
-            ? "You're a legendary plant parent!"
+            ? "You're a legendary plant parent"
             : status === "strong"
-            ? "Your plants are thriving!"
-            : "Keep up the great care!"}
+            ? "Your plants are thriving"
+            : "Keep up the great care"}
         </p>
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
+
+        <button
           onClick={onComplete}
-          className="px-6 py-2 bg-sage-600 text-white rounded-xl font-medium"
+          className="px-6 py-2 bg-sage-600 text-white rounded-lg font-medium transition-colors hover:bg-sage-700"
         >
           Continue
-        </motion.button>
+        </button>
       </motion.div>
     </motion.div>
   );
