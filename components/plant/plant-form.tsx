@@ -12,7 +12,7 @@ import { WateringRecommendation } from "@/components/plant/watering-recommendati
 import { BurstConfetti } from "@/components/ui/confetti";
 import { useCreatePlant, useUpdatePlant } from "@/hooks/use-plants";
 import { searchPlants, getPlantById, CATEGORY_INFO, type PlantSpecies } from "@/lib/data/plants";
-import { Leaf, Sparkles } from "lucide-react";
+import { Leaf, Sparkles, Calendar } from "lucide-react";
 import type { Plant, NewPlant, PlantUpdate } from "@/types/supabase";
 
 /**
@@ -50,6 +50,7 @@ export function PlantForm({
   const [interval, setInterval] = useState(7);
   const [notes, setNotes] = useState("");
   const [photo, setPhoto] = useState<string | null>(null);
+  const [birthday, setBirthday] = useState<string>(""); // Plant birthday for milestones
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showBurst, setShowBurst] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -81,6 +82,7 @@ export function PlantForm({
         setInterval(plant.watering_interval);
         setNotes(plant.notes || "");
         setPhoto(plant.photo || null);
+        setBirthday(plant.birthday ? plant.birthday.split("T")[0] : "");
         // Try to find matching plant in database
         const matchingPlant = getPlantById(plant.type);
         setPlantId(matchingPlant ? plant.type : null);
@@ -91,6 +93,7 @@ export function PlantForm({
         setInterval(7);
         setNotes("");
         setPhoto(null);
+        setBirthday("");
       }
       setShowBurst(false);
       setSearchQuery("");
@@ -120,6 +123,9 @@ export function PlantForm({
     const typeToStore = plantId || type;
 
     try {
+      // Convert birthday to ISO timestamp if provided
+      const birthdayValue = birthday ? new Date(birthday).toISOString() : null;
+
       if (isEditing && plant) {
         const updates: PlantUpdate = {
           name: name.trim(),
@@ -127,6 +133,7 @@ export function PlantForm({
           watering_interval: interval,
           notes: notes.trim() || null,
           photo: photo,
+          birthday: birthdayValue,
         };
         const updatedPlant = await updatePlant.mutateAsync({ id: plant.id, updates });
         setShowBurst(true);
@@ -142,6 +149,7 @@ export function PlantForm({
           watering_interval: interval,
           notes: notes.trim() || null,
           photo: photo,
+          birthday: birthdayValue,
         };
         const createdPlant = await createPlant.mutateAsync(newPlant);
         setShowBurst(true);
@@ -328,6 +336,34 @@ export function PlantForm({
             disabled={isSubmitting}
             maxLength={200}
           />
+        </motion.div>
+
+        {/* Birthday (Optional) */}
+        <motion.div
+          className="space-y-2"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+        >
+          <label
+            htmlFor="birthday"
+            className="text-sm font-medium text-foreground flex items-center gap-1.5"
+          >
+            <Calendar className="w-3.5 h-3.5" />
+            Plant Birthday{" "}
+            <span className="text-muted-foreground font-normal">(optional)</span>
+          </label>
+          <Input
+            id="birthday"
+            type="date"
+            value={birthday}
+            onChange={(e) => setBirthday(e.target.value)}
+            disabled={isSubmitting}
+            max={new Date().toISOString().split("T")[0]}
+          />
+          <p className="text-xs text-muted-foreground">
+            When you got this plant - unlocks milestones and celebrations!
+          </p>
         </motion.div>
 
         {/* Actions */}

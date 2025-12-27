@@ -18,6 +18,7 @@ import { cn } from "@/lib/utils";
 import { MoreHorizontal, Pencil, Trash2, Droplets } from "lucide-react";
 import type { Plant } from "@/types/supabase";
 import { CareStreak } from "@/components/plant/care-streak";
+import { PlantAge } from "@/components/plant/plant-milestones";
 
 /**
  * Card component for displaying a plant with watering status.
@@ -216,8 +217,11 @@ export function PlantCard({
                     {plantType.label}
                   </p>
                 </div>
-                {/* Care Streak Badge */}
-                <CareStreak plant={plant} showDetails />
+                {/* Badges */}
+                <div className="flex flex-col items-end gap-1">
+                  <CareStreak plant={plant} showDetails />
+                  <PlantAge plant={plant} />
+                </div>
               </div>
             </div>
 
