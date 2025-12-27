@@ -69,7 +69,7 @@ export function DialogContent({
         className={cn(
           "fixed left-[50%] top-[50%] z-50",
           "w-full max-w-lg translate-x-[-50%] translate-y-[-50%]",
-          "bg-card rounded-2xl shadow-lifted",
+          "bg-card rounded-xl shadow-lifted",
           "border border-border/50",
           "p-6",
           "data-[state=open]:animate-in data-[state=closed]:animate-out",

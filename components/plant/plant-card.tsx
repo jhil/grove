@@ -123,7 +123,7 @@ export function PlantCard({
                   className="fixed inset-0 z-10"
                   onClick={() => setShowMenu(false)}
                 />
-                <div className="absolute left-0 top-full mt-1 z-20 bg-white rounded-xl shadow-lifted border border-border/50 py-1 min-w-[140px]">
+                <div className="absolute left-0 top-full mt-1 z-20 bg-white rounded-lg shadow-lifted border border-border/50 py-1 min-w-[140px]">
                   <button
                     onClick={() => {
                       setShowMenu(false);
@@ -171,6 +171,7 @@ export function PlantCard({
           {/* Water Button */}
           <WaterButton
             plantId={plant.id}
+            groveId={groveId}
             plantName={plant.name}
             status={status}
             onWatered={onWatered}

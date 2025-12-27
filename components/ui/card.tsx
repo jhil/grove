@@ -18,16 +18,15 @@ export const Card = React.forwardRef<HTMLDivElement, CardProps>(
       <div
         ref={ref}
         className={cn(
-          // Base card styles
-          "rounded-2xl bg-card text-card-foreground",
+          // Base card styles - refined, not overly rounded
+          "rounded-xl bg-card text-card-foreground",
           "border border-border/50",
           // Variant styles
           variant === "default" && "shadow-soft",
           variant === "elevated" && "shadow-lifted",
           variant === "interactive" && [
-            "shadow-soft transition-all duration-200 ease-out",
-            "hover:shadow-lifted hover:-translate-y-1",
-            "cursor-pointer",
+            "shadow-soft transition-shadow duration-300 ease-out",
+            "hover:shadow-lifted",
           ],
           className
         )}

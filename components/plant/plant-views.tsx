@@ -195,7 +195,7 @@ function PlantListItem({
 
         {/* Actions */}
         <div className="flex items-center gap-2 flex-shrink-0">
-          <WaterButton plantId={plant.id} plantName={plant.name} status={status} onWatered={onWatered} />
+          <WaterButton plantId={plant.id} groveId={groveId} plantName={plant.name} status={status} onWatered={onWatered} />
 
           <div className="relative">
             <button
@@ -312,7 +312,7 @@ function PlantCompactItem({
           onClick={() => {
             // Quick inline water
             import("@/lib/database/plants").then(({ waterPlant }) => {
-              waterPlant(plant.id).then(() => {
+              waterPlant(plant.id, groveId).then(() => {
                 showToast(`${plant.name} watered!`, "success");
                 onWatered?.();
               });

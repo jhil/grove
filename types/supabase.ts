@@ -107,6 +107,82 @@ export type Database = {
           }
         ];
       };
+      profiles: {
+        Row: {
+          id: string;
+          email: string | null;
+          display_name: string | null;
+          avatar_url: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id: string;
+          email?: string | null;
+          display_name?: string | null;
+          avatar_url?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          email?: string | null;
+          display_name?: string | null;
+          avatar_url?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      watering_events: {
+        Row: {
+          id: string;
+          plant_id: string;
+          grove_id: string;
+          user_id: string | null;
+          user_name: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          plant_id: string;
+          grove_id: string;
+          user_id?: string | null;
+          user_name?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          plant_id?: string;
+          grove_id?: string;
+          user_id?: string | null;
+          user_name?: string | null;
+          created_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "watering_events_plant_id_fkey";
+            columns: ["plant_id"];
+            isOneToOne: false;
+            referencedRelation: "plants";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "watering_events_grove_id_fkey";
+            columns: ["grove_id"];
+            isOneToOne: false;
+            referencedRelation: "groves";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "watering_events_user_id_fkey";
+            columns: ["user_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
     };
     Views: Record<string, never>;
     Functions: Record<string, never>;
@@ -125,3 +201,10 @@ export type GroveUpdate = Database["public"]["Tables"]["groves"]["Update"];
 export type Plant = Database["public"]["Tables"]["plants"]["Row"];
 export type NewPlant = Database["public"]["Tables"]["plants"]["Insert"];
 export type PlantUpdate = Database["public"]["Tables"]["plants"]["Update"];
+
+export type Profile = Database["public"]["Tables"]["profiles"]["Row"];
+export type NewProfile = Database["public"]["Tables"]["profiles"]["Insert"];
+export type ProfileUpdate = Database["public"]["Tables"]["profiles"]["Update"];
+
+export type WateringEvent = Database["public"]["Tables"]["watering_events"]["Row"];
+export type NewWateringEvent = Database["public"]["Tables"]["watering_events"]["Insert"];

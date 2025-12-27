@@ -10,6 +10,7 @@ import {
   getRandomTip,
 } from "@/lib/utils/plant-helpers";
 import { useWaterPlant } from "@/hooks/use-plants";
+import { useAuth } from "@/hooks/use-auth";
 import { useToast } from "@/components/ui/toast";
 import { cn } from "@/lib/utils";
 import { Droplets, Sparkles, Lightbulb } from "lucide-react";
@@ -61,10 +62,12 @@ export function GroveHealth({ plants }: GroveHealthProps) {
  */
 interface QuickWaterProps {
   plants: Plant[];
+  groveId: string;
 }
 
-export function QuickWater({ plants }: QuickWaterProps) {
+export function QuickWater({ plants, groveId }: QuickWaterProps) {
   const { showToast } = useToast();
+  const { user, profile } = useAuth();
   const waterPlant = useWaterPlant();
 
   const plantsNeedingWater = getPlantsNeedingWater(plants);
@@ -73,9 +76,19 @@ export function QuickWater({ plants }: QuickWaterProps) {
 
   const handleWaterAll = async () => {
     try {
+      const userInfo = user && profile
+        ? { userId: user.id, userName: profile.display_name || profile.email || "Someone" }
+        : undefined;
+
       // Water all plants that need it
       await Promise.all(
-        plantsNeedingWater.map((plant) => waterPlant.mutateAsync(plant.id))
+        plantsNeedingWater.map((plant) =>
+          waterPlant.mutateAsync({
+            plantId: plant.id,
+            groveId,
+            userInfo,
+          })
+        )
       );
       showToast(
         `Watered ${plantsNeedingWater.length} plant${

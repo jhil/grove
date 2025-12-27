@@ -1,6 +1,6 @@
 "use client";
 
-import { use } from "react";
+import { use, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Header } from "@/components/shared/header";
 import { EmptyState } from "@/components/shared/empty-state";
@@ -20,6 +20,7 @@ import { useRealtimeSync } from "@/hooks/use-realtime";
 import { useActivities } from "@/hooks/use-activities";
 import { useViewMode } from "@/hooks/use-view-mode";
 import { useSortOption } from "@/hooks/use-sort";
+import { useMyGroves } from "@/hooks/use-my-groves";
 import { useToast } from "@/components/ui/toast";
 import { Plus, Leaf, AlertCircle } from "lucide-react";
 import { useState } from "react";
@@ -42,6 +43,14 @@ export default function GrovePage({ params }: GrovePageProps) {
 
   // Enable real-time sync for this grove
   useRealtimeSync(id);
+
+  // Save grove to user's list when loaded
+  const { saveGrove, updateGroveName } = useMyGroves();
+  useEffect(() => {
+    if (grove) {
+      saveGrove({ id: grove.id, name: grove.name });
+    }
+  }, [grove, saveGrove]);
 
   // Activity logging
   const { logPlantAdded, logPlantWatered, logPlantEdited, logPlantRemoved } = useActivities(id);
@@ -107,7 +116,7 @@ export default function GrovePage({ params }: GrovePageProps) {
         {plants && plants.length > 0 && (
           <div className="mt-6 space-y-4">
             <CareSummary plants={plants} />
-            <QuickWater plants={plants} />
+            <QuickWater plants={plants} groveId={id} />
           </div>
         )}
 

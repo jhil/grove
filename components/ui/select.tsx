@@ -41,7 +41,7 @@ export function Select({
       <BaseSelect.Trigger
         className={cn(
           "flex h-11 w-full items-center justify-between",
-          "rounded-xl px-4 py-2",
+          "rounded-lg px-4 py-2",
           "bg-cream-100 text-foreground",
           "border border-border",
           "text-sm",
@@ -64,7 +64,7 @@ export function Select({
           <BaseSelect.Popup
             className={cn(
               "z-50 min-w-[8rem] overflow-hidden",
-              "rounded-xl bg-card",
+              "rounded-lg bg-card",
               "border border-border/50 shadow-lifted",
               "p-1"
             )}

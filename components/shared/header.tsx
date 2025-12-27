@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Leaf, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { AuthButton } from "@/components/auth/auth-dialog";
 import { cn } from "@/lib/utils";
 
 /**
@@ -62,8 +63,11 @@ export function Header({
           )}
         </div>
 
-        {/* Right side: Actions */}
-        {actions && <div className="flex items-center gap-2">{actions}</div>}
+        {/* Right side: Actions + Auth */}
+        <div className="flex items-center gap-3">
+          {actions}
+          <AuthButton />
+        </div>
       </div>
     </header>
   );

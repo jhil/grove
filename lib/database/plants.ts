@@ -1,5 +1,5 @@
 import { createClient } from "@/lib/supabase/client";
-import type { Plant, NewPlant, PlantUpdate } from "@/types/supabase";
+import type { Plant, NewPlant, PlantUpdate, WateringEvent, NewWateringEvent } from "@/types/supabase";
 
 /**
  * Database operations for plants.
@@ -90,12 +90,57 @@ export async function updatePlant(
 }
 
 /**
- * Water a plant (update last_watered timestamp)
+ * Water a plant (update last_watered timestamp) and record who did it
  */
-export async function waterPlant(id: string): Promise<Plant> {
-  return updatePlant(id, {
-    last_watered: new Date().toISOString(),
+export async function waterPlant(
+  id: string,
+  groveId: string,
+  userInfo?: { userId: string; userName: string }
+): Promise<Plant> {
+  const supabase = createClient();
+  const now = new Date().toISOString();
+
+  // Update the plant's last_watered timestamp
+  const plant = await updatePlant(id, {
+    last_watered: now,
   });
+
+  // Record the watering event (if user is authenticated)
+  try {
+    await supabase.from("watering_events").insert({
+      plant_id: id,
+      grove_id: groveId,
+      user_id: userInfo?.userId || null,
+      user_name: userInfo?.userName || null,
+      created_at: now,
+    } as NewWateringEvent);
+  } catch (error) {
+    // Don't fail the watering if event logging fails
+    console.error("Failed to record watering event:", error);
+  }
+
+  return plant;
+}
+
+/**
+ * Get watering events for a grove
+ */
+export async function getWateringEvents(groveId: string, limit = 20): Promise<WateringEvent[]> {
+  const supabase = createClient();
+
+  const { data, error } = await supabase
+    .from("watering_events")
+    .select("*")
+    .eq("grove_id", groveId)
+    .order("created_at", { ascending: false })
+    .limit(limit);
+
+  if (error) {
+    console.error("Failed to fetch watering events:", error);
+    return [];
+  }
+
+  return (data ?? []) as WateringEvent[];
 }
 
 /**

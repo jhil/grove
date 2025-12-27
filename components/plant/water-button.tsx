@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useWaterPlant } from "@/hooks/use-plants";
+import { useAuth } from "@/hooks/use-auth";
 import { useToast } from "@/components/ui/toast";
 import { cn } from "@/lib/utils";
 import { Droplets, Check } from "lucide-react";
@@ -14,6 +15,7 @@ import type { WateringStatus } from "@/lib/utils/dates";
  */
 interface WaterButtonProps {
   plantId: string;
+  groveId: string;
   plantName: string;
   status: WateringStatus;
   onWatered?: () => void;
@@ -21,18 +23,28 @@ interface WaterButtonProps {
 
 export function WaterButton({
   plantId,
+  groveId,
   plantName,
   status,
   onWatered,
 }: WaterButtonProps) {
   const { showToast } = useToast();
+  const { user, profile } = useAuth();
   const waterPlant = useWaterPlant();
 
   const [justWatered, setJustWatered] = useState(false);
 
   const handleWater = async () => {
     try {
-      await waterPlant.mutateAsync(plantId);
+      const userInfo = user && profile
+        ? { userId: user.id, userName: profile.display_name || profile.email || "Someone" }
+        : undefined;
+
+      await waterPlant.mutateAsync({
+        plantId,
+        groveId,
+        userInfo,
+      });
       setJustWatered(true);
       showToast(`${plantName} watered!`, "success");
       onWatered?.();

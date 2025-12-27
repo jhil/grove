@@ -76,8 +76,16 @@ export function useWaterPlant() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: waterPlant,
-    onMutate: async (id) => {
+    mutationFn: ({
+      plantId,
+      groveId,
+      userInfo,
+    }: {
+      plantId: string;
+      groveId: string;
+      userInfo?: { userId: string; userName: string };
+    }) => waterPlant(plantId, groveId, userInfo),
+    onMutate: async ({ plantId }) => {
       // Cancel any outgoing refetches
       await queryClient.cancelQueries({ queryKey: plantKeys.all });
 
@@ -92,7 +100,7 @@ export function useWaterPlant() {
         (old: Plant[] | undefined) => {
           if (!old) return old;
           return old.map((plant) =>
-            plant.id === id
+            plant.id === plantId
               ? { ...plant, last_watered: new Date().toISOString() }
               : plant
           );
@@ -102,7 +110,7 @@ export function useWaterPlant() {
       // Return context with the snapshotted value
       return { previousPlants };
     },
-    onError: (_err, _id, context) => {
+    onError: (_err, _vars, context) => {
       // Roll back on error
       if (context?.previousPlants) {
         context.previousPlants.forEach(([queryKey, data]) => {

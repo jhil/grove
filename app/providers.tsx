@@ -3,10 +3,11 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useState } from "react";
 import { ToastProvider } from "@/components/ui/toast";
+import { AuthProvider } from "@/hooks/use-auth";
 
 /**
  * Root providers for the application.
- * Includes TanStack Query and Toast notifications.
+ * Includes TanStack Query, Toast notifications, and Authentication.
  */
 export function Providers({ children }: { children: React.ReactNode }) {
   // Create a new QueryClient instance for each session
@@ -27,9 +28,11 @@ export function Providers({ children }: { children: React.ReactNode }) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <ToastProvider>
-        {children}
-      </ToastProvider>
+      <AuthProvider>
+        <ToastProvider>
+          {children}
+        </ToastProvider>
+      </AuthProvider>
     </QueryClientProvider>
   );
 }

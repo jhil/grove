@@ -1,7 +1,9 @@
 "use client";
 
 import { useOnboarding } from "@/hooks/use-onboarding";
+import { useMyGroves } from "@/hooks/use-my-groves";
 import { OnboardingFlow } from "@/components/onboarding/onboarding-flow";
+import { MyGroves } from "@/components/grove/my-groves";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -12,6 +14,7 @@ import { Leaf, Users, Droplets, Share2 } from "lucide-react";
  */
 export function HomeContent() {
   const { hasCompletedOnboarding, isLoaded, completeOnboarding } = useOnboarding();
+  const { hasGroves } = useMyGroves();
 
   // Show nothing while loading to prevent flash
   if (!isLoaded) {
@@ -86,11 +89,14 @@ export function HomeContent() {
             </Link>
 
             <p className="text-sm text-muted-foreground mt-4">
-              Free to use. No account required.
+              Free to use. Sign in to track who cares for your plants.
             </p>
           </div>
         </div>
       </header>
+
+      {/* User's Groves - shown if they have any saved */}
+      {hasGroves && <MyGroves />}
 
       {/* Features Section */}
       <section className="py-16 md:py-24">
