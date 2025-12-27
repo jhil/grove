@@ -1,13 +1,44 @@
 # Database Migrations
 
-Run these SQL commands in the Supabase SQL Editor to set up the required tables.
+Run this SQL in the Supabase SQL Editor to set up all required tables.
 
-## Migration 2: User Profiles and Watering Events
-
-Add this after the initial grove/plants schema is set up.
+## Complete Schema Setup
 
 ```sql
--- User profiles table
+-- =====================================================
+-- GROVES TABLE
+-- =====================================================
+CREATE TABLE IF NOT EXISTS groves (
+  id TEXT PRIMARY KEY,
+  name TEXT NOT NULL,
+  cover_photo TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- =====================================================
+-- PLANTS TABLE
+-- =====================================================
+CREATE TABLE IF NOT EXISTS plants (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  grove_id TEXT NOT NULL REFERENCES groves(id) ON DELETE CASCADE,
+  name TEXT NOT NULL,
+  type TEXT NOT NULL,
+  watering_interval INTEGER NOT NULL,
+  photo TEXT,
+  notes TEXT,
+  last_watered TIMESTAMPTZ,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Indexes for plants
+CREATE INDEX IF NOT EXISTS idx_plants_grove_id ON plants(grove_id);
+CREATE INDEX IF NOT EXISTS idx_plants_last_watered ON plants(last_watered);
+
+-- =====================================================
+-- USER PROFILES TABLE
+-- =====================================================
 CREATE TABLE IF NOT EXISTS profiles (
   id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
   email TEXT,
@@ -17,22 +48,10 @@ CREATE TABLE IF NOT EXISTS profiles (
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- RLS for profiles
-ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
-
--- Users can read all profiles (for displaying who watered)
-CREATE POLICY "Public profiles are viewable by everyone"
-ON profiles FOR SELECT USING (true);
-
--- Users can only update their own profile
-CREATE POLICY "Users can update own profile"
-ON profiles FOR UPDATE USING (auth.uid() = id);
-
--- Users can insert their own profile
-CREATE POLICY "Users can insert own profile"
-ON profiles FOR INSERT WITH CHECK (auth.uid() = id);
-
--- Watering events table - records who watered what plant
+-- =====================================================
+-- WATERING EVENTS TABLE
+-- Records who watered what plant and when
+-- =====================================================
 CREATE TABLE IF NOT EXISTS watering_events (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   plant_id UUID NOT NULL REFERENCES plants(id) ON DELETE CASCADE,
@@ -43,30 +62,134 @@ CREATE TABLE IF NOT EXISTS watering_events (
 );
 
 -- Indexes for watering events
-CREATE INDEX idx_watering_events_plant_id ON watering_events(plant_id);
-CREATE INDEX idx_watering_events_grove_id ON watering_events(grove_id);
-CREATE INDEX idx_watering_events_created_at ON watering_events(created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_watering_events_plant_id ON watering_events(plant_id);
+CREATE INDEX IF NOT EXISTS idx_watering_events_grove_id ON watering_events(grove_id);
+CREATE INDEX IF NOT EXISTS idx_watering_events_created_at ON watering_events(created_at DESC);
 
--- RLS for watering events
-ALTER TABLE watering_events ENABLE ROW LEVEL SECURITY;
+-- =====================================================
+-- AUTO-UPDATE TIMESTAMPS FUNCTION
+-- =====================================================
+CREATE OR REPLACE FUNCTION update_updated_at()
+RETURNS TRIGGER AS $$
+BEGIN
+  NEW.updated_at = NOW();
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
 
--- Anyone can view watering events (public groves)
-CREATE POLICY "Public watering events"
-ON watering_events FOR SELECT USING (true);
+-- Triggers for auto-updating timestamps
+DROP TRIGGER IF EXISTS update_groves_timestamp ON groves;
+CREATE TRIGGER update_groves_timestamp
+BEFORE UPDATE ON groves
+FOR EACH ROW EXECUTE FUNCTION update_updated_at();
 
--- Authenticated users can insert watering events
-CREATE POLICY "Authenticated users can insert watering events"
-ON watering_events FOR INSERT WITH CHECK (auth.uid() IS NOT NULL);
+DROP TRIGGER IF EXISTS update_plants_timestamp ON plants;
+CREATE TRIGGER update_plants_timestamp
+BEFORE UPDATE ON plants
+FOR EACH ROW EXECUTE FUNCTION update_updated_at();
 
--- Enable realtime for watering events
-ALTER PUBLICATION supabase_realtime ADD TABLE watering_events;
-
--- Auto-update profiles timestamp
+DROP TRIGGER IF EXISTS update_profiles_timestamp ON profiles;
 CREATE TRIGGER update_profiles_timestamp
 BEFORE UPDATE ON profiles
 FOR EACH ROW EXECUTE FUNCTION update_updated_at();
 
--- Function to get recent activity for a grove
+-- =====================================================
+-- ROW LEVEL SECURITY POLICIES
+-- =====================================================
+
+-- Enable RLS on all tables
+ALTER TABLE groves ENABLE ROW LEVEL SECURITY;
+ALTER TABLE plants ENABLE ROW LEVEL SECURITY;
+ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
+ALTER TABLE watering_events ENABLE ROW LEVEL SECURITY;
+
+-- Groves: Public access (anyone can create/read/update)
+DROP POLICY IF EXISTS "Public groves select" ON groves;
+CREATE POLICY "Public groves select" ON groves FOR SELECT USING (true);
+
+DROP POLICY IF EXISTS "Public groves insert" ON groves;
+CREATE POLICY "Public groves insert" ON groves FOR INSERT WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Public groves update" ON groves;
+CREATE POLICY "Public groves update" ON groves FOR UPDATE USING (true);
+
+DROP POLICY IF EXISTS "Public groves delete" ON groves;
+CREATE POLICY "Public groves delete" ON groves FOR DELETE USING (true);
+
+-- Plants: Public access (anyone can create/read/update/delete)
+DROP POLICY IF EXISTS "Public plants select" ON plants;
+CREATE POLICY "Public plants select" ON plants FOR SELECT USING (true);
+
+DROP POLICY IF EXISTS "Public plants insert" ON plants;
+CREATE POLICY "Public plants insert" ON plants FOR INSERT WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Public plants update" ON plants;
+CREATE POLICY "Public plants update" ON plants FOR UPDATE USING (true);
+
+DROP POLICY IF EXISTS "Public plants delete" ON plants;
+CREATE POLICY "Public plants delete" ON plants FOR DELETE USING (true);
+
+-- Profiles: Public read, user-specific write
+DROP POLICY IF EXISTS "Public profiles are viewable by everyone" ON profiles;
+CREATE POLICY "Public profiles are viewable by everyone"
+ON profiles FOR SELECT USING (true);
+
+DROP POLICY IF EXISTS "Users can update own profile" ON profiles;
+CREATE POLICY "Users can update own profile"
+ON profiles FOR UPDATE USING (auth.uid() = id);
+
+DROP POLICY IF EXISTS "Users can insert own profile" ON profiles;
+CREATE POLICY "Users can insert own profile"
+ON profiles FOR INSERT WITH CHECK (auth.uid() = id);
+
+-- Watering events: Public read, anyone can insert
+DROP POLICY IF EXISTS "Public watering events select" ON watering_events;
+CREATE POLICY "Public watering events select"
+ON watering_events FOR SELECT USING (true);
+
+DROP POLICY IF EXISTS "Anyone can insert watering events" ON watering_events;
+CREATE POLICY "Anyone can insert watering events"
+ON watering_events FOR INSERT WITH CHECK (true);
+
+-- =====================================================
+-- REALTIME PUBLICATION
+-- =====================================================
+ALTER PUBLICATION supabase_realtime ADD TABLE groves;
+ALTER PUBLICATION supabase_realtime ADD TABLE plants;
+ALTER PUBLICATION supabase_realtime ADD TABLE watering_events;
+
+-- =====================================================
+-- STORAGE BUCKET FOR PLANT PHOTOS
+-- =====================================================
+INSERT INTO storage.buckets (id, name, public)
+VALUES ('plant-photos', 'plant-photos', true)
+ON CONFLICT (id) DO NOTHING;
+
+-- Storage policies for plant photos
+DROP POLICY IF EXISTS "Public plant photos read" ON storage.objects;
+CREATE POLICY "Public plant photos read"
+ON storage.objects FOR SELECT
+USING (bucket_id = 'plant-photos');
+
+DROP POLICY IF EXISTS "Anyone can upload plant photos" ON storage.objects;
+CREATE POLICY "Anyone can upload plant photos"
+ON storage.objects FOR INSERT
+WITH CHECK (bucket_id = 'plant-photos');
+
+DROP POLICY IF EXISTS "Anyone can update plant photos" ON storage.objects;
+CREATE POLICY "Anyone can update plant photos"
+ON storage.objects FOR UPDATE
+USING (bucket_id = 'plant-photos');
+
+DROP POLICY IF EXISTS "Anyone can delete plant photos" ON storage.objects;
+CREATE POLICY "Anyone can delete plant photos"
+ON storage.objects FOR DELETE
+USING (bucket_id = 'plant-photos');
+
+-- =====================================================
+-- HELPER FUNCTION: GET GROVE ACTIVITY
+-- Returns recent watering events for a grove
+-- =====================================================
 CREATE OR REPLACE FUNCTION get_grove_activity(p_grove_id TEXT, p_limit INT DEFAULT 20)
 RETURNS TABLE (
   id UUID,
@@ -96,7 +219,11 @@ $$ LANGUAGE plpgsql;
 
 ## Notes
 
-- `profiles` table stores user display info
-- `watering_events` records each watering action with who did it
-- `user_name` is denormalized so history is preserved even if user deletes account
-- The `get_grove_activity` function provides a convenient way to fetch recent activity
+- **groves**: Stores grove information (name, cover photo)
+- **plants**: Individual plants within a grove
+- **profiles**: User profile data linked to Supabase Auth
+- **watering_events**: Records each watering action with who did it
+- **user_name** is denormalized so history is preserved even if user deletes account
+- **plant-photos** storage bucket for uploading plant images
+- All tables have public read access for collaborative features
+- Profiles require authentication for insert/update

@@ -10,7 +10,9 @@
       "Bash(node:*)",
       "Bash(git add:*)",
       "Bash(git commit -m \"$\\(cat <<''EOF''\nfeat: complete Plangrove collaborative plant care app\n\nCore features:\n- Grove and plant CRUD with Supabase\n- Real-time sync across devices\n- Watering tracking with urgency indicators\n- Photo upload for plants\n- Grove sharing via public links\n\nUI/UX:\n- \"Quiet Greenhouse\" design with Denim Ink typography\n- Multiple view modes \\(gallery, list, compact\\)\n- Plant sorting \\(urgency, name, date, type\\)\n- Grove health dashboard and statistics\n- Activity changelog for grove history\n- Weather widget integration\n- Sound effects for interactions\n- Motion animations throughout\n\nAdditional features:\n- AI-powered plant name generator\n- Smart watering recommendations\n- Multi-step onboarding flow\n- Grove settings with name editing and delete\n- PWA manifest for mobile installation\n\n🤖 Generated with [Claude Code]\\(https://claude.com/claude-code\\)\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
-      "Bash(git push:*)"
+      "Bash(git push:*)",
+      "Bash(git commit:*)",
+      "Bash(curl:*)"
     ]
   }
 }
