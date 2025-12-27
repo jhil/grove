@@ -40,7 +40,11 @@
       "WebFetch(domain:www.samara.com)",
       "Bash(pnpm deploy:*)",
       "Bash(npx playwright install:*)",
-      "Bash(npx tsx:*)"
+      "Bash(npx tsx:*)",
+      "Bash(pnpm outdated:*)",
+      "Bash(npm outdated:*)",
+      "Bash(npm view:*)",
+      "Bash(pnpm update:*)"
     ]
   }
 }
