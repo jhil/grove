@@ -7,6 +7,7 @@ import { Header } from "@/components/shared/header";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Confetti } from "@/components/ui/confetti";
 import { useCreateGrove } from "@/hooks/use-grove";
 import { useToast } from "@/components/ui/toast";
 import { Leaf, Sparkles, ArrowRight, Check } from "lucide-react";
@@ -23,6 +24,7 @@ export default function CreateGrovePage() {
   const [name, setName] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [showConfetti, setShowConfetti] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,12 +39,13 @@ export default function CreateGrovePage() {
     try {
       const grove = await createGrove.mutateAsync({ name: name.trim() });
       setIsSuccess(true);
+      setShowConfetti(true);
       showToast(`${grove.name} created!`, "success");
 
-      // Short delay to show success state before navigating
+      // Short delay to show success state and confetti before navigating
       setTimeout(() => {
         router.push(`/grove/${grove.id}`);
-      }, 800);
+      }, 1500);
     } catch (error) {
       console.error("Failed to create grove:", error);
       showToast("Failed to create grove. Please try again.", "error");
@@ -59,6 +62,9 @@ export default function CreateGrovePage() {
 
   return (
     <div className="min-h-screen bg-background overflow-hidden">
+      {/* Confetti celebration on success */}
+      <Confetti active={showConfetti} duration={2500} count={60} />
+
       {/* Animated background */}
       <div className="fixed inset-0 -z-10">
         <motion.div
