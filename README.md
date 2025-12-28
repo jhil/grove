@@ -175,7 +175,7 @@ Set these in the Cloudflare dashboard (Workers & Pages > plangrove > Settings > 
 ## Project Structure
 
 ```
-grove/
+plangrove/
 ├── app/              # Next.js pages
 ├── components/       # React components
 │   ├── ui/           # Base UI primitives (Dialog, Select, Combobox)
