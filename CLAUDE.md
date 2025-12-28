@@ -113,3 +113,38 @@ Follow the icon mapping in `docs/DESIGN.md`:
 1. Create migration in Supabase dashboard
 2. Document in `docs/MIGRATIONS.md`
 3. Update TypeScript types if needed
+
+## MCP Servers
+
+This project has access to the following MCP servers:
+
+### Supabase
+
+Use the Supabase MCP for database operations:
+
+- `execute_sql` - Run SQL queries directly
+- `apply_migration` - Apply database migrations
+- `list_tables` - View table schemas
+- `get_logs` - Check service logs for debugging
+
+### Cloudflare
+
+Use the Cloudflare MCP for deployment operations:
+
+- `workers_list` - List all Workers
+- `pages_list_projects` - List Pages projects
+- `pages_get_deployment` - Check deployment status
+
+### Serena
+
+Serena provides semantic code understanding via Language Server Protocol (LSP):
+
+- `find_symbol` - Find functions, classes, types by name
+- `get_symbol_definition` - Get full definition with docstrings
+- `get_references` - Find all usages of a symbol
+- `get_hover_info` - Get type info and documentation
+
+**Best Practices:**
+- Use Serena for understanding code structure before making changes
+- Prefer `find_symbol` over grep for finding definitions
+- Use `get_references` to understand impact of changes
