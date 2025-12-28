@@ -90,11 +90,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     };
 
-    // Timeout fallback - ensure loading stops after 3 seconds max
+    // Timeout fallback - ensure loading stops after 10 seconds max
+    // Increased from 3s to allow slower networks/cold starts
     const timeout = setTimeout(() => {
       console.warn("Auth initialization timeout - forcing loading to false");
       setLoadingFalse();
-    }, 3000);
+    }, 10000);
 
     // Get initial session immediately
     const initSession = async () => {

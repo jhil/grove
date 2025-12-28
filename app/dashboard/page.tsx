@@ -23,9 +23,12 @@ import { transition } from "@/lib/motion";
  * Shows groves, quick actions, and personalized content
  */
 export default function DashboardPage() {
+	console.log("[DashboardPage] rendering...");
 	const router = useRouter();
 	const { user, profile, isAuthenticated, isLoading } = useAuth();
+	console.log("[DashboardPage] auth state:", { isLoading, isAuthenticated, userId: user?.id });
 	const { data: groves = [], isLoading: grovesLoading } = useMyOwnedGroves();
+	console.log("[DashboardPage] groves:", { grovesLoading, grovesCount: groves.length });
 
 	// Redirect if not authenticated
 	useEffect(() => {

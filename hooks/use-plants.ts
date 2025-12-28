@@ -25,9 +25,14 @@ export const plantKeys = {
 export function usePlants(groveId: string) {
   return useQuery({
     queryKey: plantKeys.byGrove(groveId),
-    queryFn: () => getPlantsByGrove(groveId),
+    queryFn: async () => {
+      if (!groveId) return [];
+      return getPlantsByGrove(groveId);
+    },
     staleTime: 30 * 1000, // 30 seconds
     enabled: !!groveId,
+    retry: 2,
+    refetchOnMount: true,
   });
 }
 

@@ -28,9 +28,14 @@ export const groveKeys = {
 export function useGrove(id: string) {
   return useQuery({
     queryKey: groveKeys.detail(id),
-    queryFn: () => getGrove(id),
+    queryFn: async () => {
+      if (!id) return null;
+      return getGrove(id);
+    },
     staleTime: 60 * 1000, // 1 minute
     enabled: !!id,
+    retry: 2,
+    refetchOnMount: true,
   });
 }
 
@@ -75,15 +80,38 @@ export function useCreateGrove() {
 
 /**
  * Hook to fetch groves owned by the current user.
+ * Fetches directly from Supabase to ensure fresh user ID.
  */
 export function useMyOwnedGroves() {
   const { user, isLoading: authLoading } = useAuth();
 
+  const queryEnabled = !authLoading;
+  console.log("[useMyOwnedGroves] authLoading:", authLoading, "user:", user?.id, "enabled:", queryEnabled);
+
   return useQuery({
-    queryKey: user?.id ? groveKeys.byOwner(user.id) : ["groves", "none"],
-    queryFn: () => (user?.id ? getGrovesByOwner(user.id) : Promise.resolve([])),
+    queryKey: ["groves", "my-owned", user?.id ?? "pending"],
+    queryFn: async () => {
+      console.log("[useMyOwnedGroves] queryFn running...");
+      // Always get fresh user from Supabase to avoid stale closure issues
+      const { createClient } = await import("@/lib/supabase/client");
+      const supabase = createClient();
+      const { data: authData } = await supabase.auth.getUser();
+      const userId = authData?.user?.id;
+      console.log("[useMyOwnedGroves] got userId:", userId);
+
+      if (!userId) {
+        console.log("[useMyOwnedGroves] no userId, returning empty");
+        return [];
+      }
+
+      const groves = await getGrovesByOwner(userId);
+      console.log("[useMyOwnedGroves] got groves:", groves.length);
+      return groves;
+    },
     staleTime: 60 * 1000, // 1 minute
-    enabled: !authLoading && !!user?.id,
+    enabled: queryEnabled,
+    // Refetch when user changes
+    refetchOnMount: true,
   });
 }
 
