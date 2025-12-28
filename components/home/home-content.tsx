@@ -5,6 +5,7 @@ import { useMyGroves } from "@/hooks/use-my-groves";
 import { OnboardingFlow } from "@/components/onboarding/onboarding-flow";
 import { MyGroves } from "@/components/grove/my-groves";
 import Link from "next/link";
+import Image from "next/image";
 import { motion, useInView } from "motion/react";
 import { useRef } from "react";
 import { Button } from "@/components/ui/button";
@@ -23,7 +24,7 @@ import { transition } from "@/lib/motion";
 
 /**
  * Home page with editorial, full-width layout.
- * Inspired by: Nornorm, Spring/Summer, Samara
+ * Inspired by: Samara, Nornorm, Spring/Summer
  */
 export function HomeContent() {
   const { hasCompletedOnboarding, isLoaded, completeOnboarding } = useOnboarding();
@@ -83,9 +84,60 @@ export function HomeContent() {
         </div>
       </nav>
 
-      {/* Hero - full width, asymmetric */}
-      <header id="main-content" className="min-h-[80vh] sm:min-h-[85vh] flex flex-col justify-center px-6 lg:px-12 pt-20">
-        <div className="max-w-7xl w-full">
+      {/* Hero - Split layout with image */}
+      <HeroSection />
+
+      {/* User's Groves */}
+      {hasGroves && (
+        <motion.section
+          className="px-6 lg:px-12 py-16"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ ...transition.enter, delay: 0.5 }}
+        >
+          <MyGroves />
+        </motion.section>
+      )}
+
+      {/* Full-width lifestyle image */}
+      <LifestyleImageSection />
+
+      {/* Features - with imagery */}
+      <FeaturesSection />
+
+      {/* Use Cases - alternating image layouts */}
+      <UseCasesSection />
+
+      {/* CTA - with background image */}
+      <CTASection />
+
+      {/* Footer - minimal */}
+      <footer className="px-6 lg:px-12 py-12 border-t border-border/30">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div className="flex items-center gap-2">
+            <div className="w-6 h-6 rounded-md bg-sage-100 flex items-center justify-center">
+              <Leaf className="w-3 h-3 text-sage-600" />
+            </div>
+            <span className="text-sm text-muted-foreground">Plangrove</span>
+          </div>
+          <Link
+            href="/colophon"
+            className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+          >
+            Colophon
+          </Link>
+        </div>
+      </footer>
+    </div>
+  );
+}
+
+function HeroSection() {
+  return (
+    <header id="main-content" className="min-h-screen lg:min-h-[90vh] pt-20">
+      <div className="grid lg:grid-cols-2 min-h-[calc(100vh-5rem)] lg:min-h-[calc(90vh-5rem)]">
+        {/* Text content */}
+        <div className="flex flex-col justify-center px-6 lg:px-12 py-12 lg:py-20 order-2 lg:order-1">
           <motion.p
             className="text-sm text-muted-foreground mb-4 tracking-wide uppercase"
             initial={{ opacity: 0 }}
@@ -96,7 +148,7 @@ export function HomeContent() {
           </motion.p>
 
           <motion.h1
-            className="text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-semibold text-foreground tracking-tight leading-[0.95] max-w-4xl"
+            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-semibold text-foreground tracking-tight leading-[0.95] max-w-xl"
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ ...transition.slow, delay: 0.15 }}
@@ -107,13 +159,13 @@ export function HomeContent() {
           </motion.h1>
 
           <motion.p
-            className="text-base sm:text-lg md:text-xl text-muted-foreground mt-6 sm:mt-8 max-w-xl leading-relaxed"
+            className="text-base sm:text-lg md:text-xl text-muted-foreground mt-6 sm:mt-8 max-w-md leading-relaxed"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ ...transition.enter, delay: 0.3 }}
           >
-            Plangrove makes it simple to coordinate plant care with your team,
-            roommates, or community. No more forgotten waterings.
+            Coordinate plant care with your team, roommates, or community.
+            No more forgotten waterings.
           </motion.p>
 
           <motion.div
@@ -133,41 +185,53 @@ export function HomeContent() {
             </span>
           </motion.div>
         </div>
-      </header>
 
-      {/* User's Groves */}
-      {hasGroves && (
-        <motion.section
-          className="px-6 lg:px-12 py-16"
+        {/* Hero image */}
+        <motion.div
+          className="relative h-[50vh] lg:h-auto order-1 lg:order-2 overflow-hidden"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ ...transition.enter, delay: 0.5 }}
+          transition={{ ...transition.slow, delay: 0.2 }}
         >
-          <MyGroves />
-        </motion.section>
-      )}
+          <Image
+            src="/img/plant-room.jpg"
+            alt="A sunlit room filled with lush green plants and cozy furniture"
+            fill
+            className="object-cover"
+            priority
+            sizes="(max-width: 1024px) 100vw, 50vw"
+          />
+          {/* Subtle gradient overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-background/20 via-transparent to-transparent lg:bg-gradient-to-r lg:from-background/10 lg:via-transparent lg:to-transparent" />
+        </motion.div>
+      </div>
+    </header>
+  );
+}
 
-      {/* Features - full width grid */}
-      <FeaturesSection />
+function LifestyleImageSection() {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-100px" });
 
-      {/* Use Cases - edge to edge */}
-      <UseCasesSection />
-
-      {/* CTA - full width */}
-      <CTASection />
-
-      {/* Footer - minimal */}
-      <footer className="px-6 lg:px-12 py-12 border-t border-border/30">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded-md bg-sage-100 flex items-center justify-center">
-              <Leaf className="w-3 h-3 text-sage-600" />
-            </div>
-            <span className="text-sm text-muted-foreground">Plangrove</span>
-          </div>
+  return (
+    <section ref={ref} className="py-4 sm:py-8">
+      <motion.div
+        className="px-4 sm:px-6 lg:px-12"
+        initial={{ opacity: 0, y: 24 }}
+        animate={isInView ? { opacity: 1, y: 0 } : {}}
+        transition={transition.slow}
+      >
+        <div className="relative aspect-[21/9] sm:aspect-[3/1] overflow-hidden rounded-2xl sm:rounded-3xl">
+          <Image
+            src="/img/foliage-closeup.jpg"
+            alt="Closeup of vibrant green foliage in a garden"
+            fill
+            className="object-cover"
+            sizes="100vw"
+          />
         </div>
-      </footer>
-    </div>
+      </motion.div>
+    </section>
   );
 }
 
@@ -202,11 +266,11 @@ function FeaturesSection() {
     <section
       ref={ref}
       aria-labelledby="features-heading"
-      className="py-16 sm:py-24 lg:py-32 border-t border-border/30"
+      className="py-20 sm:py-28 lg:py-36"
     >
       <div className="px-6 lg:px-12">
         <motion.div
-          className="mb-10 sm:mb-16"
+          className="mb-12 sm:mb-20 max-w-3xl"
           initial={{ opacity: 0, y: 16 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={transition.enter}
@@ -216,28 +280,29 @@ function FeaturesSection() {
           </p>
           <h2
             id="features-heading"
-            className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-semibold text-foreground tracking-tight max-w-2xl"
+            className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-semibold text-foreground tracking-tight"
           >
-            Simple plant care for groups
+            Simple plant care
+            <br />
+            for groups
           </h2>
         </motion.div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-px bg-border/30">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
           {features.map((feature, index) => (
             <motion.div
               key={feature.title}
               initial={{ opacity: 0, y: 24 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ ...transition.enter, delay: index * 0.1 }}
-              className="bg-background p-6 sm:p-8 lg:p-10"
             >
-              <div className="w-10 h-10 rounded-lg bg-sage-100 flex items-center justify-center text-sage-600 mb-4 sm:mb-6">
-                <feature.icon className="w-5 h-5" />
+              <div className="w-12 h-12 rounded-xl bg-sage-100 flex items-center justify-center text-sage-600 mb-6">
+                <feature.icon className="w-6 h-6" />
               </div>
-              <h3 className="text-lg font-medium text-foreground mb-2">
+              <h3 className="text-xl font-medium text-foreground mb-3">
                 {feature.title}
               </h3>
-              <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
+              <p className="text-base text-muted-foreground leading-relaxed">
                 {feature.description}
               </p>
             </motion.div>
@@ -257,50 +322,84 @@ function UseCasesSection() {
       icon: Building2,
       label: "Office",
       title: "Keep office plants thriving",
-      description: "Share responsibility for office greenery across your team.",
+      description: "Share responsibility for office greenery across your team. Never let the conference room ficus down again.",
+      image: "/img/kitchen-counter.jpg",
+      imageAlt: "A kitchen counter with a potted plant adding life to the space",
     },
     {
       icon: Home,
       label: "Home",
       title: "Roommate coordination",
-      description: "Never argue about who watered the fiddle leaf fig again.",
+      description: "Never argue about who watered the fiddle leaf fig. Everyone can see the status and log their care.",
+      image: "/img/reading-plants.jpg",
+      imageAlt: "A person reading a book surrounded by lush green plants",
     },
     {
       icon: Trees,
       label: "Community",
       title: "Garden collaboration",
-      description: "Coordinate care across multiple caretakers and spaces.",
+      description: "Coordinate care across multiple caretakers and spaces. Perfect for community gardens and shared courtyards.",
+      image: "/img/kitchen-shelves.jpg",
+      imageAlt: "Kitchen shelves filled with a variety of healthy plants",
     },
   ];
 
   return (
-    <section ref={ref} aria-label="Use cases" className="bg-sage-50/50">
-      <div className="grid lg:grid-cols-3">
-        {useCases.map((useCase, index) => (
-          <motion.div
-            key={useCase.title}
-            initial={{ opacity: 0, y: 24 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ ...transition.enter, delay: index * 0.1 }}
-            className="p-10 lg:p-16 border-b lg:border-b-0 lg:border-r border-border/30 last:border-0"
+    <section ref={ref} aria-label="Use cases" className="py-8 sm:py-12">
+      {useCases.map((useCase, index) => (
+        <motion.div
+          key={useCase.title}
+          initial={{ opacity: 0, y: 32 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ ...transition.slow, delay: index * 0.15 }}
+          className="mb-8 sm:mb-12 last:mb-0"
+        >
+          <div
+            className={`grid lg:grid-cols-2 gap-0 ${
+              index % 2 === 1 ? "lg:direction-rtl" : ""
+            }`}
           >
-            <div className="flex items-center gap-3 mb-8">
-              <div className="w-10 h-10 rounded-lg bg-sage-100 flex items-center justify-center text-sage-600">
-                <useCase.icon className="w-5 h-5" />
-              </div>
-              <span className="text-sm text-muted-foreground tracking-wide uppercase">
-                {useCase.label}
-              </span>
+            {/* Image - alternating sides on desktop */}
+            <div
+              className={`relative h-[40vh] sm:h-[50vh] lg:h-[70vh] ${
+                index % 2 === 1 ? "lg:order-2" : ""
+              }`}
+            >
+              <Image
+                src={useCase.image}
+                alt={useCase.imageAlt}
+                fill
+                className="object-cover"
+                sizes="(max-width: 1024px) 100vw, 50vw"
+              />
             </div>
-            <h3 className="text-2xl font-medium text-foreground mb-3 tracking-tight">
-              {useCase.title}
-            </h3>
-            <p className="text-muted-foreground leading-relaxed">
-              {useCase.description}
-            </p>
-          </motion.div>
-        ))}
-      </div>
+
+            {/* Content */}
+            <div
+              className={`flex flex-col justify-center p-8 sm:p-12 lg:p-20 bg-sage-50/50 ${
+                index % 2 === 1 ? "lg:order-1" : ""
+              }`}
+            >
+              <div className="max-w-md">
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="w-10 h-10 rounded-lg bg-sage-100 flex items-center justify-center text-sage-600">
+                    <useCase.icon className="w-5 h-5" />
+                  </div>
+                  <span className="text-sm text-muted-foreground tracking-wide uppercase">
+                    {useCase.label}
+                  </span>
+                </div>
+                <h3 className="text-2xl sm:text-3xl lg:text-4xl font-semibold text-foreground mb-4 tracking-tight">
+                  {useCase.title}
+                </h3>
+                <p className="text-base sm:text-lg text-muted-foreground leading-relaxed">
+                  {useCase.description}
+                </p>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+      ))}
     </section>
   );
 }
@@ -310,31 +409,36 @@ function CTASection() {
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 
   return (
-    <section ref={ref} aria-labelledby="cta-heading" className="py-24 lg:py-32">
-      <div className="px-6 lg:px-12 max-w-7xl">
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={transition.enter}
-        >
-          <h2
-            id="cta-heading"
-            className="text-4xl md:text-5xl lg:text-6xl font-semibold text-foreground tracking-tight mb-6"
+    <section ref={ref} aria-labelledby="cta-heading" className="relative py-24 lg:py-40">
+      {/* Background pattern */}
+      <div className="absolute inset-0 bg-sage-50/30" />
+
+      <div className="relative px-6 lg:px-12">
+        <div className="max-w-4xl mx-auto text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={transition.enter}
           >
-            Ready to grow
-            <br />
-            together?
-          </h2>
-          <p className="text-lg text-muted-foreground mb-10 max-w-md">
-            Create your first grove in seconds. Start caring for plants as a team.
-          </p>
-          <Link href="/create-grove">
-            <Button size="lg" variant="accent" className="group">
-              Start your grove
-              <ArrowRight className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
-            </Button>
-          </Link>
-        </motion.div>
+            <h2
+              id="cta-heading"
+              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-semibold text-foreground tracking-tight mb-6"
+            >
+              Ready to grow
+              <br />
+              together?
+            </h2>
+            <p className="text-lg sm:text-xl text-muted-foreground mb-10 max-w-lg mx-auto">
+              Create your first grove in seconds. Start caring for plants as a team.
+            </p>
+            <Link href="/create-grove">
+              <Button size="lg" variant="accent" className="group">
+                Start your grove
+                <ArrowRight className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
+              </Button>
+            </Link>
+          </motion.div>
+        </div>
       </div>
     </section>
   );
