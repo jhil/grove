@@ -22,7 +22,7 @@ import {
 } from "lucide-react";
 import { NotificationSettings } from "@/components/pwa/notification-settings";
 import { Avatar } from "@/components/ui/avatar";
-import { useMyGroves } from "@/hooks/use-my-groves";
+import { useMyOwnedGroves } from "@/hooks/use-grove";
 import { transition } from "@/lib/motion";
 
 /**
@@ -34,7 +34,7 @@ export default function ProfilePage() {
 	const { user, profile, isAuthenticated, isLoading, signOut, updateProfile } =
 		useAuth();
 	const { showToast } = useToast();
-	const { groves } = useMyGroves();
+	const { data: groves = [], isLoading: grovesLoading } = useMyOwnedGroves();
 
 	const [displayName, setDisplayName] = useState("");
 	const [isSaving, setIsSaving] = useState(false);
