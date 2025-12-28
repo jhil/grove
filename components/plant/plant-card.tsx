@@ -107,7 +107,7 @@ export const PlantCard = memo(function PlantCard({
           <div
             className={cn(
               "h-40 flex items-center justify-center relative overflow-hidden",
-              plant.photo ? "bg-cream-100" : "bg-gradient-to-br from-sage-50 to-sage-100"
+              plant.photo ? "bg-cream-100" : "bg-gradient-to-br from-terracotta-50 to-terracotta-100"
             )}
           >
             {plant.photo ? (
@@ -194,7 +194,7 @@ export const PlantCard = memo(function PlantCard({
                           setShowMenu(false);
                           setShowEdit(true);
                         }}
-                        className="w-full px-3 py-2 text-left text-sm hover:bg-sage-50 flex items-center gap-2"
+                        className="w-full px-3 py-2 text-left text-sm hover:bg-terracotta-50 flex items-center gap-2"
                         whileHover={{ x: 4 }}
                         transition={{ duration: 0.15 }}
                       >
@@ -229,7 +229,7 @@ export const PlantCard = memo(function PlantCard({
                 <div className="min-w-0 flex-1">
                   <motion.h3
                     className="font-semibold text-foreground truncate"
-                    animate={{ color: isHovered ? "var(--sage-600)" : "var(--foreground)" }}
+                    animate={{ color: isHovered ? "var(--terracotta-600)" : "var(--foreground)" }}
                     transition={{ duration: 0.2 }}
                   >
                     {plant.name}

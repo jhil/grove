@@ -43,7 +43,7 @@ export function NameGenerator({ plantType, onSelect, className }: NameGeneratorP
         variant="ghost"
         size="sm"
         onClick={generateSuggestions}
-        className={cn("gap-1.5 text-sage-500 hover:text-sage-600", className)}
+        className={cn("gap-1.5 text-terracotta-500 hover:text-terracotta-600", className)}
       >
         <Sparkles className="w-3.5 h-3.5" />
         Suggest names
@@ -86,7 +86,7 @@ export function NameGenerator({ plantType, onSelect, className }: NameGeneratorP
             onClick={() => handleSelect(name)}
             className={cn(
               "px-3 py-1.5 text-sm rounded-full",
-              "bg-sage-50 text-sage-700 hover:bg-sage-100",
+              "bg-terracotta-50 text-terracotta-700 hover:bg-terracotta-100",
               "transition-colors"
             )}
           >

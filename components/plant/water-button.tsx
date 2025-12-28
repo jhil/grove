@@ -156,7 +156,7 @@ export function WaterButton({
           variant={getVariant()}
           className={cn(
             "w-full gap-2 relative overflow-hidden",
-            justWatered && "bg-sage-100 text-sage-700 border-sage-200",
+            justWatered && "bg-terracotta-100 text-terracotta-700 border-terracotta-200",
           )}
           onClick={handleWater}
           disabled={waterPlant.isPending || justWatered}

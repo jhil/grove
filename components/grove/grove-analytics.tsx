@@ -77,7 +77,7 @@ export function GroveAnalyticsDashboard({
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center gap-2">
-        <BarChart3 className="w-5 h-5 text-sage-600" />
+        <BarChart3 className="w-5 h-5 text-terracotta-600" />
         <h3 className="text-lg font-medium text-foreground">Grove Analytics</h3>
       </div>
 
@@ -199,9 +199,9 @@ function MetricCard({
   variant = "default",
 }: MetricCardProps) {
   const variants = {
-    default: { bg: "bg-cream-50", icon: "text-sage-500", value: "text-sage-700" },
+    default: { bg: "bg-cream-50", icon: "text-terracotta-500", value: "text-terracotta-700" },
     water: { bg: "bg-water-400/10", icon: "text-water-500", value: "text-water-600" },
-    success: { bg: "bg-sage-100", icon: "text-sage-600", value: "text-sage-700" },
+    success: { bg: "bg-terracotta-100", icon: "text-terracotta-600", value: "text-terracotta-700" },
     warning: { bg: "bg-amber-50", icon: "text-amber-500", value: "text-amber-600" },
     danger: { bg: "bg-terracotta-400/10", icon: "text-terracotta-500", value: "text-terracotta-600" },
     gold: { bg: "bg-amber-50", icon: "text-amber-500", value: "text-amber-600" },
@@ -322,13 +322,13 @@ function HighlightCard({
     <div
       className={cn(
         "rounded-xl p-4 flex items-start gap-3",
-        variant === "positive" ? "bg-sage-50" : "bg-amber-50"
+        variant === "positive" ? "bg-terracotta-50" : "bg-amber-50"
       )}
     >
       <div
         className={cn(
           "p-2 rounded-lg",
-          variant === "positive" ? "bg-sage-100 text-sage-600" : "bg-amber-100 text-amber-600"
+          variant === "positive" ? "bg-terracotta-100 text-terracotta-600" : "bg-amber-100 text-amber-600"
         )}
       >
         {icon}

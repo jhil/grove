@@ -23,7 +23,7 @@ export function UpdatePrompt() {
         exit={{ y: -100, opacity: 0 }}
         className="fixed top-4 left-4 right-4 z-50 md:left-auto md:right-4 md:max-w-sm"
       >
-        <div className="bg-sage-600 text-white rounded-2xl shadow-lg p-4">
+        <div className="bg-terracotta-600 text-white rounded-2xl shadow-lg p-4">
           <div className="flex items-start gap-3">
             <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center flex-shrink-0">
               <RefreshCw className="w-5 h-5" />
@@ -38,7 +38,7 @@ export function UpdatePrompt() {
                   size="sm"
                   variant="secondary"
                   onClick={update}
-                  className="bg-white text-sage-700 hover:bg-white/90"
+                  className="bg-white text-terracotta-700 hover:bg-white/90"
                 >
                   <RefreshCw className="w-3.5 h-3.5 mr-1.5" />
                   Update

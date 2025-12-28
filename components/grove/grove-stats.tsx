@@ -89,9 +89,9 @@ function StatCard({
 }: StatCardProps) {
   const variantStyles = {
     default: {
-      bg: "bg-sage-50",
-      icon: "text-sage-500",
-      value: "text-sage-700",
+      bg: "bg-terracotta-50",
+      icon: "text-terracotta-500",
+      value: "text-terracotta-700",
     },
     warning: {
       bg: "bg-terracotta-400/10",
@@ -104,9 +104,9 @@ function StatCard({
       value: "text-water-600",
     },
     success: {
-      bg: "bg-sage-100",
-      icon: "text-sage-600",
-      value: "text-sage-700",
+      bg: "bg-terracotta-100",
+      icon: "text-terracotta-600",
+      value: "text-terracotta-700",
     },
   };
 
@@ -151,17 +151,17 @@ export function CareSummary({ plants }: CareSummaryProps) {
     <div
       className={cn(
         "px-4 py-3 rounded-xl flex items-center gap-3",
-        allHealthy ? "bg-sage-100" : "bg-terracotta-400/10"
+        allHealthy ? "bg-terracotta-100" : "bg-terracotta-400/10"
       )}
     >
       {allHealthy ? (
         <>
-          <CheckCircle className="w-5 h-5 text-sage-600" />
+          <CheckCircle className="w-5 h-5 text-terracotta-600" />
           <div>
-            <p className="text-sm font-medium text-sage-700">
+            <p className="text-sm font-medium text-terracotta-700">
               All plants are happy!
             </p>
-            <p className="text-xs text-sage-600">
+            <p className="text-xs text-terracotta-600">
               No plants need watering right now
             </p>
           </div>

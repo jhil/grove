@@ -211,8 +211,8 @@ function CareModeOption({
       className={cn(
         "relative p-4 rounded-xl border-2 text-left transition-all",
         selected
-          ? "border-sage-500 bg-sage-50"
-          : "border-cream-200 hover:border-sage-300",
+          ? "border-terracotta-500 bg-terracotta-50"
+          : "border-cream-200 hover:border-terracotta-300",
         disabled && "opacity-60 cursor-not-allowed"
       )}
     >
@@ -221,7 +221,7 @@ function CareModeOption({
           Soon
         </span>
       )}
-      <Icon className={cn("w-5 h-5 mb-2", selected ? "text-sage-600" : "text-sage-400")} />
+      <Icon className={cn("w-5 h-5 mb-2", selected ? "text-terracotta-600" : "text-terracotta-400")} />
       <p className="font-medium text-sm text-foreground">{title}</p>
       <p className="text-xs text-muted-foreground mt-0.5">{description}</p>
     </button>
@@ -245,7 +245,7 @@ export function GroveSettingsButton({ grove, className }: GroveSettingsButtonPro
         variant="ghost"
         size="icon"
         onClick={() => setOpen(true)}
-        className={cn("text-sage-400 hover:text-sage-600", className)}
+        className={cn("text-terracotta-400 hover:text-terracotta-600", className)}
       >
         <Settings className="w-5 h-5" />
       </Button>

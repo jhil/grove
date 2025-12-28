@@ -47,11 +47,11 @@ const weatherConditions: Record<number, { condition: string; description: string
 
 const weatherIcons: Record<string, React.ReactNode> = {
   clear: <Sun className="w-5 h-5 text-terracotta-400" />,
-  cloudy: <Cloud className="w-5 h-5 text-sage-400" />,
+  cloudy: <Cloud className="w-5 h-5 text-terracotta-400" />,
   rain: <CloudRain className="w-5 h-5 text-water-500" />,
   snow: <Snowflake className="w-5 h-5 text-water-400" />,
-  fog: <CloudFog className="w-5 h-5 text-sage-300" />,
-  storm: <Wind className="w-5 h-5 text-sage-500" />,
+  fog: <CloudFog className="w-5 h-5 text-terracotta-300" />,
+  storm: <Wind className="w-5 h-5 text-terracotta-500" />,
 };
 
 // Local storage key for weather location
@@ -178,7 +178,7 @@ export function WeatherWidget({ className }: WeatherWidgetProps) {
   if (loading && !weather) {
     return (
       <div className={cn("animate-pulse", className)}>
-        <div className="h-14 bg-sage-50 rounded-xl" />
+        <div className="h-14 bg-terracotta-50 rounded-xl" />
       </div>
     );
   }
@@ -248,9 +248,9 @@ export function WeatherWidget({ className }: WeatherWidgetProps) {
               disabled={geocoding || !locationQuery.trim()}
               className={cn(
                 "h-9 px-3 rounded-lg",
-                "bg-sage-500 text-white",
+                "bg-terracotta-500 text-white",
                 "text-sm font-medium",
-                "hover:bg-sage-600 transition-colors",
+                "hover:bg-terracotta-600 transition-colors",
                 "disabled:opacity-50 disabled:cursor-not-allowed",
                 "flex items-center gap-1"
               )}

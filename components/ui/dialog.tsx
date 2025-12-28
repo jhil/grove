@@ -62,7 +62,7 @@ export function DialogContent({ className, children }: DialogContentProps) {
       <BaseDialog.Backdrop
         className={cn(
           "fixed inset-0 z-50",
-          "bg-sage-900/25 backdrop-blur-sm",
+          "bg-terracotta-900/25 backdrop-blur-sm",
           "data-[state=open]:animate-in data-[state=closed]:animate-out",
           "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
           "duration-200"
@@ -95,7 +95,7 @@ export function DialogContent({ className, children }: DialogContentProps) {
             className={cn(
               "rounded-lg p-1.5",
               "text-muted-foreground hover:text-foreground",
-              "hover:bg-sage-100 transition-colors",
+              "hover:bg-terracotta-100 transition-colors",
               "focus:outline-none focus:ring-2 focus:ring-ring"
             )}
           >

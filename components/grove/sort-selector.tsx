@@ -26,7 +26,7 @@ export function SortSelector({ groveId, className }: SortSelectorProps) {
         className={cn(
           "flex items-center gap-2 px-3 py-1.5 rounded-full text-sm transition-all",
           "bg-cream-100/80 backdrop-blur-sm hover:bg-cream-200/80",
-          "text-sage-600"
+          "text-terracotta-600"
         )}
       >
         <ArrowUpDown className="w-3.5 h-3.5" />
@@ -46,13 +46,13 @@ export function SortSelector({ groveId, className }: SortSelectorProps) {
                 }}
                 className={cn(
                   "w-full px-3 py-2 text-left text-sm flex items-center justify-between gap-2",
-                  "hover:bg-sage-50 transition-colors",
-                  sortOption === option.value && "text-sage-700 font-medium"
+                  "hover:bg-terracotta-50 transition-colors",
+                  sortOption === option.value && "text-terracotta-700 font-medium"
                 )}
               >
                 {option.label}
                 {sortOption === option.value && (
-                  <Check className="w-4 h-4 text-sage-500" />
+                  <Check className="w-4 h-4 text-terracotta-500" />
                 )}
               </button>
             ))}

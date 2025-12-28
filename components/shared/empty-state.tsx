@@ -37,7 +37,7 @@ export function EmptyState({
       {/* Decorative background circles */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <motion.div
-          className="absolute top-8 left-1/4 w-24 h-24 bg-sage-100 rounded-full blur-2xl opacity-50"
+          className="absolute top-8 left-1/4 w-24 h-24 bg-terracotta-100 rounded-full blur-2xl opacity-50"
           animate={{
             scale: [1, 1.2, 1],
             x: [0, 10, 0],
@@ -56,14 +56,14 @@ export function EmptyState({
 
       {icon && (
         <motion.div
-          className="relative w-20 h-20 rounded-full bg-gradient-to-br from-sage-50 to-sage-100 flex items-center justify-center mb-6 text-sage-500 shadow-soft"
+          className="relative w-20 h-20 rounded-full bg-gradient-to-br from-terracotta-50 to-terracotta-100 flex items-center justify-center mb-6 text-terracotta-500 shadow-soft"
           initial={{ scale: 0, rotate: -180 }}
           animate={{ scale: 1, rotate: 0 }}
           transition={{ type: "spring", stiffness: 200, delay: 0.1 }}
         >
           {/* Pulsing ring */}
           <motion.div
-            className="absolute inset-0 rounded-full border-2 border-sage-200"
+            className="absolute inset-0 rounded-full border-2 border-terracotta-200"
             animate={{
               scale: [1, 1.15, 1],
               opacity: [0.5, 0, 0.5],

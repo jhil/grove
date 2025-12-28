@@ -16,7 +16,7 @@ export function Skeleton({ className, shimmer = true, ...props }: SkeletonProps)
   return (
     <div
       className={cn(
-        "rounded-xl bg-sage-100 relative overflow-hidden",
+        "rounded-xl bg-terracotta-100 relative overflow-hidden",
         !shimmer && "animate-pulse",
         className
       )}
@@ -50,7 +50,7 @@ export function PlantCardSkeleton({ index = 0 }: { index?: number }) {
       }}
     >
       {/* Photo placeholder */}
-      <div className="relative aspect-square w-full rounded-xl mb-4 bg-gradient-to-br from-sage-50 to-sage-100 overflow-hidden">
+      <div className="relative aspect-square w-full rounded-xl mb-4 bg-gradient-to-br from-terracotta-50 to-terracotta-100 overflow-hidden">
         <div
           className="absolute inset-0 -translate-x-full animate-shimmer bg-gradient-to-r from-transparent via-white/60 to-transparent"
           style={{

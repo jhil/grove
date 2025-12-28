@@ -34,9 +34,9 @@ export function GroveHealth({ plants }: GroveHealthProps) {
         className={cn(
           "p-6",
           health >= 90
-            ? "bg-gradient-to-r from-sage-50 to-sage-100"
+            ? "bg-gradient-to-r from-terracotta-50 to-terracotta-100"
             : health >= 70
-            ? "bg-gradient-to-r from-sage-50 to-cream-100"
+            ? "bg-gradient-to-r from-terracotta-50 to-cream-100"
             : health >= 50
             ? "bg-gradient-to-r from-water-400/10 to-cream-100"
             : "bg-gradient-to-r from-terracotta-400/10 to-cream-100"
@@ -150,11 +150,11 @@ export function PlantCareTip() {
 
   return (
     <div className="flex items-start gap-3 p-4 bg-cream-100 rounded-xl">
-      <div className="w-8 h-8 rounded-full bg-sage-100 flex items-center justify-center flex-shrink-0">
-        <Lightbulb className="w-4 h-4 text-sage-500" />
+      <div className="w-8 h-8 rounded-full bg-terracotta-100 flex items-center justify-center flex-shrink-0">
+        <Lightbulb className="w-4 h-4 text-terracotta-500" />
       </div>
       <div>
-        <p className="text-xs font-medium text-sage-500 uppercase tracking-wider mb-1">
+        <p className="text-xs font-medium text-terracotta-500 uppercase tracking-wider mb-1">
           Plant Care Tip
         </p>
         <p className="text-sm text-muted-foreground">{tip}</p>

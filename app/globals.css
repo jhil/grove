@@ -77,10 +77,18 @@
   --color-sage-500: var(--sage-500);
   --color-sage-600: var(--sage-600);
   --color-sage-700: var(--sage-700);
+  --color-sage-800: var(--sage-800);
+  --color-sage-900: var(--sage-900);
+  --color-terracotta-50: var(--terracotta-50);
+  --color-terracotta-100: var(--terracotta-100);
+  --color-terracotta-200: var(--terracotta-200);
   --color-terracotta-300: var(--terracotta-300);
   --color-terracotta-400: var(--terracotta-400);
   --color-terracotta-500: var(--terracotta-500);
   --color-terracotta-600: var(--terracotta-600);
+  --color-terracotta-700: var(--terracotta-700);
+  --color-terracotta-800: var(--terracotta-800);
+  --color-terracotta-900: var(--terracotta-900);
   --color-cream-50: var(--cream-50);
   --color-cream-100: var(--cream-100);
   --color-cream-200: var(--cream-200);
@@ -116,13 +124,21 @@
   --sage-500: oklch(0.55 0.10 130);
   --sage-600: oklch(0.47 0.10 130);
   --sage-700: oklch(0.40 0.08 130);
+  --sage-800: oklch(0.32 0.07 130);
+  --sage-900: oklch(0.25 0.06 130);
 
-  /* === TERRACOTTA - Warm accent === */
-  /* Earthy orange-brown for accents, warmth, urgency */
-  --terracotta-300: oklch(0.82 0.10 50);
-  --terracotta-400: oklch(0.73 0.14 45);
-  --terracotta-500: oklch(0.65 0.16 40);
-  --terracotta-600: oklch(0.57 0.16 38);
+  /* === TERRACOTTA - Primary orange palette === */
+  /* Warm, earthy orange - the hero color that stands out */
+  --terracotta-50: oklch(0.97 0.02 50);
+  --terracotta-100: oklch(0.93 0.04 48);
+  --terracotta-200: oklch(0.87 0.08 46);
+  --terracotta-300: oklch(0.80 0.12 44);
+  --terracotta-400: oklch(0.72 0.15 42);
+  --terracotta-500: oklch(0.64 0.17 40);
+  --terracotta-600: oklch(0.56 0.16 38);
+  --terracotta-700: oklch(0.48 0.14 36);
+  --terracotta-800: oklch(0.38 0.11 34);
+  --terracotta-900: oklch(0.28 0.08 32);
 
   /* === CREAM - Warm backgrounds === */
   /* Sunlit paper tones for backgrounds */
@@ -141,87 +157,87 @@
   /* === SEMANTIC MAPPINGS === */
   /* Map our custom palette to shadcn variables */
   --background: var(--cream-50);
-  --foreground: var(--sage-700);
+  --foreground: var(--terracotta-800);
   --card: var(--cream-100);
-  --card-foreground: var(--sage-700);
+  --card-foreground: var(--terracotta-800);
   --popover: var(--cream-50);
-  --popover-foreground: var(--sage-700);
+  --popover-foreground: var(--terracotta-800);
 
-  /* Primary = Sage green */
-  --primary: var(--sage-500);
+  /* Primary = Terracotta orange (the hero) */
+  --primary: var(--terracotta-500);
   --primary-foreground: var(--cream-50);
 
-  /* Secondary = Lighter sage */
-  --secondary: var(--sage-100);
-  --secondary-foreground: var(--sage-700);
+  /* Secondary = Lighter terracotta */
+  --secondary: var(--terracotta-100);
+  --secondary-foreground: var(--terracotta-800);
 
-  /* Muted = Very light sage */
-  --muted: var(--sage-50);
-  --muted-foreground: var(--sage-400);
+  /* Muted = Very light terracotta */
+  --muted: var(--terracotta-50);
+  --muted-foreground: var(--terracotta-500);
 
-  /* Accent = Terracotta */
-  --accent: var(--terracotta-400);
+  /* Accent = Darker terracotta for emphasis */
+  --accent: var(--terracotta-600);
   --accent-foreground: var(--cream-50);
 
-  /* Destructive = Deeper terracotta */
-  --destructive: var(--terracotta-600);
+  /* Destructive = Deep red-ish */
+  --destructive: oklch(0.55 0.20 25);
 
-  /* Borders and inputs */
-  --border: var(--sage-200);
-  --input: var(--sage-100);
-  --ring: var(--sage-400);
+  /* Borders and inputs - warm tones */
+  --border: var(--terracotta-200);
+  --input: var(--terracotta-100);
+  --ring: var(--terracotta-400);
 
   /* Charts - Using our palette */
-  --chart-1: var(--sage-500);
-  --chart-2: var(--terracotta-500);
+  --chart-1: var(--terracotta-500);
+  --chart-2: var(--terracotta-400);
   --chart-3: var(--water-500);
   --chart-4: var(--warning);
-  --chart-5: var(--sage-300);
+  --chart-5: var(--terracotta-300);
 
-  /* Sidebar - using sage tones */
+  /* Sidebar - warm terracotta tones */
   --sidebar: var(--cream-100);
-  --sidebar-foreground: var(--sage-700);
-  --sidebar-primary: var(--sage-500);
+  --sidebar-foreground: var(--terracotta-800);
+  --sidebar-primary: var(--terracotta-500);
   --sidebar-primary-foreground: var(--cream-50);
-  --sidebar-accent: var(--sage-100);
-  --sidebar-accent-foreground: var(--sage-700);
-  --sidebar-border: var(--sage-200);
-  --sidebar-ring: var(--sage-400);
+  --sidebar-accent: var(--terracotta-100);
+  --sidebar-accent-foreground: var(--terracotta-800);
+  --sidebar-border: var(--terracotta-200);
+  --sidebar-ring: var(--terracotta-400);
 }
 
-/* Dark mode - keeping it warm, not cold */
+/* Dark mode - warm terracotta tones */
 .dark {
-  --background: oklch(0.18 0.02 130);
+  --background: oklch(0.18 0.02 40);
   --foreground: var(--cream-100);
-  --card: oklch(0.22 0.02 130);
+  --card: oklch(0.22 0.02 40);
   --card-foreground: var(--cream-100);
-  --popover: oklch(0.22 0.02 130);
+  --popover: oklch(0.22 0.02 40);
   --popover-foreground: var(--cream-100);
-  --primary: var(--sage-400);
-  --primary-foreground: oklch(0.18 0.02 130);
-  --secondary: oklch(0.28 0.03 130);
+  --primary: var(--terracotta-400);
+  --primary-foreground: oklch(0.18 0.02 40);
+  --secondary: oklch(0.28 0.03 40);
   --secondary-foreground: var(--cream-100);
-  --muted: oklch(0.28 0.03 130);
-  --muted-foreground: var(--sage-300);
-  --accent: var(--terracotta-400);
-  --accent-foreground: oklch(0.18 0.02 130);
-  --destructive: var(--terracotta-500);
+  --muted: oklch(0.28 0.03 40);
+  --muted-foreground: var(--terracotta-300);
+  --accent: var(--terracotta-500);
+  --accent-foreground: oklch(0.18 0.02 40);
+  --destructive: oklch(0.55 0.20 25);
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
-  --ring: var(--sage-400);
-  --chart-1: var(--sage-400);
-  --chart-2: var(--terracotta-400);
+  --ring: var(--terracotta-400);
+  --chart-1: var(--terracotta-400);
+  --chart-2: var(--terracotta-300);
   --chart-3: var(--water-400);
   --chart-4: var(--warning);
-  --chart-5: var(--sage-300);
-  --sidebar: oklch(0.22 0.02 130);
+  --chart-5: var(--terracotta-300);
+  --sidebar: oklch(0.22 0.02 40);
   --sidebar-foreground: var(--cream-100);
-  --sidebar-primary: var(--sage-400);
-  --sidebar-primary-foreground: oklch(0.18 0.02 130);
-  --sidebar-accent: oklch(0.28 0.03 130);
+  --sidebar-primary: var(--terracotta-400);
+  --sidebar-primary-foreground: oklch(0.18 0.02 40);
+  --sidebar-accent: oklch(0.28 0.03 40);
   --sidebar-accent-foreground: var(--cream-100);
   --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: var(--sage-400);
+  --sidebar-ring: var(--terracotta-400);
 }
 
 @layer base {
@@ -354,5 +370,44 @@
 
   .tracking-display {
     letter-spacing: -0.03em;
+  }
+
+  /* =========================================================================
+   * GRAINY TEXTURE OVERLAY
+   * For editorial photo aesthetic - inspired by film photography
+   * ========================================================================= */
+
+  @keyframes grain {
+    0%, 100% { transform: translate(0, 0); }
+    10% { transform: translate(-5%, -10%); }
+    20% { transform: translate(-15%, 5%); }
+    30% { transform: translate(7%, -25%); }
+    40% { transform: translate(-5%, 25%); }
+    50% { transform: translate(-15%, 10%); }
+    60% { transform: translate(15%, 0%); }
+    70% { transform: translate(0%, 15%); }
+    80% { transform: translate(3%, 35%); }
+    90% { transform: translate(-10%, 10%); }
+  }
+
+  /* Note: Don't set position here - elements using this are already positioned */
+  .grainy-overlay::after {
+    content: "";
+    position: absolute;
+    inset: -100%;
+    width: 300%;
+    height: 300%;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    opacity: 0.08;
+    pointer-events: none;
+    animation: grain 8s steps(10) infinite;
+    z-index: 1;
+  }
+
+  /* Static grain for better performance on mobile */
+  @media (prefers-reduced-motion: reduce) {
+    .grainy-overlay::after {
+      animation: none;
+    }
   }
 }

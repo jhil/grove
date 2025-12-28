@@ -66,8 +66,8 @@ function GroveItem({ id, name, lastVisited, onRemove }: GroveItemProps) {
     <Card className="group hover:shadow-lifted transition-shadow">
       <Link href={`/grove/${id}`}>
         <CardContent className="p-4 flex items-center gap-4">
-          <div className="w-12 h-12 rounded-lg bg-sage-100 flex items-center justify-center flex-shrink-0">
-            <Leaf className="w-6 h-6 text-sage-600" />
+          <div className="w-12 h-12 rounded-lg bg-terracotta-100 flex items-center justify-center flex-shrink-0">
+            <Leaf className="w-6 h-6 text-terracotta-600" />
           </div>
           <div className="flex-1 min-w-0">
             <h3 className="font-medium text-foreground truncate">{name}</h3>

@@ -173,9 +173,9 @@ export function MilestoneProgress({ plant }: MilestoneProgressProps) {
         <span className="text-muted-foreground">Next: {next.label}</span>
         <span className="font-medium text-foreground">{Math.round(next.progress)}%</span>
       </div>
-      <div className="h-1 bg-sage-100 rounded-full overflow-hidden">
+      <div className="h-1 bg-terracotta-100 rounded-full overflow-hidden">
         <motion.div
-          className="h-full bg-sage-500 rounded-full"
+          className="h-full bg-terracotta-500 rounded-full"
           initial={{ width: 0 }}
           animate={{ width: `${next.progress}%` }}
           transition={{ ...transition.slow, delay: 0.2 }}
@@ -275,7 +275,7 @@ export function MilestoneCelebration({ milestone, onComplete }: MilestoneCelebra
           Milestone Achieved
         </h3>
 
-        <p className="text-lg font-medium text-sage-700 mb-1">
+        <p className="text-lg font-medium text-terracotta-700 mb-1">
           {milestone.label}
         </p>
         <p className="text-muted-foreground mb-6">
@@ -284,7 +284,7 @@ export function MilestoneCelebration({ milestone, onComplete }: MilestoneCelebra
 
         <button
           onClick={onComplete}
-          className="px-6 py-2 bg-sage-600 text-white rounded-lg font-medium transition-colors hover:bg-sage-700"
+          className="px-6 py-2 bg-terracotta-600 text-white rounded-lg font-medium transition-colors hover:bg-terracotta-700"
         >
           Continue
         </button>

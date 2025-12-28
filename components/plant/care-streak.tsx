@@ -43,7 +43,7 @@ export function CareStreak({ plant, showDetails = false, className }: CareStreak
         status === "legendary" && "bg-amber-50 text-amber-700 border border-amber-200",
         status === "strong" && "bg-orange-50 text-orange-700 border border-orange-200",
         status === "building" && "bg-emerald-50 text-emerald-700 border border-emerald-200",
-        status === "starting" && "bg-sage-50 text-sage-700 border border-sage-200",
+        status === "starting" && "bg-terracotta-50 text-terracotta-700 border border-terracotta-200",
         atRisk && "ring-1 ring-terracotta-300",
         className
       )}
@@ -144,7 +144,7 @@ export function StreakCelebration({
         onClick={(e) => e.stopPropagation()}
         className="bg-white rounded-xl p-8 shadow-elevated text-center max-w-sm mx-4 border border-border/50"
       >
-        <div className="w-16 h-16 rounded-xl bg-sage-100 flex items-center justify-center text-sage-600 mx-auto mb-4">
+        <div className="w-16 h-16 rounded-xl bg-terracotta-100 flex items-center justify-center text-terracotta-600 mx-auto mb-4">
           <Icon className="w-8 h-8" />
         </div>
 
@@ -161,7 +161,7 @@ export function StreakCelebration({
 
         <button
           onClick={onComplete}
-          className="px-6 py-2 bg-sage-600 text-white rounded-lg font-medium transition-colors hover:bg-sage-700"
+          className="px-6 py-2 bg-terracotta-600 text-white rounded-lg font-medium transition-colors hover:bg-terracotta-700"
         >
           Continue
         </button>

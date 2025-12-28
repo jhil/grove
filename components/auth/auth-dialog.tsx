@@ -8,6 +8,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { useToast } from "@/components/ui/toast";
 import { cn } from "@/lib/utils";
 import { Leaf, Mail, Lock, User, Loader2 } from "lucide-react";
+import { Avatar } from "@/components/ui/avatar";
 
 /**
  * Authentication dialog with sign in / sign up forms.
@@ -85,8 +86,8 @@ export function AuthDialog({ open, onOpenChange, defaultMode = "signin" }: AuthD
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Logo */}
         <div className="flex justify-center mb-6">
-          <div className="w-14 h-14 rounded-full bg-sage-100 flex items-center justify-center">
-            <Leaf className="w-7 h-7 text-sage-600" />
+          <div className="w-14 h-14 rounded-full bg-terracotta-100 flex items-center justify-center">
+            <Leaf className="w-7 h-7 text-terracotta-600" />
           </div>
         </div>
 
@@ -201,18 +202,17 @@ export function AuthButton({ className }: AuthButtonProps) {
     );
   }
 
-  // Authenticated - show user info and link to account
+  // Authenticated - show avatar and link to dashboard/profile
   if (isAuthenticated && user) {
-    const displayName = profile?.display_name || user.email?.split("@")[0] || "Account";
-
     return (
-      <a href="/profile">
-        <Button variant="ghost" size="sm" className={cn("gap-2", className)}>
-          <User className="w-4 h-4" />
-          <span className="hidden sm:inline max-w-[100px] truncate">
-            {displayName}
-          </span>
-        </Button>
+      <a
+        href="/dashboard"
+        className={cn(
+          "flex items-center gap-2 hover:opacity-80 transition-opacity",
+          className
+        )}
+      >
+        <Avatar email={user.email} name={profile?.display_name} size="sm" />
       </a>
     );
   }

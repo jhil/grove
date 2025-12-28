@@ -80,7 +80,7 @@ export function WateringRecommendation({
           className={cn(
             "flex items-start gap-2 text-sm px-3 py-2 rounded-lg",
             check.isRecommended
-              ? "bg-sage-50 text-sage-700"
+              ? "bg-terracotta-50 text-terracotta-700"
               : "bg-terracotta-400/10 text-terracotta-600"
           )}
         >

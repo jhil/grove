@@ -17,7 +17,7 @@ export default function GroveNotFound() {
       {/* Animated background */}
       <div className="fixed inset-0 -z-10">
         <motion.div
-          className="absolute top-20 right-1/4 w-56 h-56 bg-sage-100 rounded-full blur-3xl opacity-40"
+          className="absolute top-20 right-1/4 w-56 h-56 bg-terracotta-100 rounded-full blur-3xl opacity-40"
           animate={{
             scale: [1, 1.15, 1],
             x: [0, 15, 0],
@@ -47,7 +47,7 @@ export default function GroveNotFound() {
           >
             {/* Background circle */}
             <motion.div
-              className="mx-auto w-24 h-24 rounded-full bg-gradient-to-br from-sage-50 to-sage-100 flex items-center justify-center shadow-soft"
+              className="mx-auto w-24 h-24 rounded-full bg-gradient-to-br from-terracotta-50 to-terracotta-100 flex items-center justify-center shadow-soft"
               animate={{
                 boxShadow: [
                   "0 4px 20px -2px rgba(0, 0, 0, 0.06)",
@@ -64,7 +64,7 @@ export default function GroveNotFound() {
                 }}
                 transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
               >
-                <Search className="w-10 h-10 text-sage-400" />
+                <Search className="w-10 h-10 text-terracotta-400" />
               </motion.div>
             </motion.div>
 
@@ -72,7 +72,7 @@ export default function GroveNotFound() {
             {["?", "?", "?"].map((q, i) => (
               <motion.span
                 key={i}
-                className="absolute text-sage-300 font-bold text-lg"
+                className="absolute text-terracotta-300 font-bold text-lg"
                 style={{
                   left: `${25 + i * 25}%`,
                   top: `${-10 + (i % 2) * 20}%`,
@@ -142,7 +142,7 @@ export default function GroveNotFound() {
 
           {/* Helpful tips */}
           <motion.div
-            className="mt-10 p-4 bg-sage-50 rounded-xl border border-sage-100"
+            className="mt-10 p-4 bg-terracotta-50 rounded-xl border border-terracotta-100"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.6 }}
@@ -157,7 +157,7 @@ export default function GroveNotFound() {
 
       {/* Decorative floating leaf */}
       <motion.div
-        className="fixed bottom-10 right-10 text-sage-200 opacity-20 pointer-events-none"
+        className="fixed bottom-10 right-10 text-terracotta-200 opacity-20 pointer-events-none"
         animate={{
           y: [0, -10, 0],
           rotate: [0, 10, -10, 0],

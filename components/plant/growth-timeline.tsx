@@ -150,7 +150,7 @@ export function GrowthTimeline({ plant, editable = true }: GrowthTimelineProps) 
                 <img
                   src={photo.photo_url}
                   alt={photo.caption || `Photo ${index + 1}`}
-                  className="w-20 h-20 object-cover rounded-lg ring-2 ring-transparent hover:ring-sage-300 transition-all"
+                  className="w-20 h-20 object-cover rounded-lg ring-2 ring-transparent hover:ring-terracotta-300 transition-all"
                 />
                 {/* Date overlay */}
                 <div className="absolute bottom-0 left-0 right-0 bg-black/50 text-white text-[10px] px-1.5 py-0.5 rounded-b-lg truncate">

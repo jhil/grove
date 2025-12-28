@@ -94,9 +94,9 @@ export function SelectItem({ value, children, disabled }: SelectItemProps) {
         "text-sm",
         "outline-none",
         "transition-colors",
-        "focus:bg-sage-100 focus:text-foreground",
+        "focus:bg-terracotta-100 focus:text-foreground",
         "data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
-        "data-[highlighted]:bg-sage-100"
+        "data-[highlighted]:bg-terracotta-100"
       )}
     >
       <BaseSelect.ItemIndicator className="absolute left-3 flex items-center justify-center">

@@ -74,14 +74,14 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
 }
 
 const icons: Record<ToastType, React.ReactNode> = {
-  success: <CheckCircle className="h-5 w-5 text-sage-500" />,
+  success: <CheckCircle className="h-5 w-5 text-terracotta-500" />,
   error: <AlertCircle className="h-5 w-5 text-destructive" />,
   warning: <AlertCircle className="h-5 w-5 text-warning" />,
   info: <Info className="h-5 w-5 text-water-500" />,
 };
 
 const typeStyles: Record<ToastType, string> = {
-  success: "border-l-4 border-l-sage-500 bg-sage-50/80",
+  success: "border-l-4 border-l-terracotta-500 bg-terracotta-50/80",
   error: "border-l-4 border-l-destructive bg-destructive/5",
   warning: "border-l-4 border-l-warning bg-warning/5",
   info: "border-l-4 border-l-water-500 bg-water-400/5",
@@ -210,7 +210,7 @@ function ToastItem({ toast, onRemove }: ToastItemProps) {
         className={cn(
           "flex-shrink-0 rounded-lg p-1",
           "text-muted-foreground hover:text-foreground",
-          "hover:bg-sage-100 transition-colors"
+          "hover:bg-terracotta-100 transition-colors"
         )}
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
@@ -232,7 +232,7 @@ function ToastItem({ toast, onRemove }: ToastItemProps) {
           {[...Array(3)].map((_, i) => (
             <motion.div
               key={i}
-              className="absolute text-sage-400"
+              className="absolute text-terracotta-400"
               style={{
                 left: `${20 + i * 30}%`,
                 top: `${20 + (i % 2) * 40}%`,

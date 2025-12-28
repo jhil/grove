@@ -6,7 +6,7 @@ import { Header } from "@/components/shared/header";
 import { SHOP_PRODUCTS, CATEGORIES, type Product } from "@/lib/data/shop-products";
 import { FadeInUp, StaggerContainer, StaggerItem } from "@/components/ui/motion";
 import { cn } from "@/lib/utils";
-import { ExternalLink, ShoppingBag, Sparkles } from "lucide-react";
+import { ExternalLink, ShoppingBasket, Sparkles } from "lucide-react";
 
 /**
  * Shop page with curated plant care products.
@@ -33,12 +33,12 @@ export default function ShopPage() {
         <FadeInUp>
           <section className="text-center mb-12">
             <motion.div
-              className="inline-flex items-center gap-2 px-3 py-1.5 bg-sage-100 text-sage-600 rounded-full text-sm font-medium mb-4"
+              className="inline-flex items-center gap-2 px-3 py-1.5 bg-terracotta-100 text-terracotta-600 rounded-full text-sm font-medium mb-4"
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ delay: 0.1, type: "spring", stiffness: 200 }}
             >
-              <ShoppingBag className="w-4 h-4" />
+              <ShoppingBasket className="w-4 h-4" />
               Curated Collection
             </motion.div>
             <motion.h1
@@ -55,8 +55,7 @@ export default function ShopPage() {
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.3 }}
             >
-              Thoughtfully selected tools and supplies to help your plants thrive.
-              Quality items we personally recommend.
+              Tools and supplies we actually use. Nothing fancy, just good stuff.
             </motion.p>
           </section>
         </FadeInUp>
@@ -104,7 +103,7 @@ export default function ShopPage() {
                   "px-4 py-2.5 rounded-lg text-sm font-medium transition-colors",
                   "min-h-[44px]", // Mobile touch target
                   selectedCategory === category.id
-                    ? "bg-sage-500 text-white"
+                    ? "bg-terracotta-500 text-white"
                     : "bg-cream-100 text-muted-foreground hover:bg-cream-200"
                 )}
                 initial={{ opacity: 0, scale: 0.9 }}
@@ -208,13 +207,13 @@ function FeaturedProductCard({ product }: { product: Product }) {
         </motion.div>
         {/* Hover overlay */}
         <motion.div
-          className="absolute inset-0 bg-gradient-to-t from-sage-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"
+          className="absolute inset-0 bg-gradient-to-t from-terracotta-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"
         />
       </div>
       <div className="p-4">
         <div className="flex items-start justify-between gap-2">
           <div>
-            <h3 className="font-medium text-foreground group-hover:text-sage-600 transition-colors">
+            <h3 className="font-medium text-foreground group-hover:text-terracotta-600 transition-colors">
               {product.name}
             </h3>
             <p className="text-sm text-muted-foreground mt-1 line-clamp-2">
@@ -230,7 +229,7 @@ function FeaturedProductCard({ product }: { product: Product }) {
           </motion.div>
         </div>
         <motion.p
-          className="text-lg font-semibold text-sage-600 mt-3"
+          className="text-lg font-semibold text-terracotta-600 mt-3"
           whileHover={{ scale: 1.05 }}
           transition={{ type: "spring", stiffness: 300 }}
         >
@@ -270,10 +269,10 @@ function ProductCard({ product }: { product: Product }) {
       </div>
       <div className="p-4">
         <div className="flex items-start justify-between gap-2">
-          <h3 className="font-medium text-foreground text-sm sm:text-base group-hover:text-sage-600 transition-colors">
+          <h3 className="font-medium text-foreground text-sm sm:text-base group-hover:text-terracotta-600 transition-colors">
             {product.name}
           </h3>
-          <span className="text-sm sm:text-base font-semibold text-sage-600 whitespace-nowrap">
+          <span className="text-sm sm:text-base font-semibold text-terracotta-600 whitespace-nowrap">
             {product.price}
           </span>
         </div>

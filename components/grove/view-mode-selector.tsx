@@ -36,8 +36,8 @@ export function ViewModeSelector({ groveId, className }: ViewModeSelectorProps) 
           className={cn(
             "relative flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm transition-all duration-200",
             viewMode === value
-              ? "bg-white text-sage-700 shadow-soft"
-              : "text-sage-500 hover:text-sage-600 hover:bg-cream-50"
+              ? "bg-white text-terracotta-700 shadow-soft"
+              : "text-terracotta-500 hover:text-terracotta-600 hover:bg-cream-50"
           )}
           aria-label={label}
           title={label}

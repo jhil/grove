@@ -19,7 +19,7 @@ interface ProgressProps {
 }
 
 const variantStyles = {
-  default: "bg-sage-500",
+  default: "bg-terracotta-500",
   water: "bg-water-500",
   warning: "bg-warning",
   danger: "bg-destructive",
@@ -55,7 +55,7 @@ export function Progress({
       )}
       <BaseProgress.Track
         className={cn(
-          "w-full overflow-hidden rounded-full bg-sage-100",
+          "w-full overflow-hidden rounded-full bg-terracotta-100",
           sizeStyles[size]
         )}
       >

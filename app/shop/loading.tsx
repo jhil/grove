@@ -3,7 +3,7 @@
 import { motion } from "motion/react";
 import { Header } from "@/components/shared/header";
 import { ShopGridSkeleton, Skeleton } from "@/components/ui/skeleton";
-import { ShoppingBag } from "lucide-react";
+import { ShoppingBasket } from "lucide-react";
 
 /**
  * Loading state for shop page.
@@ -23,7 +23,7 @@ export default function ShopLoading() {
           transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
         />
         <motion.div
-          className="absolute bottom-20 right-1/4 w-72 h-72 bg-sage-200/30 rounded-full blur-3xl"
+          className="absolute bottom-20 right-1/4 w-72 h-72 bg-terracotta-200/30 rounded-full blur-3xl"
           animate={{
             scale: [1, 1.15, 1],
             y: [0, -25, 0],
@@ -43,11 +43,11 @@ export default function ShopLoading() {
           transition={{ duration: 0.3 }}
         >
           <motion.div
-            className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-sage-100 mb-4"
+            className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-terracotta-100 mb-4"
             animate={{ rotate: [0, 5, -5, 0] }}
             transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
           >
-            <ShoppingBag className="w-8 h-8 text-sage-400" />
+            <ShoppingBasket className="w-8 h-8 text-terracotta-400" />
           </motion.div>
           <Skeleton className="h-10 w-64 mx-auto mb-3" />
           <Skeleton className="h-5 w-96 max-w-full mx-auto" />

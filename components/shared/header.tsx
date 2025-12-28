@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "motion/react";
-import { Leaf, ArrowLeft, ShoppingBag } from "lucide-react";
+import { Flower, ArrowLeft, ShoppingBasket } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AuthButton } from "@/components/auth/auth-dialog";
 
@@ -56,7 +56,7 @@ export function Header({
           ) : (
             <Link href="/" className="flex items-center gap-2 group">
               <motion.div
-                className="w-9 h-9 rounded-full bg-sage-100 flex items-center justify-center group-hover:bg-sage-200 transition-colors"
+                className="w-9 h-9 rounded-full bg-terracotta-100 flex items-center justify-center group-hover:bg-terracotta-200 transition-colors"
                 whileHover={{ scale: 1.05, rotate: 5 }}
                 whileTap={{ scale: 0.95 }}
               >
@@ -64,12 +64,12 @@ export function Header({
                   animate={{ rotate: [0, 5, -5, 0] }}
                   transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
                 >
-                  <Leaf className="w-5 h-5 text-sage-600" />
+                  <Flower className="w-5 h-5 text-terracotta-600" />
                 </motion.div>
               </motion.div>
               <motion.span
                 className="font-display font-bold text-lg text-foreground"
-                whileHover={{ color: "var(--sage-600)" }}
+                whileHover={{ color: "var(--terracotta-600)" }}
                 transition={{ duration: 0.2 }}
               >
                 Plangrove
@@ -108,7 +108,7 @@ export function Header({
                   whileHover={{ y: -1 }}
                   transition={{ type: "spring", stiffness: 400 }}
                 >
-                  <ShoppingBag className="w-4 h-4" />
+                  <ShoppingBasket className="w-4 h-4" />
                 </motion.div>
                 <span className="hidden sm:inline">Shop</span>
               </Button>

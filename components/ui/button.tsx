@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 
 /**
  * Button component with Plangrove's organic styling.
- * Variants: primary (sage), secondary, ghost, accent (terracotta), water
+ * Variants: primary (terracotta), secondary, ghost, accent (darker terracotta), water
  */
 
 type ButtonVariant = "primary" | "secondary" | "ghost" | "accent" | "water" | "destructive";
@@ -20,21 +20,21 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 const variantStyles: Record<ButtonVariant, string> = {
   primary: `
     bg-primary text-primary-foreground
-    hover:bg-sage-600 active:bg-sage-700
+    hover:bg-terracotta-600 active:bg-terracotta-700
     shadow-soft hover:shadow-lifted
   `,
   secondary: `
     bg-secondary text-secondary-foreground
-    hover:bg-sage-200 active:bg-sage-300
+    hover:bg-terracotta-200 active:bg-terracotta-300
     border border-border
   `,
   ghost: `
     bg-transparent text-foreground
-    hover:bg-sage-100 active:bg-sage-200
+    hover:bg-terracotta-100 active:bg-terracotta-200
   `,
   accent: `
     bg-accent text-accent-foreground
-    hover:bg-terracotta-500 active:bg-terracotta-600
+    hover:bg-terracotta-700 active:bg-terracotta-800
     shadow-soft hover:shadow-lifted
   `,
   water: `

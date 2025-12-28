@@ -79,8 +79,8 @@ export function InstallPrompt() {
       >
         <div className="bg-white rounded-xl border border-border/50 shadow-elevated p-4">
           <div className="flex items-start gap-3">
-            <div className="w-10 h-10 rounded-lg bg-sage-100 flex items-center justify-center flex-shrink-0">
-              <Smartphone className="w-5 h-5 text-sage-600" />
+            <div className="w-10 h-10 rounded-lg bg-terracotta-100 flex items-center justify-center flex-shrink-0">
+              <Smartphone className="w-5 h-5 text-terracotta-600" />
             </div>
             <div className="flex-1 min-w-0">
               <h4 className="font-medium text-foreground">Install Plangrove</h4>
@@ -99,7 +99,7 @@ export function InstallPrompt() {
             </div>
             <button
               onClick={handleDismiss}
-              className="p-1 hover:bg-sage-100 rounded-md transition-colors"
+              className="p-1 hover:bg-terracotta-100 rounded-md transition-colors"
             >
               <X className="w-4 h-4 text-muted-foreground" />
             </button>

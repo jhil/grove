@@ -169,7 +169,7 @@ export function NotificationSettings({ compact = false }: NotificationSettingsPr
 
 function PermissionBadge({ permission }: { permission: string }) {
   const configs: Record<string, { bg: string; text: string; Icon: React.ComponentType<{ className?: string }>; label: string }> = {
-    granted: { bg: "bg-sage-50", text: "text-sage-700", Icon: Check, label: "Enabled" },
+    granted: { bg: "bg-terracotta-50", text: "text-terracotta-700", Icon: Check, label: "Enabled" },
     denied: { bg: "bg-terracotta-50", text: "text-terracotta-700", Icon: X, label: "Blocked" },
     default: { bg: "bg-cream-100", text: "text-muted-foreground", Icon: Bell, label: "Off" },
   };
@@ -186,7 +186,7 @@ function PermissionBadge({ permission }: { permission: string }) {
         "flex items-center gap-1.5 px-2 py-1 rounded-md text-xs font-medium border",
         config.bg,
         config.text,
-        permission === "granted" && "border-sage-200",
+        permission === "granted" && "border-terracotta-200",
         permission === "denied" && "border-terracotta-200",
         permission === "default" && "border-border/50"
       )}
@@ -207,8 +207,8 @@ function NotificationTypeItem({
   description: string;
 }) {
   return (
-    <div className="flex items-center gap-3 p-2 rounded-lg bg-sage-50/50">
-      <div className="w-8 h-8 rounded-md bg-sage-100 flex items-center justify-center text-sage-600">
+    <div className="flex items-center gap-3 p-2 rounded-lg bg-terracotta-50/50">
+      <div className="w-8 h-8 rounded-md bg-terracotta-100 flex items-center justify-center text-terracotta-600">
         <Icon className="w-4 h-4" />
       </div>
       <div>

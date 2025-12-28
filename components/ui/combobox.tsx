@@ -352,8 +352,8 @@ export function Combobox({
                               "text-sm text-left",
                               "outline-none",
                               "transition-colors",
-                              isHighlighted && "bg-sage-100",
-                              !isHighlighted && "hover:bg-sage-50"
+                              isHighlighted && "bg-terracotta-100",
+                              !isHighlighted && "hover:bg-terracotta-50"
                             )}
                           >
                             {isSelected && (

@@ -45,8 +45,8 @@ export class ErrorBoundary extends Component<Props, State> {
       return (
         <div className="min-h-[400px] flex items-center justify-center p-8">
           <div className="text-center max-w-md">
-            <div className="w-16 h-16 rounded-full bg-sage-100 flex items-center justify-center mx-auto mb-6">
-              <Leaf className="w-8 h-8 text-sage-600" />
+            <div className="w-16 h-16 rounded-full bg-terracotta-100 flex items-center justify-center mx-auto mb-6">
+              <Leaf className="w-8 h-8 text-terracotta-600" />
             </div>
             <h2 className="text-xl font-semibold text-foreground mb-2">
               Something went wrong

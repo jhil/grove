@@ -53,7 +53,7 @@ export function GroveChangelog({
         )}
       >
         <div className="w-12 h-12 rounded-full bg-cream-100 flex items-center justify-center mb-3">
-          <History className="w-6 h-6 text-sage-400" />
+          <History className="w-6 h-6 text-terracotta-400" />
         </div>
         <p className="text-muted-foreground text-sm">
           No activity yet. Start by adding some plants!
@@ -143,19 +143,19 @@ function ActivityIcon({ type }: { type: Activity["type"] }) {
 function getActivityColor(type: Activity["type"]): string {
   switch (type) {
     case "plant_added":
-      return "bg-sage-100 text-sage-600";
+      return "bg-terracotta-100 text-terracotta-600";
     case "plant_watered":
       return "bg-water-500/20 text-water-600";
     case "plant_edited":
       return "bg-terracotta-400/20 text-terracotta-500";
     case "plant_removed":
-      return "bg-cream-200 text-sage-400";
+      return "bg-cream-200 text-terracotta-400";
     case "grove_created":
-      return "bg-sage-200 text-sage-700";
+      return "bg-terracotta-200 text-terracotta-700";
     case "grove_updated":
-      return "bg-cream-200 text-sage-500";
+      return "bg-cream-200 text-terracotta-500";
     default:
-      return "bg-cream-200 text-sage-500";
+      return "bg-cream-200 text-terracotta-500";
   }
 }
 
@@ -180,7 +180,7 @@ export function ChangelogWidget({ groveId, className }: ChangelogWidgetProps) {
       )}
     >
       <div className="flex items-center gap-2 mb-4">
-        <History className="w-4 h-4 text-sage-500" />
+        <History className="w-4 h-4 text-terracotta-500" />
         <h3 className="font-medium text-foreground">Recent Activity</h3>
       </div>
 

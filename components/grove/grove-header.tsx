@@ -68,7 +68,7 @@ export function GroveHeader({ grove }: GroveHeaderProps) {
         >
           {copied ? (
             <>
-              <Check className="w-4 h-4 text-sage-600" />
+              <Check className="w-4 h-4 text-terracotta-600" />
               Copied!
             </>
           ) : (

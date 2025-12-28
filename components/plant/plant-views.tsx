@@ -161,7 +161,7 @@ function PlantListItem({
         <div
           className={cn(
             "w-16 h-16 rounded-xl flex items-center justify-center flex-shrink-0 overflow-hidden",
-            plant.photo ? "bg-cream-100" : "bg-gradient-to-br from-sage-50 to-sage-100"
+            plant.photo ? "bg-cream-100" : "bg-gradient-to-br from-terracotta-50 to-terracotta-100"
           )}
         >
           {plant.photo ? (
@@ -200,7 +200,7 @@ function PlantListItem({
           <div className="relative">
             <button
               onClick={() => setShowMenu(!showMenu)}
-              className="p-2 rounded-xl hover:bg-cream-100 text-sage-400 hover:text-sage-600 transition-colors"
+              className="p-2 rounded-xl hover:bg-cream-100 text-terracotta-400 hover:text-terracotta-600 transition-colors"
             >
               <MoreHorizontal className="w-5 h-5" />
             </button>
@@ -210,7 +210,7 @@ function PlantListItem({
                 <div className="absolute right-0 top-full mt-1 z-20 bg-white rounded-xl shadow-lifted border border-border/50 py-1 min-w-[120px]">
                   <button
                     onClick={() => { setShowMenu(false); setShowEdit(true); }}
-                    className="w-full px-3 py-2 text-left text-sm hover:bg-sage-50 flex items-center gap-2"
+                    className="w-full px-3 py-2 text-left text-sm hover:bg-terracotta-50 flex items-center gap-2"
                   >
                     <Pencil className="w-4 h-4" /> Edit
                   </button>
@@ -299,7 +299,7 @@ function PlantCompactItem({
             status === "overdue" && "bg-destructive",
             status === "due-today" && "bg-warning",
             status === "upcoming" && "bg-terracotta-400",
-            status === "healthy" && "bg-sage-500"
+            status === "healthy" && "bg-terracotta-500"
           )}
           title={formatWateringStatus(plant.last_watered, plant.watering_interval)}
         />
@@ -327,7 +327,7 @@ function PlantCompactItem({
         {/* Edit */}
         <button
           onClick={() => setShowEdit(true)}
-          className="p-1.5 rounded-lg hover:bg-sage-100 text-sage-400 transition-colors"
+          className="p-1.5 rounded-lg hover:bg-terracotta-100 text-terracotta-400 transition-colors"
           title="Edit"
         >
           <Pencil className="w-4 h-4" />

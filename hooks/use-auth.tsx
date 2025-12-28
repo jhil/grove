@@ -166,15 +166,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (error) throw error;
   }, [supabase]);
 
-  // Update profile
+  // Update profile (uses upsert to create profile if it doesn't exist)
   const updateProfile = useCallback(async (updates: { display_name?: string }) => {
     if (!supabase) throw new Error("Supabase not initialized");
     if (!user) throw new Error("Not authenticated");
 
     const { error } = await supabase
       .from("profiles")
-      .update(updates)
-      .eq("id", user.id);
+      .upsert({
+        id: user.id,
+        email: user.email,
+        ...updates,
+      });
 
     if (error) throw error;
 

@@ -90,7 +90,7 @@ export function PlantPhoto({
           )}
         />
       ) : (
-        <div className="w-full h-full bg-gradient-to-br from-sage-50 to-sage-100 flex items-center justify-center">
+        <div className="w-full h-full bg-gradient-to-br from-terracotta-50 to-terracotta-100 flex items-center justify-center">
           <span className={cn("text-5xl", size === "lg" && "text-7xl")}>
             {typeInfo.emoji}
           </span>
@@ -200,7 +200,7 @@ export function PhotoUploadButton({
         {photo ? (
           <img src={photo} alt="Plant" className="w-full h-full object-cover" />
         ) : (
-          <div className="w-full h-full bg-gradient-to-br from-sage-50 to-sage-100 flex items-center justify-center">
+          <div className="w-full h-full bg-gradient-to-br from-terracotta-50 to-terracotta-100 flex items-center justify-center">
             <span className="text-2xl">{typeInfo.emoji}</span>
           </div>
         )}

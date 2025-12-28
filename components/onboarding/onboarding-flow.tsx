@@ -4,35 +4,35 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { Leaf, Droplets, Users, Link, ArrowRight, Check } from "lucide-react";
+import { HouseHeart, Droplets, Users, Link, ArrowRight, Check } from "lucide-react";
 import { transition } from "@/lib/motion";
 
 interface OnboardingStep {
-  icon: typeof Leaf;
+  icon: typeof HouseHeart;
   title: string;
   description: string;
 }
 
 const STEPS: OnboardingStep[] = [
   {
-    icon: Leaf,
-    title: "Create a Grove",
-    description: "A grove is your shared plant space. Name it, add your plants, and watch them thrive together.",
+    icon: HouseHeart,
+    title: "Make a grove",
+    description: "A grove is your shared plant space. Name it, add plants, keep them alive.",
   },
   {
     icon: Droplets,
-    title: "Track Watering",
-    description: "Each plant has its own schedule. See when it needs water and mark it done with one tap.",
+    title: "Track watering",
+    description: "Each plant has its own schedule. One tap when it's watered.",
   },
   {
     icon: Users,
-    title: "Care Together",
-    description: "Share your grove with roommates, colleagues, or friends. Everyone can water and track plants.",
+    title: "Share the work",
+    description: "Invite roommates, coworkers, whoever. Everyone can water and check in.",
   },
   {
     icon: Link,
-    title: "Share the Link",
-    description: "Just share the link — no accounts needed. Anyone with the link can join.",
+    title: "Just a link",
+    description: "Share the link. No accounts needed. Anyone can join.",
   },
 ];
 
@@ -71,10 +71,10 @@ export function OnboardingFlow({ onComplete, className }: OnboardingFlowProps) {
             className={cn(
               "h-1.5 rounded-full transition-all",
               index === currentStep
-                ? "w-8 bg-sage-500"
+                ? "w-8 bg-terracotta-500"
                 : index < currentStep
-                ? "w-1.5 bg-sage-400"
-                : "w-1.5 bg-sage-200"
+                ? "w-1.5 bg-terracotta-400"
+                : "w-1.5 bg-terracotta-200"
             )}
             style={{
               transitionDuration: "400ms",
@@ -99,9 +99,9 @@ export function OnboardingFlow({ onComplete, className }: OnboardingFlowProps) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ ...transition.enter, delay: 0.1 }}
-            className="w-16 h-16 mx-auto rounded-xl bg-sage-100 flex items-center justify-center"
+            className="w-16 h-16 mx-auto rounded-xl bg-terracotta-100 flex items-center justify-center"
           >
-            <Icon className="w-8 h-8 text-sage-600" />
+            <Icon className="w-8 h-8 text-terracotta-600" />
           </motion.div>
 
           {/* Title */}

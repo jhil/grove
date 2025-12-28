@@ -188,7 +188,7 @@ export function PlantForm({
           transition={{ type: "spring", stiffness: 200, delay: 0.1 }}
         >
           <motion.div
-            className="w-16 h-16 rounded-full bg-sage-100 flex items-center justify-center text-3xl"
+            className="w-16 h-16 rounded-full bg-terracotta-100 flex items-center justify-center text-3xl"
             animate={{
               scale: showBurst ? [1, 1.2, 1] : 1,
             }}

@@ -31,13 +31,13 @@ interface ConfettiProps {
 }
 
 const COLORS = [
-  "var(--sage-400)",
-  "var(--sage-500)",
   "var(--terracotta-400)",
+  "var(--terracotta-500)",
+  "var(--terracotta-300)",
   "var(--water-400)",
   "var(--warning)",
-  "var(--sage-300)",
-  "var(--terracotta-300)",
+  "var(--cream-200)",
+  "var(--terracotta-600)",
 ];
 
 // Generate deterministic pieces based on index
