@@ -87,7 +87,21 @@
       "WebFetch(domain:growershouse.com)",
       "WebFetch(domain:hydro-lite.com)",
       "WebFetch(domain:thelandscaperstore.com)",
-      "mcp__chrome-devtools__list_network_requests"
+      "mcp__chrome-devtools__list_network_requests",
+      "Bash(timeout 10 npx:*)",
+      "mcp__supabase__list_tables",
+      "mcp__supabase__list_projects",
+      "mcp__supabase__execute_sql",
+      "mcp__supabase__get_logs",
+      "mcp__supabase__apply_migration",
+      "Bash(git -C /Users/jeffand/dev/plangrove config:*)",
+      "Bash(pnpm list:*)"
     ]
-  }
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "cloudflare",
+    "supabase",
+    "cloudflare-builds"
+  ]
 }
