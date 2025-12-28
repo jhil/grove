@@ -7,7 +7,9 @@ import {
   updateGrove,
   deleteGrove,
   generateGroveId,
+  getGrovesByOwner,
 } from "@/lib/database/groves";
+import { useAuth } from "@/hooks/use-auth";
 import type { Grove, NewGrove, GroveUpdate } from "@/types/supabase";
 
 /**
@@ -17,6 +19,7 @@ import type { Grove, NewGrove, GroveUpdate } from "@/types/supabase";
 export const groveKeys = {
   all: ["groves"] as const,
   detail: (id: string) => ["groves", id] as const,
+  byOwner: (userId: string) => ["groves", "owner", userId] as const,
 };
 
 /**
@@ -34,9 +37,11 @@ export function useGrove(id: string) {
 /**
  * Hook to create a new grove.
  * Automatically generates a unique ID from the name.
+ * Sets the owner_id to the current authenticated user.
  */
 export function useCreateGrove() {
   const queryClient = useQueryClient();
+  const { user } = useAuth();
 
   return useMutation({
     mutationFn: async (data: { name: string; coverPhoto?: string; location?: string }) => {
@@ -46,13 +51,32 @@ export function useCreateGrove() {
         name: data.name,
         cover_photo: data.coverPhoto || null,
         location: data.location || null,
+        owner_id: user?.id || null,
       };
       return createGrove(grove);
     },
     onSuccess: (data) => {
       // Update the cache with the new grove
       queryClient.setQueryData(groveKeys.detail(data.id), data);
+      // Invalidate the owner's groves list
+      if (user?.id) {
+        queryClient.invalidateQueries({ queryKey: groveKeys.byOwner(user.id) });
+      }
     },
+  });
+}
+
+/**
+ * Hook to fetch groves owned by the current user.
+ */
+export function useMyOwnedGroves() {
+  const { user, isLoading: authLoading } = useAuth();
+
+  return useQuery({
+    queryKey: user?.id ? groveKeys.byOwner(user.id) : ["groves", "none"],
+    queryFn: () => (user?.id ? getGrovesByOwner(user.id) : Promise.resolve([])),
+    staleTime: 60 * 1000, // 1 minute
+    enabled: !authLoading && !!user?.id,
   });
 }
 

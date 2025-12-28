@@ -42,6 +42,7 @@ export type Database = {
           name: string;
           cover_photo: string | null;
           location: string | null;
+          owner_id: string | null;
           created_at: string;
           updated_at: string;
         };
@@ -50,6 +51,7 @@ export type Database = {
           name: string;
           cover_photo?: string | null;
           location?: string | null;
+          owner_id?: string | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -58,6 +60,7 @@ export type Database = {
           name?: string;
           cover_photo?: string | null;
           location?: string | null;
+          owner_id?: string | null;
           created_at?: string;
           updated_at?: string;
         };

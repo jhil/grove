@@ -101,12 +101,23 @@
       "Bash(pnpm --filter @plangrove/mcp build:*)",
       "Bash(timeout 2 node:*)",
       "WebFetch(domain:www.npmjs.com)",
-      "mcp__plangrove__whoami"
+      "mcp__plangrove__whoami",
+      "WebFetch(domain:lucide.dev)",
+      "mcp__supabase__search_docs",
+      "WebFetch(domain:developers.home.google.com)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "mcp__cloudflare-builds__accounts_list",
+      "mcp__cloudflare-builds__workers_list",
+      "mcp__cloudflare-builds__set_active_account",
+      "Bash(git fetch:*)",
+      "mcp__cloudflare-builds__workers_builds_set_active_worker",
+      "mcp__cloudflare-builds__workers_builds_list_builds",
+      "mcp__cloudflare-builds__workers_get_worker",
+      "WebFetch(domain:developers.google.com)"
     ]
   },
   "enableAllProjectMcpServers": true,
   "enabledMcpjsonServers": [
-    "cloudflare",
     "supabase",
     "cloudflare-builds"
   ]

@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion } from "motion/react";
 import { useAuth } from "@/hooks/use-auth";
-import { useMyGroves } from "@/hooks/use-my-groves";
+import { useMyOwnedGroves } from "@/hooks/use-grove";
 import { Button } from "@/components/ui/button";
 import { Avatar } from "@/components/ui/avatar";
 import {
@@ -25,7 +25,7 @@ import { transition } from "@/lib/motion";
 export default function DashboardPage() {
 	const router = useRouter();
 	const { user, profile, isAuthenticated, isLoading } = useAuth();
-	const { groves, isLoaded: grovesLoaded } = useMyGroves();
+	const { data: groves = [], isLoading: grovesLoading } = useMyOwnedGroves();
 
 	// Redirect if not authenticated
 	useEffect(() => {
@@ -34,7 +34,7 @@ export default function DashboardPage() {
 		}
 	}, [isLoading, isAuthenticated, router]);
 
-	if (isLoading || !grovesLoaded) {
+	if (isLoading || grovesLoading) {
 		return (
 			<div className="min-h-screen bg-background flex items-center justify-center">
 				<motion.div
@@ -194,7 +194,7 @@ export default function DashboardPage() {
 													{grove.name}
 												</h3>
 												<p className="text-sm text-muted-foreground">
-													Last visited {formatRelativeTime(grove.lastVisited)}
+													Updated {formatRelativeTime(grove.updated_at)}
 												</p>
 											</div>
 											<ArrowRight className="w-5 h-5 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />

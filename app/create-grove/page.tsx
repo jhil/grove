@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Confetti } from "@/components/ui/confetti";
 import { useCreateGrove } from "@/hooks/use-grove";
-import { useMyGroves } from "@/hooks/use-my-groves";
 import { useToast } from "@/components/ui/toast";
 import { generateSlug } from "@/lib/database/groves";
 import {
@@ -30,7 +29,6 @@ export default function CreateGrovePage() {
 	const router = useRouter();
 	const { showToast } = useToast();
 	const createGrove = useCreateGrove();
-	const { saveGrove } = useMyGroves();
 
 	const [name, setName] = useState("");
 	const [location, setLocation] = useState("");
@@ -53,9 +51,6 @@ export default function CreateGrovePage() {
 				name: name.trim(),
 				location: location.trim() || undefined,
 			});
-
-			// Save to localStorage so it appears in dashboard
-			saveGrove({ id: grove.id, name: grove.name });
 
 			setIsSuccess(true);
 			setShowConfetti(true);

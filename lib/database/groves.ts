@@ -7,6 +7,25 @@ import type { Grove, NewGrove, GroveUpdate } from "@/types/supabase";
  */
 
 /**
+ * Fetch all groves owned by a user
+ */
+export async function getGrovesByOwner(userId: string): Promise<Grove[]> {
+  const supabase = createClient();
+
+  const { data, error } = await supabase
+    .from("groves")
+    .select("*")
+    .eq("owner_id", userId)
+    .order("updated_at", { ascending: false });
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data as Grove[];
+}
+
+/**
  * Fetch a single grove by ID
  */
 export async function getGrove(id: string): Promise<Grove | null> {
