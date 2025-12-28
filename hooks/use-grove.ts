@@ -39,12 +39,13 @@ export function useCreateGrove() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (data: { name: string; coverPhoto?: string }) => {
-      const id = generateGroveId(data.name);
+    mutationFn: async (data: { name: string; coverPhoto?: string; location?: string }) => {
+      const id = await generateGroveId(data.name);
       const grove: NewGrove = {
         id,
         name: data.name,
         cover_photo: data.coverPhoto || null,
+        location: data.location || null,
       };
       return createGrove(grove);
     },

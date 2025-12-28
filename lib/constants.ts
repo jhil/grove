@@ -2,6 +2,8 @@
  * Application constants.
  */
 
+import { getPlantById } from "@/lib/data/plants";
+
 /**
  * Plant types with default watering intervals.
  */
@@ -66,9 +68,28 @@ export type PlantType = (typeof PLANT_TYPES)[number]["value"];
 
 /**
  * Get plant type info by value.
+ * Checks both category types and plant database IDs.
  */
-export function getPlantType(value: string) {
-  return PLANT_TYPES.find((type) => type.value === value) || PLANT_TYPES[8]; // Default to "other"
+export function getPlantType(value: string): { value: string; label: string; defaultInterval: number; emoji: string } {
+  // First check if it's a category
+  const categoryMatch = PLANT_TYPES.find((type) => type.value === value);
+  if (categoryMatch) {
+    return categoryMatch;
+  }
+
+  // Check if it's a plant database ID
+  const plant = getPlantById(value);
+  if (plant) {
+    return {
+      value: plant.id,
+      label: plant.commonName,
+      defaultInterval: plant.wateringInterval.ideal,
+      emoji: plant.emoji,
+    };
+  }
+
+  // Default to "other"
+  return PLANT_TYPES[8];
 }
 
 /**

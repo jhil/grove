@@ -85,18 +85,30 @@ export async function deleteGrove(id: string): Promise<void> {
 }
 
 /**
- * Generate a unique grove ID from a name.
- * Creates a slug and appends random chars if needed.
+ * Generate a slug from a grove name.
  */
-export function generateGroveId(name: string): string {
-  const slug = name
+export function generateSlug(name: string): string {
+  return name
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-|-$/g, "")
     .substring(0, 40);
+}
 
+/**
+ * Generate a unique grove ID from a name.
+ * Tries the clean slug first, only adds suffix if taken.
+ */
+export async function generateGroveId(name: string): Promise<string> {
+  const slug = generateSlug(name);
+
+  // Try the clean slug first
+  if (await isGroveIdAvailable(slug)) {
+    return slug;
+  }
+
+  // If taken, add a random suffix
   const random = Math.random().toString(36).substring(2, 6);
-
   return `${slug}-${random}`;
 }
 

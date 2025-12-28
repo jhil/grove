@@ -11,8 +11,9 @@ import { NameGenerator } from "@/components/plant/name-generator";
 import { WateringRecommendation } from "@/components/plant/watering-recommendation";
 import { BurstConfetti } from "@/components/ui/confetti";
 import { useCreatePlant, useUpdatePlant } from "@/hooks/use-plants";
-import { searchPlants, getPlantById, CATEGORY_INFO, type PlantSpecies } from "@/lib/data/plants";
-import { Leaf, Sparkles, Calendar } from "lucide-react";
+import { searchPlants, getPlantById, CATEGORY_INFO } from "@/lib/data/plants";
+import type { PlantSpecies } from "@/lib/data/plants";
+import { Leaf, Sparkles, Loader2 } from "lucide-react";
 import type { Plant, NewPlant, PlantUpdate } from "@/types/supabase";
 
 /**
@@ -49,6 +50,7 @@ export function PlantForm({
   const [type, setType] = useState("other"); // Category
   const [interval, setInterval] = useState(7);
   const [notes, setNotes] = useState("");
+  const [location, setLocation] = useState("");
   const [photo, setPhoto] = useState<string | null>(null);
   const [birthday, setBirthday] = useState<string>(""); // Plant birthday for milestones
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -81,6 +83,7 @@ export function PlantForm({
         setType(plant.type);
         setInterval(plant.watering_interval);
         setNotes(plant.notes || "");
+        setLocation(plant.location || "");
         setPhoto(plant.photo || null);
         setBirthday(plant.birthday ? plant.birthday.split("T")[0] : "");
         // Try to find matching plant in database
@@ -92,6 +95,7 @@ export function PlantForm({
         setType("other");
         setInterval(7);
         setNotes("");
+        setLocation("");
         setPhoto(null);
         setBirthday("");
       }
@@ -132,6 +136,7 @@ export function PlantForm({
           type: typeToStore,
           watering_interval: interval,
           notes: notes.trim() || null,
+          location: location.trim() || null,
           photo: photo,
           birthday: birthdayValue,
         };
@@ -148,6 +153,7 @@ export function PlantForm({
           type: typeToStore,
           watering_interval: interval,
           notes: notes.trim() || null,
+          location: location.trim() || null,
           photo: photo,
           birthday: birthdayValue,
         };
@@ -339,6 +345,31 @@ export function PlantForm({
           />
         </motion.div>
 
+        {/* Location (Optional) */}
+        <motion.div
+          className="space-y-2"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.37 }}
+        >
+          <label
+            htmlFor="location"
+            className="text-sm font-medium text-foreground"
+          >
+            Location{" "}
+            <span className="text-muted-foreground font-normal">(optional)</span>
+          </label>
+          <Input
+            id="location"
+            type="text"
+            placeholder="e.g., Living room, Kitchen window, Patio"
+            value={location}
+            onChange={(e) => setLocation(e.target.value)}
+            disabled={isSubmitting}
+            maxLength={100}
+          />
+        </motion.div>
+
         {/* Birthday (Optional) */}
         <motion.div
           className="space-y-2"
@@ -348,9 +379,8 @@ export function PlantForm({
         >
           <label
             htmlFor="birthday"
-            className="text-sm font-medium text-foreground flex items-center gap-1.5"
+            className="text-sm font-medium text-foreground"
           >
-            <Calendar className="w-3.5 h-3.5" />
             Plant Birthday{" "}
             <span className="text-muted-foreground font-normal">(optional)</span>
           </label>
@@ -362,9 +392,6 @@ export function PlantForm({
             disabled={isSubmitting}
             max={new Date().toISOString().split("T")[0]}
           />
-          <p className="text-xs text-muted-foreground">
-            When you got this plant - unlocks milestones and celebrations!
-          </p>
         </motion.div>
 
         {/* Actions */}
@@ -404,12 +431,7 @@ export function PlantForm({
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                   >
-                    <motion.div
-                      animate={{ rotate: 360 }}
-                      transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                    >
-                      <Leaf className="w-4 h-4" />
-                    </motion.div>
+                    <Loader2 className="w-4 h-4 animate-spin" />
                     {isEditing ? "Saving..." : "Adding..."}
                   </motion.span>
                 ) : showBurst ? (

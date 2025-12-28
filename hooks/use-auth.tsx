@@ -76,44 +76,71 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   // Initialize auth state when supabase is ready
+  // Uses both getSession() and onAuthStateChange for reliability
   useEffect(() => {
     if (!supabase) return;
 
-    const initAuth = async () => {
-      try {
-        const { data: { session: initialSession } } = await supabase.auth.getSession();
-        setSession(initialSession);
-        setUser(initialSession?.user ?? null);
+    let isMounted = true;
+    let didSetLoading = false;
 
-        if (initialSession?.user) {
-          const userProfile = await fetchProfile(initialSession.user.id, supabase);
-          setProfile(userProfile);
-        }
-      } catch (error) {
-        console.error("Error initializing auth:", error);
-      } finally {
+    const setLoadingFalse = () => {
+      if (!didSetLoading && isMounted) {
+        didSetLoading = true;
         setIsLoading(false);
       }
     };
 
-    initAuth();
+    // Timeout fallback - ensure loading stops after 3 seconds max
+    const timeout = setTimeout(() => {
+      console.warn("Auth initialization timeout - forcing loading to false");
+      setLoadingFalse();
+    }, 3000);
 
-    // Listen for auth changes
+    // Get initial session immediately
+    const initSession = async () => {
+      try {
+        const { data: { session: currentSession } } = await supabase.auth.getSession();
+
+        if (!isMounted) return;
+
+        setSession(currentSession);
+        setUser(currentSession?.user ?? null);
+
+        if (currentSession?.user) {
+          const userProfile = await fetchProfile(currentSession.user.id, supabase);
+          if (isMounted) setProfile(userProfile);
+        }
+      } catch (error) {
+        console.error("Error getting session:", error);
+      } finally {
+        setLoadingFalse();
+      }
+    };
+
+    initSession();
+
+    // Listen for auth changes (sign in, sign out, token refresh, etc.)
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, newSession) => {
+        if (!isMounted) return;
+
         setSession(newSession);
         setUser(newSession?.user ?? null);
 
         if (newSession?.user) {
           const userProfile = await fetchProfile(newSession.user.id, supabase);
-          setProfile(userProfile);
+          if (isMounted) setProfile(userProfile);
         } else {
           setProfile(null);
         }
       }
     );
 
-    return () => subscription.unsubscribe();
+    return () => {
+      isMounted = false;
+      clearTimeout(timeout);
+      subscription.unsubscribe();
+    };
   }, [supabase, fetchProfile]);
 
   // Sign up with email and password

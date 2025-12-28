@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Dialog } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -26,6 +27,7 @@ export function AuthDialog({ open, onOpenChange, defaultMode = "signin" }: AuthD
   const [displayName, setDisplayName] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
+  const router = useRouter();
   const { signIn, signUp } = useAuth();
   const { showToast } = useToast();
 
@@ -51,6 +53,8 @@ export function AuthDialog({ open, onOpenChange, defaultMode = "signin" }: AuthD
       } else {
         await signIn(email, password);
         showToast("Welcome back!", "success");
+        // Redirect to dashboard after successful sign in
+        router.push("/dashboard");
       }
       onOpenChange(false);
       // Reset form
@@ -202,8 +206,9 @@ export function AuthButton({ className }: AuthButtonProps) {
     );
   }
 
-  // Authenticated - show avatar and link to dashboard/profile
+  // Authenticated - show avatar and display name, link to dashboard
   if (isAuthenticated && user) {
+    const displayName = profile?.display_name || user.email?.split("@")[0];
     return (
       <a
         href="/dashboard"
@@ -212,6 +217,9 @@ export function AuthButton({ className }: AuthButtonProps) {
           className
         )}
       >
+        <span className="text-sm font-medium text-foreground hidden sm:inline">
+          {displayName}
+        </span>
         <Avatar email={user.email} name={profile?.display_name} size="sm" />
       </a>
     );

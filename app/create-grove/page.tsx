@@ -8,7 +8,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Confetti } from "@/components/ui/confetti";
 import { useCreateGrove } from "@/hooks/use-grove";
+import { useMyGroves } from "@/hooks/use-my-groves";
 import { useToast } from "@/components/ui/toast";
+import { generateSlug } from "@/lib/database/groves";
 import {
 	Leaf,
 	ArrowLeft,
@@ -16,6 +18,7 @@ import {
 	Check,
 	Sparkles,
 	Flower,
+	MapPin,
 } from "lucide-react";
 import { transition } from "@/lib/motion";
 
@@ -27,8 +30,10 @@ export default function CreateGrovePage() {
 	const router = useRouter();
 	const { showToast } = useToast();
 	const createGrove = useCreateGrove();
+	const { saveGrove } = useMyGroves();
 
 	const [name, setName] = useState("");
+	const [location, setLocation] = useState("");
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [isSuccess, setIsSuccess] = useState(false);
 	const [showConfetti, setShowConfetti] = useState(false);
@@ -44,7 +49,14 @@ export default function CreateGrovePage() {
 		setIsSubmitting(true);
 
 		try {
-			const grove = await createGrove.mutateAsync({ name: name.trim() });
+			const grove = await createGrove.mutateAsync({
+				name: name.trim(),
+				location: location.trim() || undefined,
+			});
+
+			// Save to localStorage so it appears in dashboard
+			saveGrove({ id: grove.id, name: grove.name });
+
 			setIsSuccess(true);
 			setShowConfetti(true);
 			showToast(`${grove.name} created!`, "success");
@@ -61,11 +73,7 @@ export default function CreateGrovePage() {
 	};
 
 	// Generate preview URL from name
-	const previewSlug = name
-		.toLowerCase()
-		.replace(/[^a-z0-9]+/g, "-")
-		.replace(/^-|-$/g, "")
-		.slice(0, 30);
+	const previewSlug = generateSlug(name);
 
 	return (
 		<div className="min-h-screen bg-background">
@@ -156,6 +164,35 @@ export default function CreateGrovePage() {
 								/>
 								<p className="text-xs text-muted-foreground">
 									{name.length}/50 characters
+								</p>
+							</div>
+
+							{/* Location Input */}
+							<div className="space-y-2">
+								<label
+									htmlFor="grove-location"
+									className="text-sm font-medium text-foreground"
+								>
+									Location{" "}
+									<span className="text-muted-foreground font-normal">
+										(optional)
+									</span>
+								</label>
+								<div className="relative">
+									<MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+									<Input
+										id="grove-location"
+										type="text"
+										placeholder="Brooklyn, NY or 90210"
+										value={location}
+										onChange={(e) => setLocation(e.target.value)}
+										disabled={isSubmitting || isSuccess}
+										maxLength={100}
+										className="h-12 text-base pl-10"
+									/>
+								</div>
+								<p className="text-xs text-muted-foreground">
+									For local weather and watering reminders
 								</p>
 							</div>
 

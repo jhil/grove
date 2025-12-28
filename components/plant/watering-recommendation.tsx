@@ -5,7 +5,7 @@ import {
   isIntervalRecommended,
 } from "@/lib/utils/watering-recommendations";
 import { cn } from "@/lib/utils";
-import { Info, CheckCircle, AlertTriangle } from "lucide-react";
+import { AlertTriangle } from "lucide-react";
 import type { PlantSpecies } from "@/lib/data/plants";
 
 /**
@@ -33,76 +33,43 @@ export function WateringRecommendation({
         min: selectedPlant.wateringInterval.min,
         ideal: selectedPlant.wateringInterval.ideal,
         max: selectedPlant.wateringInterval.max,
-        tips: getWateringTipsForPlant(selectedPlant),
       }
     : getWateringRecommendation(plantType);
 
-  // Check if current interval is within recommended range
-  const check = currentInterval
-    ? selectedPlant
-      ? {
-          isRecommended:
-            currentInterval >= selectedPlant.wateringInterval.min &&
-            currentInterval <= selectedPlant.wateringInterval.max,
-          suggestion:
-            currentInterval < selectedPlant.wateringInterval.min
-              ? `${selectedPlant.commonName} prefers less frequent watering. Try ${selectedPlant.wateringInterval.ideal} days.`
-              : `${selectedPlant.commonName} may need more frequent watering. Try ${selectedPlant.wateringInterval.ideal} days.`,
-        }
-      : isIntervalRecommended(plantType, currentInterval)
-    : null;
+  // Check if current interval is outside recommended range
+  const isOutsideRange = currentInterval
+    ? currentInterval < recommendation.min || currentInterval > recommendation.max
+    : false;
+
+  const suggestion = selectedPlant
+    ? currentInterval && currentInterval < selectedPlant.wateringInterval.min
+      ? `${selectedPlant.commonName} prefers less frequent watering. Try ${selectedPlant.wateringInterval.ideal} days.`
+      : `${selectedPlant.commonName} may need more frequent watering. Try ${selectedPlant.wateringInterval.ideal} days.`
+    : isIntervalRecommended(plantType, currentInterval || 7).suggestion;
 
   return (
     <div className={cn("space-y-2", className)}>
       {/* Recommendation Info */}
-      <div className="flex items-start gap-2 text-sm">
-        <Info className="w-4 h-4 text-water-500 mt-0.5 flex-shrink-0" />
-        <div>
-          <p className="text-muted-foreground">
-            Recommended: every{" "}
-            <button
-              type="button"
-              onClick={() => onIntervalChange?.(recommendation.ideal)}
-              className="font-medium text-water-600 hover:underline"
-            >
-              {recommendation.ideal} days
-            </button>{" "}
-            <span className="text-muted-foreground/60">
-              (range: {recommendation.min}-{recommendation.max} days)
-            </span>
-          </p>
-        </div>
-      </div>
-
-      {/* Current interval feedback */}
-      {check && (
-        <div
-          className={cn(
-            "flex items-start gap-2 text-sm px-3 py-2 rounded-lg",
-            check.isRecommended
-              ? "bg-terracotta-50 text-terracotta-700"
-              : "bg-terracotta-400/10 text-terracotta-600"
-          )}
+      <p className="text-sm text-muted-foreground">
+        Recommended: every{" "}
+        <button
+          type="button"
+          onClick={() => onIntervalChange?.(recommendation.ideal)}
+          className="font-medium text-water-600 hover:underline"
         >
-          {check.isRecommended ? (
-            <>
-              <CheckCircle className="w-4 h-4 mt-0.5 flex-shrink-0" />
-              <span>Looks good! This is within the recommended range.</span>
-            </>
-          ) : (
-            <>
-              <AlertTriangle className="w-4 h-4 mt-0.5 flex-shrink-0" />
-              <span>{check.suggestion}</span>
-            </>
-          )}
-        </div>
-      )}
+          {recommendation.ideal} days
+        </button>{" "}
+        <span className="text-muted-foreground/60">
+          ({recommendation.min}-{recommendation.max} days)
+        </span>
+      </p>
 
-      {/* Quick tip */}
-      {recommendation.tips[0] && (
-        <p className="text-xs text-muted-foreground pl-6">
-          Tip: {recommendation.tips[0]}
-        </p>
+      {/* Only show warning if outside range */}
+      {isOutsideRange && (
+        <div className="flex items-start gap-2 text-sm text-terracotta-600">
+          <AlertTriangle className="w-4 h-4 mt-0.5 flex-shrink-0" />
+          <span>{suggestion}</span>
+        </div>
       )}
     </div>
   );

@@ -70,11 +70,17 @@ export function DialogContent({ className, children }: DialogContentProps) {
       />
       <BaseDialog.Popup
         className={cn(
-          "fixed left-[50%] top-[50%] z-50",
-          "w-full max-w-lg translate-x-[-50%] translate-y-[-50%]",
+          "fixed left-[50%] z-50",
+          "w-full max-w-lg translate-x-[-50%]",
+          // Position from top instead of center to allow scrolling
+          "top-4 sm:top-[50%] sm:translate-y-[-50%]",
+          // Max height with scroll
+          "max-h-[calc(100vh-2rem)] sm:max-h-[90vh]",
+          "overflow-y-auto",
           "bg-card rounded-2xl shadow-lifted",
           "border border-border/50",
-          "p-6",
+          // Safe area padding for iOS
+          "p-6 pb-[calc(1.5rem+env(safe-area-inset-bottom))]",
           "data-[state=open]:animate-in data-[state=closed]:animate-out",
           "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
           "data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95",
