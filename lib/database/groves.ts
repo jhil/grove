@@ -116,25 +116,10 @@ export function generateSlug(name: string): string {
 
 /**
  * Generate a unique grove ID from a name.
- * Tries the clean slug first, only adds suffix if taken.
+ * Always includes a random suffix to guarantee uniqueness without database checks.
  */
-export async function generateGroveId(name: string): Promise<string> {
+export function generateGroveId(name: string): string {
   const slug = generateSlug(name);
-
-  // Try the clean slug first
-  if (await isGroveIdAvailable(slug)) {
-    return slug;
-  }
-
-  // If taken, add a random suffix
   const random = Math.random().toString(36).substring(2, 6);
   return `${slug}-${random}`;
-}
-
-/**
- * Check if a grove ID is available
- */
-export async function isGroveIdAvailable(id: string): Promise<boolean> {
-  const grove = await getGrove(id);
-  return grove === null;
 }

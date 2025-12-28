@@ -45,13 +45,20 @@ export function useCreateGrove() {
 
   return useMutation({
     mutationFn: async (data: { name: string; coverPhoto?: string; location?: string }) => {
-      const id = await generateGroveId(data.name);
+      // Generate ID synchronously with random suffix
+      const id = generateGroveId(data.name);
+      // Get current user ID at mutation time via fresh client
+      const { createClient } = await import("@/lib/supabase/client");
+      const supabase = createClient();
+      const { data: authData } = await supabase.auth.getUser();
+      const currentUserId = authData?.user?.id || null;
+
       const grove: NewGrove = {
         id,
         name: data.name,
         cover_photo: data.coverPhoto || null,
         location: data.location || null,
-        owner_id: user?.id || null,
+        owner_id: currentUserId,
       };
       return createGrove(grove);
     },
