@@ -33,32 +33,69 @@ export function deviceIdToPlantId(deviceId: string): string | null {
 }
 
 /**
+ * Generate smart nicknames for voice recognition.
+ * Creates variations that users might naturally say.
+ */
+function generateNicknames(plantName: string, plantType: string): string[] {
+  const nicknames: string[] = [];
+  const nameParts = plantName.toLowerCase().split(" ");
+  const typeParts = plantType.toLowerCase().split(" ");
+
+  // Add each word from the plant name as a nickname
+  for (const part of nameParts) {
+    if (part.length > 2 && !nicknames.includes(part)) {
+      nicknames.push(part);
+    }
+  }
+
+  // Add plant type variations (e.g., "fern", "snake plant")
+  if (!nicknames.includes(plantType.toLowerCase())) {
+    nicknames.push(plantType.toLowerCase());
+  }
+
+  // Add "my [type]" variation for single plants of a type
+  nicknames.push(`my ${plantType.toLowerCase()}`);
+
+  // Add "the [name]" variation
+  if (nameParts.length === 1) {
+    nicknames.push(`the ${nameParts[0]}`);
+  }
+
+  // Common variations: remove common suffixes/prefixes
+  const commonWords = ["plant", "tree", "the", "my", "a"];
+  for (const part of typeParts) {
+    if (!commonWords.includes(part) && part.length > 2 && !nicknames.includes(part)) {
+      nicknames.push(part);
+    }
+  }
+
+  // Limit to 10 nicknames (Google's limit)
+  return nicknames.slice(0, 10);
+}
+
+/**
  * Convert a Plangrove plant to a Google Smart Home device.
  */
 export function plantToDevice(plant: Plant, grove: Grove): GoogleDevice {
-  // Generate nicknames from plant name
-  const nicknames: string[] = [];
-  const nameParts = plant.name.split(" ");
-  if (nameParts.length > 1) {
-    // Add first word as nickname (e.g., "Fern" from "Fern Fred")
-    nicknames.push(nameParts[0]);
-    // Add last word as nickname (e.g., "Fred" from "Fern Fred")
-    nicknames.push(nameParts[nameParts.length - 1]);
-  }
+  const nicknames = generateNicknames(plant.name, plant.type);
+
+  // Create a descriptive default name that works well with voice
+  const defaultName = plant.name;
 
   return {
     id: plantIdToDeviceId(plant.id),
     type: GOOGLE_DEVICE_TYPE,
     traits: [...GOOGLE_TRAITS],
     name: {
-      name: plant.name,
+      name: defaultName,
+      defaultNames: [`${plant.type} plant`, plant.type],
       nicknames: nicknames.length > 0 ? nicknames : undefined,
     },
     willReportState: false,
     roomHint: plant.location || grove.location || grove.name,
     deviceInfo: {
       manufacturer: DEVICE_MANUFACTURER,
-      model: DEVICE_MODEL,
+      model: plant.type, // Use plant type as model
       swVersion: DEVICE_SW_VERSION,
     },
     attributes: {
@@ -67,6 +104,8 @@ export function plantToDevice(plant: Plant, grove: Grove): GoogleDevice {
     customData: {
       plantId: plant.id,
       groveId: plant.grove_id,
+      plantType: plant.type,
+      groveName: grove.name,
     },
   };
 }

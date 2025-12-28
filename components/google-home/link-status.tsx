@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
 import { useToast } from "@/components/ui/toast";
-import { Home, Check, X, Loader2, ExternalLink } from "lucide-react";
+import { Home, Check, X, Loader2, ExternalLink, Unlink } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { Grove } from "@/types/supabase";
 
@@ -26,8 +26,10 @@ export function GoogleHomeLinkStatus({ grove }: GoogleHomeLinkStatusProps) {
   const [link, setLink] = useState<GoogleHomeLink | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isUnlinking, setIsUnlinking] = useState(false);
+  const [isUnlinkingAll, setIsUnlinkingAll] = useState(false);
 
   const isGroveLinked = link?.linked_groves?.includes(grove.id);
+  const linkedGrovesCount = link?.linked_groves?.length || 0;
 
   // Fetch current link status
   useEffect(() => {
@@ -106,6 +108,36 @@ export function GoogleHomeLinkStatus({ grove }: GoogleHomeLinkStatusProps) {
       showToast("Failed to connect grove", "error");
     } finally {
       setIsUnlinking(false);
+    }
+  };
+
+  // Handle unlinking from Google Home entirely
+  const handleUnlinkAll = async () => {
+    if (!link) return;
+
+    const confirmed = window.confirm(
+      "This will disconnect all your groves from Google Home. You'll need to re-link your account in the Google Home app to use voice commands again. Continue?"
+    );
+
+    if (!confirmed) return;
+
+    setIsUnlinkingAll(true);
+    try {
+      const response = await fetch("/api/google-home/unlink", {
+        method: "POST",
+      });
+
+      if (response.ok) {
+        setLink(null);
+        showToast("Disconnected from Google Home", "success");
+      } else {
+        throw new Error("Failed to unlink");
+      }
+    } catch (error) {
+      console.error("Failed to unlink from Google Home:", error);
+      showToast("Failed to disconnect from Google Home", "error");
+    } finally {
+      setIsUnlinkingAll(false);
     }
   };
 
@@ -190,37 +222,56 @@ export function GoogleHomeLinkStatus({ grove }: GoogleHomeLinkStatusProps) {
         </div>
       </div>
 
-      {isGroveLinked ? (
-        <Button
-          variant="secondary"
-          size="sm"
-          onClick={handleUnlinkGrove}
-          disabled={isUnlinking}
-          className="gap-2"
+      <div className="flex flex-wrap gap-2">
+        {isGroveLinked ? (
+          <Button
+            variant="secondary"
+            size="sm"
+            onClick={handleUnlinkGrove}
+            disabled={isUnlinking || isUnlinkingAll}
+            className="gap-2"
+          >
+            {isUnlinking ? (
+              <Loader2 className="w-4 h-4 animate-spin" />
+            ) : (
+              <X className="w-4 h-4" />
+            )}
+            Disconnect Grove
+          </Button>
+        ) : (
+          <Button
+            variant="secondary"
+            size="sm"
+            onClick={handleLinkGrove}
+            disabled={isUnlinking || isUnlinkingAll}
+            className="gap-2"
+          >
+            {isUnlinking ? (
+              <Loader2 className="w-4 h-4 animate-spin" />
+            ) : (
+              <Home className="w-4 h-4" />
+            )}
+            Connect Grove
+          </Button>
+        )}
+      </div>
+
+      {/* Unlink entirely option */}
+      <div className="pt-3 border-t border-border/50">
+        <button
+          onClick={handleUnlinkAll}
+          disabled={isUnlinkingAll || isUnlinking}
+          className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-red-600 transition-colors disabled:opacity-50"
         >
-          {isUnlinking ? (
-            <Loader2 className="w-4 h-4 animate-spin" />
+          {isUnlinkingAll ? (
+            <Loader2 className="w-3 h-3 animate-spin" />
           ) : (
-            <X className="w-4 h-4" />
+            <Unlink className="w-3 h-3" />
           )}
-          Disconnect Grove
-        </Button>
-      ) : (
-        <Button
-          variant="secondary"
-          size="sm"
-          onClick={handleLinkGrove}
-          disabled={isUnlinking}
-          className="gap-2"
-        >
-          {isUnlinking ? (
-            <Loader2 className="w-4 h-4 animate-spin" />
-          ) : (
-            <Home className="w-4 h-4" />
-          )}
-          Connect Grove
-        </Button>
-      )}
+          Disconnect from Google Home entirely
+          {linkedGrovesCount > 1 && ` (${linkedGrovesCount} groves linked)`}
+        </button>
+      </div>
     </div>
   );
 }

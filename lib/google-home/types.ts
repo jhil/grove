@@ -56,6 +56,8 @@ export interface GoogleDevice {
   customData?: {
     plantId: string;
     groveId: string;
+    plantType?: string;
+    groveName?: string;
   };
 }
 
