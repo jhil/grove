@@ -7,7 +7,8 @@ import { Input } from "@/components/ui/input";
 import { useUpdateGrove, useDeleteGrove } from "@/hooks/use-grove";
 import { useToast } from "@/components/ui/toast";
 import { cn } from "@/lib/utils";
-import { Settings, Trash2, AlertTriangle, Users, User } from "lucide-react";
+import { Settings, Trash2, AlertTriangle, Users, User, MapPin, Home } from "lucide-react";
+import { GoogleHomeLinkStatus } from "@/components/google-home/link-status";
 import { useRouter } from "next/navigation";
 import type { Grove } from "@/types/supabase";
 
@@ -28,6 +29,7 @@ export function GroveSettings({ grove, open, onOpenChange }: GroveSettingsProps)
   const deleteGrove = useDeleteGrove();
 
   const [name, setName] = useState(grove.name);
+  const [location, setLocation] = useState(grove.location || "");
   const [careMode, setCareMode] = useState<"collaborative" | "single">("collaborative");
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -40,7 +42,10 @@ export function GroveSettings({ grove, open, onOpenChange }: GroveSettingsProps)
     try {
       await updateGrove.mutateAsync({
         id: grove.id,
-        updates: { name: name.trim() },
+        updates: {
+          name: name.trim(),
+          location: location.trim() || null,
+        },
       });
       showToast("Grove updated!", "success");
       onOpenChange(false);
@@ -85,6 +90,28 @@ export function GroveSettings({ grove, open, onOpenChange }: GroveSettingsProps)
           />
         </div>
 
+        {/* Location for Weather */}
+        <div className="space-y-2">
+          <label htmlFor="grove-location" className="text-sm font-medium text-foreground">
+            Location{" "}
+            <span className="text-muted-foreground font-normal">(for weather)</span>
+          </label>
+          <div className="relative">
+            <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <Input
+              id="grove-location"
+              value={location}
+              onChange={(e) => setLocation(e.target.value)}
+              placeholder="e.g., Brooklyn, NY or 90210"
+              maxLength={100}
+              className="pl-9"
+            />
+          </div>
+          <p className="text-xs text-muted-foreground">
+            Used for local weather and watering reminders
+          </p>
+        </div>
+
         {/* Care Mode */}
         <div className="space-y-3">
           <label className="text-sm font-medium text-foreground">
@@ -108,6 +135,15 @@ export function GroveSettings({ grove, open, onOpenChange }: GroveSettingsProps)
               comingSoon
             />
           </div>
+        </div>
+
+        {/* Google Home Integration */}
+        <div className="space-y-3 pt-2 border-t border-border">
+          <label className="text-sm font-medium text-foreground flex items-center gap-2">
+            <Home className="w-4 h-4 text-terracotta-500" />
+            Voice Control
+          </label>
+          <GoogleHomeLinkStatus grove={grove} />
         </div>
 
         {/* Actions */}

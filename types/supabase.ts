@@ -41,6 +41,7 @@ export type Database = {
           id: string;
           name: string;
           cover_photo: string | null;
+          location: string | null;
           created_at: string;
           updated_at: string;
         };
@@ -48,6 +49,7 @@ export type Database = {
           id: string;
           name: string;
           cover_photo?: string | null;
+          location?: string | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -55,6 +57,7 @@ export type Database = {
           id?: string;
           name?: string;
           cover_photo?: string | null;
+          location?: string | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -69,6 +72,7 @@ export type Database = {
           watering_interval: number;
           photo: string | null;
           notes: string | null;
+          location: string | null;
           last_watered: string | null;
           created_at: string;
           updated_at: string;
@@ -87,6 +91,7 @@ export type Database = {
           watering_interval: number;
           photo?: string | null;
           notes?: string | null;
+          location?: string | null;
           last_watered?: string | null;
           created_at?: string;
           updated_at?: string;
@@ -105,6 +110,7 @@ export type Database = {
           watering_interval?: number;
           photo?: string | null;
           notes?: string | null;
+          location?: string | null;
           last_watered?: string | null;
           created_at?: string;
           updated_at?: string;
@@ -236,6 +242,88 @@ export type Database = {
           }
         ];
       };
+      google_home_links: {
+        Row: {
+          id: string;
+          user_id: string;
+          agent_user_id: string;
+          access_token: string;
+          refresh_token: string;
+          token_expires_at: string;
+          linked_groves: string[];
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          agent_user_id: string;
+          access_token: string;
+          refresh_token: string;
+          token_expires_at: string;
+          linked_groves?: string[];
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          user_id?: string;
+          agent_user_id?: string;
+          access_token?: string;
+          refresh_token?: string;
+          token_expires_at?: string;
+          linked_groves?: string[];
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "google_home_links_user_id_fkey";
+            columns: ["user_id"];
+            isOneToOne: true;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
+      google_auth_codes: {
+        Row: {
+          id: string;
+          code: string;
+          user_id: string;
+          redirect_uri: string;
+          expires_at: string;
+          used: boolean;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          code: string;
+          user_id: string;
+          redirect_uri: string;
+          expires_at: string;
+          used?: boolean;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          code?: string;
+          user_id?: string;
+          redirect_uri?: string;
+          expires_at?: string;
+          used?: boolean;
+          created_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "google_auth_codes_user_id_fkey";
+            columns: ["user_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
     };
     Views: Record<string, never>;
     Functions: Record<string, never>;
@@ -265,3 +353,10 @@ export type NewWateringEvent = Database["public"]["Tables"]["watering_events"]["
 export type PlantPhoto = Database["public"]["Tables"]["plant_photos"]["Row"];
 export type NewPlantPhoto = Database["public"]["Tables"]["plant_photos"]["Insert"];
 export type PlantPhotoUpdate = Database["public"]["Tables"]["plant_photos"]["Update"];
+
+export type GoogleHomeLink = Database["public"]["Tables"]["google_home_links"]["Row"];
+export type NewGoogleHomeLink = Database["public"]["Tables"]["google_home_links"]["Insert"];
+export type GoogleHomeLinkUpdate = Database["public"]["Tables"]["google_home_links"]["Update"];
+
+export type GoogleAuthCode = Database["public"]["Tables"]["google_auth_codes"]["Row"];
+export type NewGoogleAuthCode = Database["public"]["Tables"]["google_auth_codes"]["Insert"];
