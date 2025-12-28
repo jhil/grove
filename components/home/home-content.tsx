@@ -9,6 +9,7 @@ import Image from "next/image";
 import { motion, useInView, useScroll, useTransform } from "motion/react";
 import { useRef } from "react";
 import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { AuthButton } from "@/components/auth/auth-dialog";
 import {
 	Users,
@@ -23,6 +24,7 @@ import {
 	HouseHeart,
 } from "lucide-react";
 import { transition } from "@/lib/motion";
+import { getBlurDataURL } from "@/lib/blur-data";
 
 /**
  * Parallax image component that moves subtly as user scrolls
@@ -54,7 +56,10 @@ function ParallaxImage({
 					fill
 					className="object-cover"
 					priority={priority}
+					loading={priority ? "eager" : "lazy"}
 					sizes="(max-width: 1024px) 100vw, 50vw"
+					placeholder="blur"
+					blurDataURL={getBlurDataURL(src)}
 				/>
 			</motion.div>
 		</div>
@@ -128,6 +133,7 @@ export function HomeContent() {
 						</span>
 					</Link>
 					<div className="flex items-center gap-4">
+						<ThemeToggle className="text-muted-foreground hover:text-foreground" />
 						<Link
 							href="/shop"
 							className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
@@ -196,17 +202,8 @@ export function HomeContent() {
 }
 
 function HeroSection() {
-	const ref = useRef(null);
-	const { scrollYProgress } = useScroll({
-		target: ref,
-		offset: ["start start", "end start"],
-	});
-
-	const y = useTransform(scrollYProgress, [0, 1], ["0%", "15%"]);
-
 	return (
 		<header
-			ref={ref}
 			id="main-content"
 			className="min-h-screen lg:min-h-[90vh] pt-20"
 		>
@@ -260,14 +257,11 @@ function HeroSection() {
 					</motion.div>
 				</div>
 
-				{/* Hero image with parallax */}
-				<motion.div
+				{/* Hero image - static for faster LCP (no motion wrapper) */}
+				<div
 					className="relative h-[50vh] lg:h-auto order-1 lg:order-2 overflow-hidden grainy-overlay"
-					initial={{ opacity: 0 }}
-					animate={{ opacity: 1 }}
-					transition={{ ...transition.slow, delay: 0.2 }}
 				>
-					<motion.div className="absolute inset-[-15%]" style={{ y }}>
+					<div className="absolute inset-0">
 						<Image
 							src="/img/plant-room.jpg"
 							alt="A sunlit room filled with lush green plants and cozy furniture"
@@ -275,11 +269,13 @@ function HeroSection() {
 							className="object-cover"
 							priority
 							sizes="(max-width: 1024px) 100vw, 50vw"
+							placeholder="blur"
+							blurDataURL={getBlurDataURL("/img/plant-room.jpg")}
 						/>
-					</motion.div>
+					</div>
 					{/* Subtle gradient overlay */}
 					<div className="absolute inset-0 bg-linear-to-t from-background/20 via-transparent to-transparent lg:bg-linear-to-r lg:from-background/10 lg:via-transparent lg:to-transparent" />
-				</motion.div>
+				</div>
 			</div>
 		</header>
 	);

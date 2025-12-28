@@ -42,11 +42,36 @@ export default function RootLayout({
 	children: React.ReactNode;
 }>) {
 	return (
-		<html lang="en">
+		<html lang="en" suppressHydrationWarning>
 			<head>
 				<link rel="apple-touch-icon" href="/icons/icon-192.svg" />
 				<meta name="apple-mobile-web-app-capable" content="yes" />
 				<meta name="mobile-web-app-capable" content="yes" />
+				{/* Preload LCP image for faster rendering */}
+				<link
+					rel="preload"
+					as="image"
+					href="/img/plant-room.jpg"
+					fetchPriority="high"
+				/>
+				{/* Prevent flash of wrong theme by setting class before paint */}
+				<script
+					dangerouslySetInnerHTML={{
+						__html: `
+							(function() {
+								try {
+									var theme = localStorage.getItem('plangrove-theme');
+									var isDark = theme === 'dark' ||
+										(theme === 'system' || !theme) &&
+										window.matchMedia('(prefers-color-scheme: dark)').matches;
+									if (isDark) {
+										document.documentElement.classList.add('dark');
+									}
+								} catch (e) {}
+							})();
+						`,
+					}}
+				/>
 			</head>
 			<body className="font-sans antialiased">
 				{/* Skip link for keyboard accessibility */}
