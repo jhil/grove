@@ -25,7 +25,7 @@ export default function GroveNotFound() {
           transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
         />
         <motion.div
-          className="absolute bottom-40 left-1/4 w-48 h-48 bg-terracotta-200/20 rounded-full blur-3xl opacity-40"
+          className="absolute bottom-40 left-1/4 w-48 h-48 bg-clay-200/20 rounded-full blur-3xl opacity-40"
           animate={{
             scale: [1, 1.2, 1],
             y: [0, -15, 0],

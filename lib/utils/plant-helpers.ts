@@ -68,7 +68,7 @@ export function getHealthMessage(health: number): {
   return {
     emoji: "🚨",
     message: "Your plants need water urgently!",
-    color: "text-terracotta-500",
+    color: "text-clay-500",
   };
 }
 
@@ -134,7 +134,7 @@ export const PLANT_CARE_TIPS = [
   "Grouping plants together can increase humidity.",
   "Dust on leaves can block photosynthesis - wipe them occasionally!",
   "Most houseplants prefer indirect light over direct sunlight.",
-  "Terracotta pots help prevent overwatering by absorbing excess moisture.",
+  "Clay pots help prevent overwatering by absorbing excess moisture.",
   "Plants can improve air quality by filtering toxins.",
 ];
 

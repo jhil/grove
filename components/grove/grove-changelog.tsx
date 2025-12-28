@@ -147,7 +147,7 @@ function getActivityColor(type: Activity["type"]): string {
     case "plant_watered":
       return "bg-water-500/20 text-water-600";
     case "plant_edited":
-      return "bg-terracotta-400/20 text-terracotta-500";
+      return "bg-clay-400/20 text-clay-500";
     case "plant_removed":
       return "bg-cream-200 text-terracotta-400";
     case "grove_created":

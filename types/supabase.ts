@@ -41,6 +41,7 @@ export type Database = {
           id: string;
           name: string;
           cover_photo: string | null;
+          color_theme: string;
           created_at: string;
           updated_at: string;
         };
@@ -48,6 +49,7 @@ export type Database = {
           id: string;
           name: string;
           cover_photo?: string | null;
+          color_theme?: string;
           created_at?: string;
           updated_at?: string;
         };
@@ -55,6 +57,7 @@ export type Database = {
           id?: string;
           name?: string;
           cover_photo?: string | null;
+          color_theme?: string;
           created_at?: string;
           updated_at?: string;
         };

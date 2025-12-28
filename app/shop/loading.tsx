@@ -15,7 +15,7 @@ export default function ShopLoading() {
       {/* Animated background */}
       <div className="fixed inset-0 -z-10">
         <motion.div
-          className="absolute top-32 left-1/4 w-64 h-64 bg-terracotta-300/20 rounded-full blur-3xl"
+          className="absolute top-32 left-1/4 w-64 h-64 bg-clay-300/20 rounded-full blur-3xl"
           animate={{
             scale: [1, 1.2, 1],
             x: [0, 20, 0],

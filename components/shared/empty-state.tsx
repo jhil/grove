@@ -45,7 +45,7 @@ export function EmptyState({
           transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
         />
         <motion.div
-          className="absolute bottom-12 right-1/4 w-32 h-32 bg-terracotta-200/30 rounded-full blur-2xl opacity-40"
+          className="absolute bottom-12 right-1/4 w-32 h-32 bg-clay-200/30 rounded-full blur-2xl opacity-40"
           animate={{
             scale: [1, 1.15, 1],
             y: [0, -8, 0],
@@ -84,7 +84,7 @@ export function EmptyState({
 
           {/* Sparkle decorations */}
           <motion.div
-            className="absolute -top-1 -right-1 text-terracotta-400"
+            className="absolute -top-1 -right-1 text-clay-400"
             initial={{ scale: 0, opacity: 0 }}
             animate={{
               scale: [0, 1, 0],

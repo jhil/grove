@@ -22,6 +22,7 @@ import { useActivities } from "@/hooks/use-activities";
 import { useViewMode } from "@/hooks/use-view-mode";
 import { useSortOption } from "@/hooks/use-sort";
 import { useMyGroves } from "@/hooks/use-my-groves";
+import { useGroveTheme } from "@/hooks/use-grove-theme";
 import { useToast } from "@/components/ui/toast";
 import { AuthButton } from "@/components/auth/auth-dialog";
 import { Plus, Leaf, AlertCircle, ArrowLeft } from "lucide-react";
@@ -41,6 +42,9 @@ export default function GrovePage({ params }: GrovePageProps) {
 
   const { data: grove, isLoading: groveLoading, error: groveError } = useGrove(id);
   const { data: plants, isLoading: plantsLoading } = usePlants(id);
+
+  // Apply grove color theme
+  useGroveTheme(grove?.color_theme);
 
   // Enable real-time sync for this grove
   useRealtimeSync(id);

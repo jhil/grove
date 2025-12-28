@@ -203,7 +203,7 @@ function MetricCard({
     water: { bg: "bg-water-400/10", icon: "text-water-500", value: "text-water-600" },
     success: { bg: "bg-terracotta-100", icon: "text-terracotta-600", value: "text-terracotta-700" },
     warning: { bg: "bg-amber-50", icon: "text-amber-500", value: "text-amber-600" },
-    danger: { bg: "bg-terracotta-400/10", icon: "text-terracotta-500", value: "text-terracotta-600" },
+    danger: { bg: "bg-clay-400/10", icon: "text-clay-500", value: "text-clay-600" },
     gold: { bg: "bg-amber-50", icon: "text-amber-500", value: "text-amber-600" },
   };
 

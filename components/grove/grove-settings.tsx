@@ -4,12 +4,15 @@ import { useState } from "react";
 import { Dialog } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { ColorThemePicker } from "@/components/grove/color-theme-picker";
 import { useUpdateGrove, useDeleteGrove } from "@/hooks/use-grove";
 import { useToast } from "@/components/ui/toast";
 import { cn } from "@/lib/utils";
 import { Settings, Trash2, AlertTriangle, Users, User } from "lucide-react";
 import { useRouter } from "next/navigation";
 import type { Grove } from "@/types/supabase";
+import type { ThemeId } from "@/lib/constants/themes";
+import { DEFAULT_THEME } from "@/lib/constants/themes";
 
 /**
  * Grove settings dialog.
@@ -29,6 +32,9 @@ export function GroveSettings({ grove, open, onOpenChange }: GroveSettingsProps)
 
   const [name, setName] = useState(grove.name);
   const [careMode, setCareMode] = useState<"collaborative" | "single">("collaborative");
+  const [colorTheme, setColorTheme] = useState<ThemeId>(
+    (grove.color_theme as ThemeId) || DEFAULT_THEME
+  );
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -40,7 +46,7 @@ export function GroveSettings({ grove, open, onOpenChange }: GroveSettingsProps)
     try {
       await updateGrove.mutateAsync({
         id: grove.id,
-        updates: { name: name.trim() },
+        updates: { name: name.trim(), color_theme: colorTheme },
       });
       showToast("Grove updated!", "success");
       onOpenChange(false);
@@ -84,6 +90,9 @@ export function GroveSettings({ grove, open, onOpenChange }: GroveSettingsProps)
             maxLength={50}
           />
         </div>
+
+        {/* Color Theme */}
+        <ColorThemePicker value={colorTheme} onChange={setColorTheme} disabled={isSubmitting} />
 
         {/* Care Mode */}
         <div className="space-y-3">
@@ -217,7 +226,7 @@ function CareModeOption({
       )}
     >
       {comingSoon && (
-        <span className="absolute top-2 right-2 text-xs px-2 py-0.5 rounded-full bg-terracotta-400/20 text-terracotta-600">
+        <span className="absolute top-2 right-2 text-xs px-2 py-0.5 rounded-full bg-clay-400/20 text-clay-600">
           Soon
         </span>
       )}

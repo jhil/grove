@@ -16,8 +16,8 @@ function AuthErrorContent() {
       <Header />
       <main className="container mx-auto px-4 py-16">
         <div className="max-w-md mx-auto text-center">
-          <div className="w-16 h-16 rounded-full bg-terracotta-100 flex items-center justify-center mx-auto mb-6">
-            <AlertCircle className="w-8 h-8 text-terracotta-500" />
+          <div className="w-16 h-16 rounded-full bg-clay-100 flex items-center justify-center mx-auto mb-6">
+            <AlertCircle className="w-8 h-8 text-clay-500" />
           </div>
           <h1 className="text-2xl font-display font-bold text-foreground mb-2">
             Authentication Error

@@ -39,7 +39,7 @@ export function GroveHealth({ plants }: GroveHealthProps) {
             ? "bg-gradient-to-r from-terracotta-50 to-cream-100"
             : health >= 50
             ? "bg-gradient-to-r from-water-400/10 to-cream-100"
-            : "bg-gradient-to-r from-terracotta-400/10 to-cream-100"
+            : "bg-gradient-to-r from-clay-400/10 to-cream-100"
         )}
       >
         <div className="flex items-center gap-4">
@@ -103,12 +103,12 @@ export function QuickWater({ plants, groveId }: QuickWaterProps) {
   };
 
   return (
-    <Card variant="elevated" className="border-terracotta-300/30">
+    <Card variant="elevated" className="border-clay-300/30">
       <CardContent className="p-4">
         <div className="flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-terracotta-400/10 flex items-center justify-center">
-              <Droplets className="w-5 h-5 text-terracotta-500" />
+            <div className="w-10 h-10 rounded-full bg-clay-400/10 flex items-center justify-center">
+              <Droplets className="w-5 h-5 text-clay-500" />
             </div>
             <div>
               <p className="font-medium text-foreground">

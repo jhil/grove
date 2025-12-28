@@ -69,7 +69,7 @@ export default function ShopPage() {
             transition={{ delay: 0.4 }}
           >
             <div className="flex items-center gap-2 mb-6">
-              <Sparkles className="w-5 h-5 text-terracotta-400" />
+              <Sparkles className="w-5 h-5 text-clay-400" />
               <h2 className="text-lg font-medium text-foreground">
                 Editor&apos;s Picks
               </h2>
@@ -201,7 +201,7 @@ function FeaturedProductCard({ product }: { product: Product }) {
           animate={{ x: 0, opacity: 1 }}
           transition={{ delay: 0.3 }}
         >
-          <span className="px-2 py-1 bg-terracotta-400 text-white text-xs font-medium rounded-full shadow-md">
+          <span className="px-2 py-1 bg-clay-400 text-white text-xs font-medium rounded-full shadow-md">
             Featured
           </span>
         </motion.div>
