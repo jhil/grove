@@ -338,6 +338,35 @@ This document records key technical and design decisions for future reference.
 
 ---
 
+## 2025-12-28: Auth Robustness for Grove Queries
+
+**Decision**: Fetch user directly from Supabase inside React Query functions rather than relying on auth context.
+
+**Context**: Grove pages and dashboard were stuck loading forever. Debug investigation revealed:
+1. Auth timeout (originally 3s) was too short for slower networks/cold starts
+2. When timeout fired, `authLoading` became `false` but `user` remained `null`
+3. React Query's `enabled: !authLoading && !!user?.id` became `false`, so queries never ran
+4. Even though a valid session cookie existed, the auth context was in a broken state
+
+**Rationale**:
+- Fetching user directly from Supabase in `queryFn` bypasses stale context issues
+- The Supabase client reads from cookies, which persist across page loads
+- Increased timeout from 3s to 10s accommodates Cloudflare cold starts
+- Debug logging added to track auth state flow in production
+
+**Code Changes**:
+- `hooks/use-auth.tsx`: Timeout increased from 3s to 10s
+- `hooks/use-grove.ts`: `useMyOwnedGroves` fetches user via `supabase.auth.getUser()` in queryFn
+- `hooks/use-grove.ts`: `useGrove` added `retry: 2` and `refetchOnMount: true`
+- `hooks/use-plants.ts`: `usePlants` added `retry: 2` and `refetchOnMount: true`
+
+**Trade-offs**:
+- Slightly more Supabase auth calls (one per query instead of reusing context)
+- Debug console.log statements remain (can be removed once confident in stability)
+- Auth context still used for UI state, but queries are more resilient
+
+---
+
 ## Future Decisions
 
 Document new decisions here as they're made.

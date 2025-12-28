@@ -12,6 +12,12 @@ This file tracks tasks that need to be completed by the user (not automated by C
 - [ ] **[T-009]** Test MCP server with Claude Code (restart Claude Code, run `whoami`)
 - [ ] **[T-010]** Test full flow: login, list_groves, water_plant
 
+### 2025-12-28
+- [ ] **[T-011]** Remove debug console.log statements from auth/grove hooks once stable
+  - Files: `hooks/use-grove.ts`, `app/dashboard/page.tsx`
+  - Search for: `[DashboardPage]`, `[useMyOwnedGroves]`
+  - Wait 1-2 weeks of stable operation before removing
+
 ---
 
 ## Completed Tasks
