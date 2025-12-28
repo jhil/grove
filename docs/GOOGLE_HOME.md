@@ -97,7 +97,32 @@ Generate a secure JWT secret:
 openssl rand -base64 32
 ```
 
-### 5. Deploy and Test
+### 5. Configure Request Sync (Optional)
+
+Request Sync notifies Google when plants are added, removed, or renamed, so users see updated devices automatically.
+
+1. Go to [Google Cloud Console](https://console.cloud.google.com/)
+2. Select your project (same as Actions Console project)
+3. Enable the **HomeGraph API**:
+   - Go to **APIs & Services** > **Enable APIs**
+   - Search for "HomeGraph API" and enable it
+4. Create a Service Account:
+   - Go to **IAM & Admin** > **Service Accounts**
+   - Click "Create Service Account"
+   - Name: "plangrove-request-sync"
+   - Grant role: No specific role needed
+   - Click "Done"
+5. Generate a key:
+   - Click on the service account
+   - Go to **Keys** > **Add Key** > **Create new key**
+   - Select JSON and download
+6. Set the environment variable:
+   ```bash
+   # Stringify the JSON file (remove newlines)
+   GOOGLE_HOME_SERVICE_ACCOUNT='{"type":"service_account","project_id":"...","private_key":"..."}'
+   ```
+
+### 6. Deploy and Test
 
 1. Deploy the updated application
 2. Open Google Home app on your phone
@@ -210,6 +235,28 @@ Temporary storage for OAuth authorization codes.
       "lang": "en"
     }
   ]
+}
+```
+
+### Request Sync API
+
+Trigger a device sync after plant changes:
+
+```bash
+POST /api/google-home/request-sync
+Authorization: Bearer <user-session-token>
+Content-Type: application/json
+
+{
+  "groveId": "grove-uuid"
+}
+```
+
+Response:
+```json
+{
+  "success": true,
+  "message": "Sync request sent to Google Home"
 }
 ```
 
