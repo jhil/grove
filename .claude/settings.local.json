@@ -95,7 +95,13 @@
       "mcp__supabase__get_logs",
       "mcp__supabase__apply_migration",
       "Bash(git -C /Users/jeffand/dev/plangrove config:*)",
-      "Bash(pnpm list:*)"
+      "Bash(pnpm list:*)",
+      "mcp__context7__resolve-library-id",
+      "mcp__context7__get-library-docs",
+      "Bash(pnpm --filter @plangrove/mcp build:*)",
+      "Bash(timeout 2 node:*)",
+      "WebFetch(domain:www.npmjs.com)",
+      "mcp__plangrove__whoami"
     ]
   },
   "enableAllProjectMcpServers": true,
