@@ -94,9 +94,13 @@ interface ToastContainerProps {
 
 function ToastContainer({ toasts, onRemove }: ToastContainerProps) {
   return (
-    <div className="fixed bottom-4 right-4 z-50 flex flex-col gap-2 max-w-sm w-full pointer-events-none">
+    <div
+      role="region"
+      aria-label="Notifications"
+      className="fixed bottom-4 right-4 z-50 flex flex-col gap-2 max-w-sm w-full pointer-events-none"
+    >
       <AnimatePresence mode="popLayout">
-        {toasts.map((toast, index) => (
+        {toasts.map((toast) => (
           <motion.div
             key={toast.id}
             layout
@@ -126,6 +130,7 @@ interface ToastItemProps {
 
 function ToastItem({ toast, onRemove }: ToastItemProps) {
   const [progress, setProgress] = React.useState(100);
+  const isUrgent = toast.type === "error" || toast.type === "warning";
 
   React.useEffect(() => {
     const startTime = Date.now();
@@ -146,6 +151,9 @@ function ToastItem({ toast, onRemove }: ToastItemProps) {
 
   return (
     <div
+      role="alert"
+      aria-live={isUrgent ? "assertive" : "polite"}
+      aria-atomic="true"
       className={cn(
         "relative overflow-hidden",
         "bg-card/95 backdrop-blur-sm rounded-xl shadow-lifted",
@@ -198,6 +206,7 @@ function ToastItem({ toast, onRemove }: ToastItemProps) {
       {/* Close button */}
       <motion.button
         onClick={() => onRemove(toast.id)}
+        aria-label="Dismiss notification"
         className={cn(
           "flex-shrink-0 rounded-lg p-1",
           "text-muted-foreground hover:text-foreground",

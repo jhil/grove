@@ -4,7 +4,10 @@ This file tracks tasks that need to be completed by the user (not automated by C
 
 ## Pending Tasks
 
-_No pending tasks_
+### 2025-12-27
+- [ ] **[T-005]** Test security headers on production after deploy (use securityheaders.com)
+- [ ] **[T-006]** Run Lighthouse audit and document Core Web Vitals baseline
+- [ ] **[T-007]** Set up E2E test infrastructure with Playwright (`npx playwright install`)
 
 ---
 

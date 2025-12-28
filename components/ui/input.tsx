@@ -18,6 +18,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
       <input
         type={type}
         ref={ref}
+        aria-invalid={error || undefined}
         className={cn(
           // Base styles
           "flex h-11 w-full rounded-lg px-4 py-2",
@@ -82,6 +83,7 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
     return (
       <textarea
         ref={ref}
+        aria-invalid={error || undefined}
         className={cn(
           // Base styles
           "flex min-h-[100px] w-full rounded-lg px-4 py-3",

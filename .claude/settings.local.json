@@ -44,7 +44,13 @@
       "Bash(pnpm outdated:*)",
       "Bash(npm outdated:*)",
       "Bash(npm view:*)",
-      "Bash(pnpm update:*)"
+      "Bash(pnpm update:*)",
+      "Bash(npx mcp-remote:*)",
+      "Bash(ping:*)",
+      "Bash(nslookup:*)",
+      "Bash(claude mcp add:*)",
+      "Bash(find:*)",
+      "Bash(git show:*)"
     ]
   }
 }

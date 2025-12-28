@@ -61,6 +61,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       <button
         ref={ref}
         disabled={disabled || loading}
+        aria-busy={loading || undefined}
         className={cn(
           // Base styles
           "inline-flex items-center justify-center gap-2",
@@ -82,6 +83,8 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
+            role="img"
+            aria-label="Loading"
           >
             <circle
               className="opacity-25"

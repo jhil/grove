@@ -1,0 +1,7 @@
+# Plangrove Security Policy
+# https://securitytxt.org/
+
+Contact: mailto:security@plangrove.app
+Expires: 2026-12-31T23:59:00.000Z
+Preferred-Languages: en
+Canonical: https://plangrove.app/.well-known/security.txt

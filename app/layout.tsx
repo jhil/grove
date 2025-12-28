@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { Providers } from "./providers";
 import { Analytics } from "@/components/analytics";
+import { WebVitals } from "./web-vitals";
 
 export const metadata: Metadata = {
   title: "Plangrove - Collaborative Plant Care",
@@ -50,6 +51,7 @@ export default function RootLayout({
         <Providers>
           {children}
         </Providers>
+        <WebVitals />
         <Analytics />
       </body>
     </html>

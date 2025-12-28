@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useCallback, memo } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -32,7 +32,7 @@ interface PlantCardProps {
   onDeleted?: () => void;
 }
 
-export function PlantCard({
+export const PlantCard = memo(function PlantCard({
   plant,
   groveId,
   onWatered,
@@ -52,6 +52,20 @@ export function PlantCard({
   const statusColors = WATERING_STATUS_COLORS[status];
   const statusText = formatWateringStatus(plant.last_watered, plant.watering_interval);
   const lastWateredText = formatLastWatered(plant.last_watered);
+
+  // Close menu on Escape key
+  const handleKeyDown = useCallback((e: KeyboardEvent) => {
+    if (e.key === "Escape" && showMenu) {
+      setShowMenu(false);
+    }
+  }, [showMenu]);
+
+  useEffect(() => {
+    if (showMenu) {
+      document.addEventListener("keydown", handleKeyDown);
+      return () => document.removeEventListener("keydown", handleKeyDown);
+    }
+  }, [showMenu, handleKeyDown]);
 
   const handleDelete = async () => {
     if (!confirm(`Delete ${plant.name}? This cannot be undone.`)) {
@@ -150,6 +164,9 @@ export function PlantCard({
                   size="icon"
                   onClick={() => setShowMenu(!showMenu)}
                   className="h-8 w-8 bg-white/80 hover:bg-white backdrop-blur-sm"
+                  aria-label="Plant options"
+                  aria-haspopup="menu"
+                  aria-expanded={showMenu}
                 >
                   <MoreHorizontal className="w-4 h-4" />
                 </Button>
@@ -163,6 +180,8 @@ export function PlantCard({
                       onClick={() => setShowMenu(false)}
                     />
                     <motion.div
+                      role="menu"
+                      aria-label={`Options for ${plant.name}`}
                       className="absolute left-0 top-full mt-1 z-20 bg-white rounded-lg shadow-lifted border border-border/50 py-1 min-w-[140px]"
                       initial={{ opacity: 0, y: -10, scale: 0.95 }}
                       animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -170,6 +189,7 @@ export function PlantCard({
                       transition={{ duration: 0.15 }}
                     >
                       <motion.button
+                        role="menuitem"
                         onClick={() => {
                           setShowMenu(false);
                           setShowEdit(true);
@@ -182,6 +202,7 @@ export function PlantCard({
                         Edit
                       </motion.button>
                       <motion.button
+                        role="menuitem"
                         onClick={() => {
                           setShowMenu(false);
                           handleDelete();
@@ -268,4 +289,4 @@ export function PlantCard({
       />
     </>
   );
-}
+});

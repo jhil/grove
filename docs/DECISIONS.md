@@ -276,6 +276,68 @@ This document records key technical and design decisions for future reference.
 
 ---
 
+## 2025-12-27: Security Headers Strategy
+
+**Decision**: Implement comprehensive security headers via Next.js config.
+
+**Context**: Needed to harden the application against common web vulnerabilities.
+
+**Headers Added**:
+- `X-Frame-Options: DENY` - Prevents clickjacking
+- `X-Content-Type-Options: nosniff` - Prevents MIME type sniffing
+- `Referrer-Policy: strict-origin-when-cross-origin` - Controls referrer information
+- `X-XSS-Protection: 1; mode=block` - Legacy XSS protection
+- `Permissions-Policy: camera=(), microphone=(), geolocation=()` - Disables unused APIs
+- `Content-Security-Policy` - Restricts resource loading to trusted sources
+
+**CSP Configuration**:
+- `default-src 'self'` - Default to same-origin
+- Scripts: self, inline (required by Next.js), Google Tag Manager
+- Styles: self, inline (required for Tailwind)
+- Images: self, data URIs, Supabase storage
+- Connect: Supabase, Open-Meteo, Nominatim, Google Analytics
+- Frames: none (frame-ancestors 'none')
+
+**Rationale**:
+- Defense in depth against XSS, clickjacking, and data injection
+- Next.js config approach keeps headers in version control
+- CSP restricts what resources can load, limiting attack surface
+- Cloudflare Workers also provides additional protection at edge
+
+**Trade-offs**:
+- CSP requires `unsafe-inline` for styles/scripts (Next.js requirement)
+- May need updates when adding new external services
+- Strict CSP can break features if not configured correctly
+
+---
+
+## 2025-12-27: Accessibility-First Approach
+
+**Decision**: Implement WCAG 2.1 AA accessibility standards throughout the application.
+
+**Context**: Accessibility audit revealed gaps in screen reader support and keyboard navigation.
+
+**Improvements Made**:
+- Toast notifications with `aria-live` regions (polite/assertive based on type)
+- Plant card menus with proper `aria-expanded`, `aria-haspopup`, `role="menu"`
+- Form inputs with `aria-required` and `aria-invalid` states
+- Section landmarks with `aria-labelledby` for navigation
+- Skip-to-content link for keyboard users
+- Loading states with `aria-busy` indicators
+
+**Rationale**:
+- Base UI components provide accessible primitives
+- ARIA attributes fill gaps for custom interactive components
+- Keyboard navigation essential for motor-impaired users
+- Screen reader support critical for visually impaired users
+
+**Trade-offs**:
+- Additional attributes increase code complexity
+- Need to test with actual screen readers
+- Some dynamic content still needs aria-live improvements
+
+---
+
 ## Future Decisions
 
 Document new decisions here as they're made.

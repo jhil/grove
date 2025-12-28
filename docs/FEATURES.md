@@ -147,11 +147,12 @@ Dashboard showing care patterns over time.
 
 - [x] Add comprehensive unit tests (Vitest + React Testing Library)
 - [ ] Add E2E tests with Playwright
-- [ ] Implement error boundaries
-- [ ] Add more loading states
+- [x] Implement error boundaries (root + grove page)
+- [x] Add more loading states (root + grove page)
 - [ ] Image optimization improvements
-- [ ] Accessibility audit (WCAG compliance)
-- [ ] Performance profiling
+- [x] Accessibility audit (WCAG compliance) - aria-live, aria-labels, landmarks
+- [x] Performance profiling (Web Vitals monitoring added)
+- [x] Security headers (CSP, X-Frame-Options, etc.)
 
 ---
 

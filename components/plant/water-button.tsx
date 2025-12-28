@@ -160,6 +160,8 @@ export function WaterButton({
           )}
           onClick={handleWater}
           disabled={waterPlant.isPending || justWatered}
+          aria-label={justWatered ? `${plantName} was just watered` : `Water ${plantName}`}
+          aria-busy={waterPlant.isPending}
         >
           {/* Urgent status pulse effect */}
           {isUrgent && !justWatered && !waterPlant.isPending && (

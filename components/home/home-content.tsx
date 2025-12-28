@@ -199,7 +199,11 @@ function FeaturesSection() {
   ];
 
   return (
-    <section ref={ref} className="py-16 sm:py-24 lg:py-32 border-t border-border/30">
+    <section
+      ref={ref}
+      aria-labelledby="features-heading"
+      className="py-16 sm:py-24 lg:py-32 border-t border-border/30"
+    >
       <div className="px-6 lg:px-12">
         <motion.div
           className="mb-10 sm:mb-16"
@@ -210,7 +214,10 @@ function FeaturesSection() {
           <p className="text-sm text-muted-foreground mb-3 tracking-wide uppercase">
             How it works
           </p>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-semibold text-foreground tracking-tight max-w-2xl">
+          <h2
+            id="features-heading"
+            className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-semibold text-foreground tracking-tight max-w-2xl"
+          >
             Simple plant care for groups
           </h2>
         </motion.div>
@@ -267,7 +274,7 @@ function UseCasesSection() {
   ];
 
   return (
-    <section ref={ref} className="bg-sage-50/50">
+    <section ref={ref} aria-label="Use cases" className="bg-sage-50/50">
       <div className="grid lg:grid-cols-3">
         {useCases.map((useCase, index) => (
           <motion.div
@@ -303,14 +310,17 @@ function CTASection() {
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 
   return (
-    <section ref={ref} className="py-24 lg:py-32">
+    <section ref={ref} aria-labelledby="cta-heading" className="py-24 lg:py-32">
       <div className="px-6 lg:px-12 max-w-7xl">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={transition.enter}
         >
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-semibold text-foreground tracking-tight mb-6">
+          <h2
+            id="cta-heading"
+            className="text-4xl md:text-5xl lg:text-6xl font-semibold text-foreground tracking-tight mb-6"
+          >
             Ready to grow
             <br />
             together?

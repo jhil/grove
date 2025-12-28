@@ -230,6 +230,7 @@ export function PlantForm({
             disabled={isSubmitting}
             autoFocus
             maxLength={50}
+            aria-required="true"
           />
         </motion.div>
 
